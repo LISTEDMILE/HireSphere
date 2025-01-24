@@ -1,0 +1,31 @@
+<%- include('../partials/head')%>
+<link rel="stylesheet" href="/style.css"/>
+    <body>
+      <%- include('../partials/nav')%>
+        <div id="body">
+    <div id="div">
+        <h1 id="top">Here are the added Posts..</h1>
+        <div >
+            <li>
+                <h1 id="name">
+                    <%= detail.jobCompany %>
+                    
+                </h1>
+                <p id="textarea">
+                    <%= detail.description %>
+                </p>
+                <a href="/host/editJob/<%= detail._id%>?editing=true"> Edit</a>
+                <form action="/host/deleteJob/<%=detail._id%>" method='POST'>
+                    <button type="submit">
+                        Delete
+                    </button>
+                </form>
+                
+            </li>
+    </div>
+        <p> from / <b><u> test </u></b>/addJob</p>
+    </div>
+</div>
+<%- include ('../partials/footer')%>
+    </body>
+</html>

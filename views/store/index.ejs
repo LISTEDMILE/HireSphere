@@ -1,0 +1,27 @@
+<%- include('../partials/head')%>
+<link rel="stylesheet" href="/style.css"/>
+    <body>
+      <%- include('../partials/nav')%>
+        <div id="body">
+    <div id="div">
+        <h1 id="top">Here are the added Vacancies..</h1>
+        <div >
+        <% details.forEach(function(detail) { %>
+            <li>
+                <h1 id="name">
+                    <%= detail.houseName %>
+                    
+                </h1>
+                <p id="textarea">
+                    <%= detail.description %>
+                </p>
+                <button>book</button>
+            </li>
+        <% });%>
+    </div>
+        <p> from / <b><u> test </u></b>/addJob</p>
+    </div>
+</div>
+<%- include ('../partials/footer')%>
+    </body>
+</html>

@@ -1,0 +1,4 @@
+<form action="/store/favourite" method="POST">
+    <button type="submit"><%= job.fav?"Remove from":"Add to"%> favourite</button>
+    <input type="hidden" name="_id" value="<%=job._id%>"/>
+</form>

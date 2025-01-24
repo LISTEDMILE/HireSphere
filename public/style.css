@@ -1,0 +1,111 @@
+
+body{
+    background-color: rgb(245, 239, 239);
+    min-height:85vh;
+    margin:0px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+#body{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+h1{
+    color: rgb(255, 255, 255);
+    font-size: 30px;
+    margin:0px;
+}
+
+#div::-webkit-scrollbar{
+    width:0px;
+}
+#div{
+    display: flex;
+    align-items: center;
+    border-radius: 8px 8px 8px 8px;
+    justify-content: space-between;
+    flex-direction: column;
+    background-color: rgba(165, 42, 42, 0.13);
+    box-shadow: 10px 10px 30px 1px black;
+    height: fit-content;
+    width:80%;
+    margin-top:30px;
+    margin-bottom: 50px;
+    p{
+        font-size: x-large;
+        justify-self:end;
+    }
+    list-style: none;
+    #top{
+        background-color:rgb(61, 128, 86);
+        width:100%;
+        position: sticky;
+        top:0px;
+        z-index: 10;
+        padding:6px 0px;
+        border-top-right-radius: 8px;
+        border-top-left-radius: 8px;
+        text-align: center;
+    }
+    div{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        text-align: center;
+        li::-webkit-scrollbar{
+            width:0px;
+        }
+        li{
+            display:flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position:relative;
+            width:20%;
+            min-height: 160px;
+            max-height: 250px;
+            height:inherit;
+            background-color:white;
+            margin-top: 30px;
+            border-radius: 8px;
+            border: 1px solid black;
+            box-shadow: 0px 15px 25px 1px black;
+            overflow-y: scroll;
+            overflow-wrap: break-word;
+            h1::-webkit-scrollbar{
+                width:0px;
+            }
+            h1{
+                color:white;
+                font-size: 15px;
+                background-color: rgb(2, 197, 197);
+                width:100%;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+                text-align: center;
+                padding:3px 0px;
+                overflow-x: scroll;
+                overflow:auto;
+                height:24px;
+                
+                
+
+            }
+            #textarea{
+                font-size: 13px;
+                width: 90%;
+                height:inherit;
+                text-align: center;
+            }
+        }
+        li:hover{
+            top:-25px;
+            box-shadow: 0px 15px 30px 3px black;
+        }
+    }
+}
+b{
+    color:rgb(19, 19, 112);
+}
