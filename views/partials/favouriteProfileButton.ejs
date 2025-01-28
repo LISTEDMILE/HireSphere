@@ -1,0 +1,4 @@
+<form action="/host/favouriteProfile" method="POST">
+    <button type="submit"><%= profile.fav?"Remove from":"Add to"%> favourite</button>
+    <input type="hidden" name="_id" value="<%=profile._id%>"/>
+</form>

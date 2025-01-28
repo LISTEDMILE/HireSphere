@@ -1,0 +1,234 @@
+
+body{
+    background-color: rgb(24, 24, 24);
+    min-height:85vh;
+    margin:0px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+#body{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+h1{
+    color: rgb(255, 255, 255);
+    font-size: 30px;
+    margin:0px;
+}
+
+#div::-webkit-scrollbar{
+    width:0px;
+}
+#div{
+    display: flex;
+    align-items: center;
+    border-radius: 8px 8px 8px 8px;
+    justify-content: space-between;
+    flex-direction: column;
+    background-color: #000000;
+    height: fit-content;
+    width:80%;
+    margin-top:30px;
+    margin-bottom: 50px;
+    p{
+        font-size: x-large;
+        justify-self:end;
+    }
+    list-style: none;
+    #top{
+        background-color:rgb(61, 128, 86);
+        width:100%;
+        position: sticky;
+        top:0px;
+        z-index: 10;
+        padding:6px 0px;
+        border-top-right-radius: 8px;
+        border-top-left-radius: 8px;
+        text-align: center;
+    }
+    div{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        text-align: center;
+        li::-webkit-scrollbar{
+            width:0px;
+        }
+        li{
+            display:flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position:relative;
+            width:40%;
+            height: 300px;
+            background-color:#0d171b;
+            margin-top: 30px;
+            border-radius: 8px;
+            border: 1px solid black;
+            box-shadow: 0px 15px 25px 1px black;
+            overflow-y: scroll;
+            overflow-wrap: break-word;
+            h1::-webkit-scrollbar{
+                width:0px;
+            }
+            #topIn{
+                width:100%;
+                background-color: rgb(1, 107, 107);
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+                height:28px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-top:7px;
+
+                #name{
+                    color:white;
+                    font-size: 15px;
+                    text-align: left;
+                    padding-left: 8px;
+                    overflow-x: scroll;
+                    overflow:auto;
+                    height:100%;
+                    
+    
+                }
+
+                div{
+                    display: flex;
+                    align-self: center;
+                    margin-right: 4px;
+                    width:fit-content;
+                    position:absolute;
+                        right:6px;
+                        top:2px;
+                    a{
+                        background-color: rgb(10, 116, 107);
+                        margin-right:6px;
+                        border-radius: 4px;
+                        
+                    }
+
+                    button{
+                        background-color: rgb(10, 116, 107);
+                        margin-right:6px;
+                        border-radius: 4px;
+                        border:none;
+                        
+
+                    }
+                }
+                
+            }
+            
+            #Cname{
+                font-size: x-large;
+                color:white;
+                overflow-wrap: break-word;
+                width:80%;
+                padding-left: 10px;
+                text-align: left;
+                align-self: flex-start;
+            }
+
+            #Salary{
+                font-size: large;
+                color:rgb(106, 106, 106);
+                overflow-wrap: break-word;
+                width:80%;
+                padding-left: 10px;
+                text-align: left;
+                align-self: flex-start;
+            }
+
+            .label1{
+                font-size:small;
+                color:rgb(211, 211, 87);
+                overflow-wrap: break-word;
+                width:80%;
+                padding-left: 10px;
+                text-align: left;
+                align-self: flex-start;
+            }
+
+            #Location{
+                font-size: medium;
+                color:rgb(255, 255, 255);
+                overflow-wrap: break-word;
+                width:80%;
+                padding-left: 10px;
+                text-align: left;
+                align-self: flex-start;
+            }
+            
+            #Skills{
+                font-size: medium;
+                color:rgb(255, 255, 255);
+                overflow-wrap: break-word;
+                width:80%;
+                padding-left: 10px;
+                text-align: left;
+                align-self: flex-start;
+            }
+
+            #openDetails{
+                background-color: rgb(185, 44, 9);
+                color:white;
+                padding:4px 8px;
+                border:none;
+                border-radius: 5px;
+                text-decoration: none;
+                position:absolute;
+                bottom:15px;
+                right:15px;
+                box-shadow: 0 4px 6px -1px #0d171b, 0 2px 4px -1px #0d171b;
+                z-index: 2;
+
+            }
+
+
+
+
+        }
+        li:hover{
+            position:relative;
+            top:-35px;
+            width:45%;
+            height:320px;
+        }
+    }
+}
+b{
+    color:cyan;
+}
+
+
+
+
+
+
+
+
+
+#reject{
+    position:absolute;
+    bottom:15px;
+    right:100px;
+    background-color: rgb(43, 42, 42);
+    border-radius: 5px;
+    border:1px solid white;
+    color:white;
+    padding:4px 8px;
+    box-shadow: 0 4px 6px -1px #0d171b, 0 2px 4px -1px #0d171b;
+                z-index: 2;
+}
+
+
+
+
+#fav{
+    font-size: 15px;
+}

@@ -4,9 +4,8 @@
       <%- include('../partials/navStore')%>
         <div id="body">
     <div id="div">
-        <h1 id="top">Here are the added Vacancies..</h1>
+        <h1 id="top">Here are the added Posts..</h1>
         <div >
-    
             <li>
                 <h1 id="name">
                     <%= detail.jobCompany %>
@@ -15,8 +14,12 @@
                 <p id="textarea">
                     <%= detail.description %>
                 </p>
-                <%- include ('../partials/favouriteButton',{job:detail})%>
-                <a href="/store/storeJobDetails/<%= detail._id %>">lkdsfj</a>
+                <a href="/store/editProfile/<%= detail._id%>?editing=true"> Edit</a>
+                <form action="/store/deleteProfile/<%=detail._id%>" method='POST'>
+                    <button type="submit">
+                        Delete
+                    </button>
+                </form>
                 
             </li>
     </div>

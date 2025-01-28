@@ -1,24 +1,32 @@
 <%- include('../partials/head')%>
 <link rel="stylesheet" href="/style.css"/>
     <body>
-      <%- include('../partials/navStore')%>
+      <%- include('../partials/navHost')%>
         <div id="body">
     <div id="div">
         <h1 id="top">Here are the added Vacancies..</h1>
         <div >
-    
+        <% favouriteProfiles.forEach(function(detail) { %>
             <li>
                 <h1 id="name">
                     <%= detail.jobCompany %>
                     
                 </h1>
+                <h1 id="name">
+                    <%= detail.housePrice %>
+                    
+                </h1>
+                <h1 id="name">
+                    <%= detail.houseLocation %>
+                    
+                </h1>
                 <p id="textarea">
                     <%= detail.description %>
                 </p>
-                <%- include ('../partials/favouriteButton',{job:detail})%>
-                <a href="/store/storeJobDetails/<%= detail._id %>">lkdsfj</a>
-                
+                <% detail.fav = true; %>
+                <%- include('../partials/favouriteProfileButton',{profile:detail})%>
             </li>
+        <% });%>
     </div>
         <p> from / <b><u> test </u></b>/addJob</p>
     </div>

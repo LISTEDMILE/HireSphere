@@ -1,7 +1,7 @@
 <%- include('../partials/head')%>
 <link rel="stylesheet" href="/style.css"/>
     <body>
-      <%- include('../partials/navStore')%>
+      <%- include('../partials/navHost')%>
         <div id="body">
     <div id="div">
         <h1 id="top">Here are the added Vacancies..</h1>
@@ -15,8 +15,7 @@
                 <p id="textarea">
                     <%= detail.description %>
                 </p>
-                <%- include ('../partials/favouriteButton',{job:detail})%>
-                <a href="/store/storeJobDetails/<%= detail._id %>">lkdsfj</a>
+                <%- include ('../partials/favouriteProfileButton',{profile:detail})%>
                 
             </li>
     </div>

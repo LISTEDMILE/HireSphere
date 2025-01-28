@@ -1,29 +1,109 @@
 <%- include('../partials/head')%>
-<link rel="stylesheet" href="/style.css"/>
+<link rel="stylesheet" href="/hostJobDetails.css"/>
     <body>
-      <%- include('../partials/nav')%>
+      <%- include('../partials/navHost')%>
         <div id="body">
     <div id="div">
-        <h1 id="top">Here are the added Posts..</h1>
-        <div >
-            <li>
-                <h1 id="name">
-                    <%= detail.jobCompany %>
-                    
-                </h1>
-                <p id="textarea">
-                    <%= detail.description %>
-                </p>
-                <a href="/host/editJob/<%= detail._id%>?editing=true"> Edit</a>
+        <div id="topIn">
+            <h1 id="top"><%=detail.jobPost%></h1>
+            <div id="topInIn">
+                <a id="edit" href="/host/editJob/<%= detail._id%>?editing=true">  ✏️</a>
                 <form action="/host/deleteJob/<%=detail._id%>" method='POST'>
-                    <button type="submit">
-                        Delete
+                    <button id="button" type="submit">
+                        ✘
                     </button>
                 </form>
+            </div>
+        </div>
+       
+        <div id="card">
+            <h2 id="Cname">
+                <%=detail.jobCompany%>
+              </h2>
+              <div id="det1">
+                <div class="div">
+                    <h2 class="ans2">
+                Expected Salary : 
+                <%=detail.jobSalaryOffered%>
+              </h2>
+              <label class="label1">
+                Location
+              </label>
+              <h2 class="ans1">
+                <%=detail.jobLocation%>
+              </h2>
+              <label class="label1">
+                Skills Required
+              </label>
+              <h2 class="ans1">
+                <%=detail.jobSkills%>
+              </h2>
+            </div>
+            <div class="div">
                 
-            </li>
+                <h2 class="ans2"> 
+                    Min CGPA : 
+                    <%=detail.jobCGPA%>
+                  </h2>
+
+                  <label class="label1">
+                    Training Period
+                </label>
+                <h2 class="ans1"> 
+                    <%=detail.jobTraining%>
+                  </h2>
+
+                  <label class="label1">
+                    Bounded For
+                </label>
+                <h2 class="ans1">
+                    <%=detail.jobBound%>
+                  </h2>
+            </div>
+
+            <div class="div">
+                
+                <label class="label1">
+                    Languages Required :
+                </label>
+                <h2 class="ans1"> 
+                    <%=detail.jobLanguages%>
+                  </h2>
+
+                  <label class="label1">
+                    Email :
+                </label>
+                <h2 class="ans1"> 
+                    <%=detail.jobOwnerEmail%>
+                  </h2>
+
+                  <label class="label1">
+                    Contact No.:
+                </label>
+                <h2 class="ans1">
+                    <%=detail.jobOwnerMobile%>
+                  </h2>
+            </div>
+            </div>
+            <div id="det1">
+                <div class="div2">
+                    <label class="label1">
+                        description
+                    </label>
+                    <h2 class="ans1"><%=detail.description%></h2>
+                    
+                </div>
+                <div class="div2">
+                    <label class="label1">
+                        Perks
+                    </label>
+                    <h2 class="ans1"><%=detail.jobPerks%></h2>
+                    
+                </div>
+            </div>
+                
     </div>
-        <p> from / <b><u> test </u></b>/addJob</p>
+        <p><b><u> test  reached last</u></b></p>
     </div>
 </div>
 <%- include ('../partials/footer')%>

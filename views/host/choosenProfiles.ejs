@@ -1,7 +1,7 @@
 <%- include('../partials/head')%>
 <link rel="stylesheet" href="/style.css"/>
     <body>
-      <%- include('../partials/navStore')%>
+      <%- include('../partials/navHost')%>
         <div id="body">
     <div id="div">
         <h1 id="top">Here are the added Vacancies..</h1>
@@ -12,19 +12,23 @@
                     <%= detail.jobCompany %>
                     
                 </h1>
+                <h1 id="name">
+                    <%= detail.housePrice %>
+                    
+                </h1>
+                <h1 id="name">
+                    <%= detail.houseLocation %>
+                    
+                </h1>
                 <p id="textarea">
                     <%= detail.description %>
                 </p>
-                <%- include ('../partials/favouriteButton',{job:detail})%>
-                <a href="/store/storeJobDetails/<%= detail._id %>">lkdsfj</a>
-
-                <form action="/store/apply" method = "POST">
+                <form action="/host/chooseProfile" method = "POST">
                     <button type ="submit">
-                        <%= detail.apply?"Cancel":"Apply"%>
+                        Cancel
                     </button>
                     <input type="hidden" name="_id" value="<%=detail._id%>"/>
                 </form>
-                
             </li>
         <% });%>
     </div>

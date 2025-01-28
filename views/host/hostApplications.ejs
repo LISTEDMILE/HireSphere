@@ -6,7 +6,7 @@
     <div id="div">
         <h1 id="top">Here are the added Posts..</h1>
         <div >
-        <% details.forEach(function(detail) { %>
+        <% appliedJobs.forEach(function(detail) { %>
             <li>
               <div id="topIn">
                 <h1 id="name">
@@ -44,6 +44,13 @@
               <h2 id="Skills">
                 <%=detail.jobSkills%>
               </h2>
+              <form action="/store/apply" method = "POST">
+                <button id="reject"
+                type ="submit">
+                    Reject
+                </button>
+                <input type="hidden" name="_id" value="<%=detail._id%>"/>
+            </form>
                 
                 
                 <a id="openDetails" href="/host/hostJobDetails/<%= detail._id %>">More..</a>

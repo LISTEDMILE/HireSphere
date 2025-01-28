@@ -1,5 +1,12 @@
-const favouriteClass = require('../models/favouriteModel');
+
 const Job = require('../models/firstmodel');
+const favouriteClass= require('../models/favouriteModel');
+const applyClass = require('../models/applyModel');
+
+
+const Profile = require('../models/firstProfilemodel');
+const favouriteProfileClass= require('../models/favouriteProfileModel');
+const chooseProfileClass = require('../models/chooseProfileModel');
 
 exports.addJobGet = (req,res,next) => {
     res.render('host/addJob',{active:"addJob",title:"Add Job",editing:false});
@@ -26,6 +33,19 @@ exports.getEditJob = (req,res,next) => {
     })
     
 };
+
+exports.getApply = (req,res,next) => {
+    applyClass.getApply().then(applies => {
+        applies = applies.map(appl => appl.jobId);
+        const details = Job.fetchAll().then(details => {
+            const appliedJobs = details.filter((e) => applies.includes(String(e._id)));
+            res.render('host/hostApplications',{appliedJobs:appliedJobs,title:"Applied",active:"hostApplied"});
+        })
+    })
+        
+
+};
+
 
 exports.postEditJob = (req,res,next) => {
     const job = new Job(req.body.jobCompany,req.body.jobPost,req.body.jobLocation,req.body.jobOwnerEmail,req.body.jobOwnerMobile,req.body.description,req.body._id);
@@ -66,5 +86,138 @@ exports.postDeleteJob = (req,res,next) => {
 
     
         
+
+/// profile
+
+
+
+exports.profileList = (req,res,next) => {
+    const details = Profile.fetchAll().then((details) => {
+        favouriteProfileClass.getFavourites().then((favourites) => { 
+            chooseProfileClass.getChooseProfiles().then((profiles) =>{
+                const detailsWithoutFavObj = favourites.map(fav => fav.profileId);
+                const detailsWithFav = details.map(detail => {
+                    if(detailsWithoutFavObj.includes((detail._id).toString())){
+                        detail.fav=true;
+                    }
+                    else{
+                        detail.fav=false;
+                    }
+                    return detail;
+                  
+                })
+                const detailsWithoutChoosenObj = profiles.map(prof => prof.profileId);
+                const detailsWithChoosenAndFav = detailsWithFav.map(detail => {
+                    if(detailsWithoutChoosenObj.includes(detail._id.toString())){
+                        detail.choosen=true;
+                    }
+                    else{
+                        detail.choosen=false;
+                    }
+                    return detail;
+                  
+                })
+                res.render('host/profileList',{details:detailsWithChoosenAndFav,title:"Profile List",active:"profileList"});
+            })   
+            
+           
+        })
+        
+    });
+};
+
+
+exports.hostProfileDetails = (req,res,next) => {
+    const profileId = req.params.profileId;
+    Profile.findById(profileId).then (profile => {
+        res.render('host/hostProfileDetails',{detail:profile,active:"profileList",title:"Required Profile"});
+    })
+};
+
+
+exports.getProfileFavourites = (req,res,next) => {
+    favouriteProfileClass.getFavourites().then(favourites => {
+        favourites = favourites.map(fav => fav.profileId);
+        const details = Profile.fetchAll().then(details => {
+            const favouriteProfiles = details.filter((e) => favourites.includes(String(e._id)));
+            res.render('host/favouriteProfiles',{favouriteProfiles:favouriteProfiles,title:"Favourites",active:"favouriteProfiles"});
+        })
+    })
+        
+
+};
+
+exports.getChooseProfiles = (req,res,next) => {
+    chooseProfileClass.getChooseProfiles().then(profiles => {
+        profiles = profiles.map(prof => prof.profileId);
+        const details = Profile.fetchAll().then(details => {
+            const choosenProfiles = details.filter((e) => profiles.includes(String(e._id)));
+            res.render('host/choosenProfiles',{details:choosenProfiles,title:"Choosen",active:"choosenProfiles"});
+        })
+    })
+        
+
+};
+
+exports.postAddProfileFavourites = (req,res,next) => {
+    const profileId = String(req.body._id);
+    favouriteProfileClass.getFavourites().then(favourites => {
+        favourites = favourites.map(fav => fav.profileId);
+        if(favourites.includes(profileId)){
+            favouriteProfileClass.deleteFavourite(profileId);
+        }
+        else{
+            const fav = new favouriteProfileClass(profileId);
+            fav.save()
+            .catch(err => {
+                console.log("Error adding profile fav",err);
+            })
+        }
+    })
+    .then(() => {
+        res.redirect('/host/favouriteProfile');
+    })
+   
+    
+};
+
+
+exports.postChooseProfile = (req,res,next) => {
+    const profileId = String(req.body._id);
+    chooseProfileClass.getChooseProfiles().then(profiles => {
+        profiles = profiles.map(prof => prof.profileId);
+        if(profiles.includes(profileId)){
+            chooseProfileClass.deleteChoosen(profileId);
+        }
+        else{
+            const prof = new chooseProfileClass(profileId);
+            prof.save()
+            .catch(err => {
+                console.log("Error adding profile fav",err);
+            })
+        }
+    })
+    .then(() => {
+        res.redirect('/host/chooseProfile');
+    })
+   
+    
+};
+
+
+
+exports.getProfileDetails = (req,res,next) => {
+    const profileId = req.params.Hid;
+    Profile.findById(profileId).then((profile) => {
+        if (!profile){
+            console.log("profile not found");
+            res.redirect('/host/profileList');
+        }
+        else{
+            res.render('host/profileDetails',{title:"Details",active:"profileList",profile:profile});
+        }
+    })
+    
+};
         
     

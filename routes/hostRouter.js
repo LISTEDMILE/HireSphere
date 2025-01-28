@@ -10,6 +10,22 @@ hostRouter.get("/hostJobDetails/:jobId",hostController.hostJobDetails);
 hostRouter.get("/editJob/:jobId",hostController.getEditJob);
 hostRouter.post("/editJob",hostController.postEditJob);
 
+hostRouter.get("/hostApplications",hostController.getApply);
+
 hostRouter.post("/deleteJob/:jobId",hostController.postDeleteJob);
+
+
+//profile
+
+
+hostRouter.get("/profileList",hostController.profileList);
+hostRouter.get("/hostProfileDetails/:profileId",hostController.hostProfileDetails);
+hostRouter.get("/favouriteProfile",hostController.getProfileFavourites);
+
+hostRouter.post("/favouriteProfile",hostController.postAddProfileFavourites);
+
+hostRouter.get("/chooseProfile",hostController.getChooseProfiles);
+
+hostRouter.post("/chooseProfile",hostController.postChooseProfile);
 
 module.exports = hostRouter;

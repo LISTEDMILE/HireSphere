@@ -6,19 +6,31 @@
     <div id="div">
         <h1 id="top">Here are the added Vacancies..</h1>
         <div >
-    
+        <% appliedJobs.forEach(function(detail) { %>
             <li>
                 <h1 id="name">
                     <%= detail.jobCompany %>
                     
                 </h1>
+                <h1 id="name">
+                    <%= detail.housePrice %>
+                    
+                </h1>
+                <h1 id="name">
+                    <%= detail.houseLocation %>
+                    
+                </h1>
                 <p id="textarea">
                     <%= detail.description %>
                 </p>
-                <%- include ('../partials/favouriteButton',{job:detail})%>
-                <a href="/store/storeJobDetails/<%= detail._id %>">lkdsfj</a>
-                
+                <form action="/store/apply" method = "POST">
+                    <button type ="submit">
+                        Cancel
+                    </button>
+                    <input type="hidden" name="_id" value="<%=detail._id%>"/>
+                </form>
             </li>
+        <% });%>
     </div>
         <p> from / <b><u> test </u></b>/addJob</p>
     </div>

@@ -2,12 +2,34 @@ const express = require('express');
 const storeController = require('../controllers/storeController');
 const storeRouter = express.Router();
 
-storeRouter.get("/",storeController.getIndex);
 storeRouter.get("/jobList",storeController.jobList);
 storeRouter.get("/storeJobDetails/:jobId",storeController.storeJobDetails);
-storeRouter.get("/booked",storeController.getBooked);
 storeRouter.get("/favourite",storeController.getFavourites);
 
 storeRouter.post("/favourite",storeController.postAddFavourites);
+
+storeRouter.get("/apply",storeController.getApply);
+
+storeRouter.post("/apply",storeController.postApply);
+
+
+
+
+//  profile
+
+
+storeRouter.get("/addProfile",storeController.addProfileGet);
+storeRouter.post("/addProfile",storeController.addProfilePost);
+storeRouter.get("/storeProfileList",storeController.storeProfileList);
+storeRouter.get("/storeProfileDetails/:profileId",storeController.storeProfileDetails);
+
+storeRouter.get("/editProfile/:profileId",storeController.getEditProfile);
+storeRouter.post("/editProfile",storeController.postEditProfile);
+
+storeRouter.get("/chooseProfile",storeController.getChooseProfiles);
+
+storeRouter.post("/deleteProfile/:profileId",storeController.postDeleteProfile);
+
+
 
 module.exports = storeRouter;

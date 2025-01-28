@@ -1,12 +1,12 @@
 <%- include('../partials/head')%>
 <link rel="stylesheet" href="/style.css"/>
     <body>
-      <%- include('../partials/navStore')%>
+      <%- include('../partials/navHost')%>
         <div id="body">
     <div id="div">
         <h1 id="top">Here are the added Vacancies..</h1>
         <div >
-    
+        <% details.forEach(function(detail) { %>
             <li>
                 <h1 id="name">
                     <%= detail.jobCompany %>
@@ -15,10 +15,18 @@
                 <p id="textarea">
                     <%= detail.description %>
                 </p>
-                <%- include ('../partials/favouriteButton',{job:detail})%>
-                <a href="/store/storeJobDetails/<%= detail._id %>">lkdsfj</a>
+                <%- include ('../partials/favouriteProfileButton',{profile:detail})%>
+                <a href="/host/hostProfileDetails/<%= detail._id %>">Details</a>
+
+                <form action="/host/chooseProfile" method = "POST">
+                    <button type ="submit">
+                        <%= detail.choosen?"Cancel":"Select"%>
+                    </button>
+                    <input type="hidden" name="_id" value="<%=detail._id%>"/>
+                </form>
                 
             </li>
+        <% });%>
     </div>
         <p> from / <b><u> test </u></b>/addJob</p>
     </div>
