@@ -105,20 +105,27 @@ h1{
                     position:absolute;
                         right:6px;
                         top:2px;
-                    a{
+                    #edit{
                         background-color: rgb(10, 116, 107);
                         margin-right:6px;
                         border-radius: 4px;
                         
                     }
 
-                    button{
+                    #button{
                         background-color: rgb(10, 116, 107);
                         margin-right:6px;
                         border-radius: 4px;
                         border:none;
+                        font-size: 17px;
                         
 
+                    }
+                    #fav{
+                        font-size: 18px;
+                        background-color: rgb(10, 116, 107);
+                        border:none;
+                        
                     }
                 }
                 
@@ -229,6 +236,3 @@ b{
 
 
 
-#fav{
-    font-size: 15px;
-}

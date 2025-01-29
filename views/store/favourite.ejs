@@ -3,7 +3,7 @@
       <%- include('../partials/navStore')%>
         <div id="body">
     <div id="div">
-        <h1 id="top">Here are the added Vacancies..</h1>
+        <h1 id="top">Favourite Posts..</h1>
         <div >
         <% favouriteJobs.forEach(function(detail) { %>
             <li>
@@ -43,7 +43,7 @@
 
                 <form action="/store/apply" method = "POST">
                     <button  id="reject" type ="submit">
-                        <%= detail.apply?"Cancel":"Apply"%>
+                        <%= detail.apply?"Cancel Apply":"Apply"%>
                     </button>
                     <input type="hidden" name="_id" value="<%=detail._id%>"/>
                 </form>

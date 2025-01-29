@@ -15,7 +15,7 @@ exports.addJobGet = (req,res,next) => {
 
 
 exports.addJobPost = (req,res,next) => {
-    const job = new Job(req.body.jobCompany,req.body.jobPost,req.body.jobLocation,req.body.jobOwnerEmail,req.body.jobOwnerMobile,req.body.description);
+    const job = new Job(req.body.jobCompany,req.body.jobPost,req.body.jobLocation,req.body.jobOwnerMobile,req.body.jobOwnerEmail,req.body.description);
     job.save();
     res.render('host/addedJob',{active:"addJobPost",title:"Job Added"});
 };
@@ -48,7 +48,7 @@ exports.getApply = (req,res,next) => {
 
 
 exports.postEditJob = (req,res,next) => {
-    const job = new Job(req.body.jobCompany,req.body.jobPost,req.body.jobLocation,req.body.jobOwnerEmail,req.body.jobOwnerMobile,req.body.description,req.body._id);
+    const job = new Job(req.body.jobCompany,req.body.jobPost,req.body.jobLocation,req.body.jobOwnerMobile,req.body.jobOwnerEmail,req.body.description,req.body._id);
     job.save();
     res.redirect('/host/hostJobList');
 };
@@ -72,17 +72,49 @@ exports.postDeleteJob = (req,res,next) => {
     Job.deleteById(jobId)
     .then((jobId) => {
         favouriteClass.getFavourites().then(favourites => {
+            applyClass.getApply().then((applies)=>{
             favourites = favourites.map(fav => fav.jobId);
+            applies = applies.map(appl => appl.jobId);
             if(favourites.includes(jobId)){
                 favouriteClass.deleteFavourite(jobId);
             }
+            if(applies.includes(jobId)){
+                applyClass.deleteApply(jobId);
+            }
+        
         })
+    })
     })
     .then(() => {res.redirect('/host/hostJobList');})
     .catch(error=>{
         console.log('Error deleting Job',error);
     })
 }
+
+
+
+
+exports.postApply = (req,res,next) => {
+    const jobId = String(req.body._id);
+    applyClass.getApply().then(applies => {
+        applies = applies.map(appl => appl.jobId);
+        if(applies.includes(jobId)){
+            applyClass.deleteApply(jobId);
+        }
+        else{
+            const appl = new applyClass(jobId);
+            appl.save()
+            .catch(err => {
+                console.log("Error adding fav",err);
+            })
+        }
+    })
+    .then(() => {
+        res.redirect('/host/hostApplications');
+    })
+   
+    
+};
 
     
         
@@ -129,8 +161,17 @@ exports.profileList = (req,res,next) => {
 
 exports.hostProfileDetails = (req,res,next) => {
     const profileId = req.params.profileId;
-    Profile.findById(profileId).then (profile => {
-        res.render('host/hostProfileDetails',{detail:profile,active:"profileList",title:"Required Profile"});
+    Profile.findById(profileId).then (detail => {
+        favouriteProfileClass.getFavourites().then(favourites => {
+            chooseProfileClass.getChooseProfiles().then(choosens => {
+                const detailsWithoutFavObj = favourites.map(fav => fav.profileId);
+                const detailsWithoutChooseObj = choosens.map(choosens => choosens.profileId);
+                detail.fav = detailsWithoutFavObj.includes((detail._id).toString());
+                detail.choosen = detailsWithoutChooseObj.includes((detail._id).toString());
+                res.render('host/hostProfileDetails',{detail:detail,active:"profileList",title:"Required Profile"});
+            })
+        })
+        
     })
 };
 

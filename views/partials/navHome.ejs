@@ -28,7 +28,7 @@
 </div>
 <div id="navDiv">
     <div class="div">
-        <button class="hover:shadow-black shadow-lg hover:bg-red-500 rounded transition duration-300 no-underline">Login</button>
+        <button class="<%= active === 'loginPage' ? 'bg-red-600 shadow-black shadow-lg' : 'hover:shadow-black shadow-lg hover:bg-red-500' %> py-2 px-4 rounded transition duration-300 no-underline">Login</button>
 <div class="a">
         <a class="ai" href="/login/employee">
             Employee</a>
@@ -41,7 +41,7 @@
 
 
     <div class="div">
-        <button class="hover:shadow-black shadow-lg hover:bg-red-500 rounded transition duration-300 no-underline">Sign-Up</button>
+        <button class="<%= active === 'signUpPage' ? 'bg-red-600 shadow-black shadow-lg' : 'hover:shadow-black shadow-lg hover:bg-red-500' %> py-2 px-4 rounded transition duration-300 no-underline">Sign-Up</button>
 
         <div class="a">
         <a class="ai" href="/signUp/recruiter">

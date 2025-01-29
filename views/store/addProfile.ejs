@@ -1,38 +1,95 @@
 <%- include('../partials/head')%>
 <link rel="stylesheet" href="/addJobStyle.css"/>
+
+<script>
+	function displayTenthY(a){
+		document.getElementById('displayTenth').value=document.getElementById('displayTenthDisplay').value=a;
+	}
+
+	function displayTwelthY(a){
+		document.getElementById('displayTwelth').value=document.getElementById('displayTwelthDisplay').value=a;
+	}
+
+	function displayGraduationY(a){
+		document.getElementById('displayGraduation').value=document.getElementById('displayGraduationDisplay').value=a;
+	}
+</script>
 	<body>
 		<%- include('../partials/navStore')%>
         <form action="/store/<%= editing ?'editProfile':'addProfile'%>" method="POST">
 			<h1>
-				<%= editing ? "Edit" : "Add" %>
+				<%= editing ? "Edit" : "Add" %> Profile
 			</h1>
 			<div id="div">
 				<input type="hidden" <% if(editing) {%>value="<%=detail._id%>"<%}%> name="_id"/>
 				<div>
 					<label>
-						 Organization Name
+						 Name
 					</label>
-            <input type="text" <% if(editing) {%>value="<%=detail.jobCompany%>"<%}%> name="jobCompany" placeholder="Organization or Company"/>
+            <input type="text" <% if(editing) {%>value="<%=detail.profileName%>"<%}%> name="profileName" placeholder="Name"/>
 			<label>
-				Post to Seek for
+				Gender
 			</label>
-	<input type="text" <% if(editing) {%>value="<%=detail.jobPost%>"<%}%> name="jobPost" placeholder="Required Post"/>
+	<input type="text" <% if(editing) {%>value="<%=detail.profileGender%>"<%}%> name="profileGender" placeholder="Gender"/>
+
 	<label>
-		Location
+		Post
 	</label>
-<input type="text" <% if(editing) {%>value="<%=detail.jobLocation%>"<%}%> name="jobLocation" placeholder="Location"/>
+<input type="text" <% if(editing) {%>value="<%=detail.profilePost%>"<%}%> name="profilePost" placeholder="Post you looking for"/>
+	<label>
+		Courses Done
+	</label>
+<input type="text" <% if(editing) {%>value="<%=detail.profileCourse%>"<%}%> name="profileCourse" placeholder="Couses"/>
+
 <label>
-	Enter your Contact Email
+	Skills
 </label>
-<input type="email" <% if(editing) {%>value="<%=detail.jobOwnerEmail%>"<%}%> name="jobOwnerEmail" placeholder="Contact Email"/>
+<input type="text" <% if(editing) {%>value="<%=detail.profileSkills%>"<%}%> name="profileSkills" placeholder="Skills"/>
+
 <label>
-	Contact Mobile
+	Email
 </label>
-<input type="number" <% if(editing) {%>value="<%=detail.jobOwnerMobile%>"<%}%> name="jobOwnerMobile" placeholder="Mobile NO."/>
+<input type="email" <% if(editing) {%>value="<%=detail.profileEmail%>"<%}%> name="profileEmail" placeholder="Contact Email"/>
+<label>
+	Mobile
+</label>
+<input type="number" <% if(editing) {%>value="<%=detail.profileMobile%>"<%}%> name="profileMobile" placeholder="Mobile NO."/>
+
+<label>
+	10th(%)
+</label>
+<input  class="range"  type="decimal" min="0" max="100" id="displayTenth" <% if(editing) {%>value="<%=detail.profileTenth%>"<%}else{%>value="70"<%}
+%>oninput="displayTenthY(this.value)"></input>
+<input type="range" oninput="displayTenthY(this.value)" min="0" max="100" id="displayTenthDisplay" name="profileTenth" step="0.1" <% if(editing) {%>value="<%=detail.profileTenth%>"<%}else{%>value="70"<%}
+%>>
+
+<label>
+	12th(%)
+</label>
+<input  class="range"  type="decimal" min="0" max="100" id="displayTwelth" <% if(editing) {%>value="<%=detail.profileTwelth%>"<%}else{%>value="70"<%}
+%>oninput="displayTwelthY(this.value)"></input>
+<input type="range" oninput="displayTwelthY(this.value)" min="0" max="100" name="profileTwelth" 
+id="displayTwelthDisplay" step="0.1" <% if(editing) {%>value="<%=detail.profileTwelth%>"<%}else{%>value="70"<%}
+%>>
+
+<label>
+	Graduation
+</label>
+<input  class="range"  id="displayGraduation" type="decimal" min="0" max="100" <% if(editing) {%>value="<%=detail.profileGraduation%>"<%}else{%>value="70"<%}
+%>oninput="displayGraduationY(this.value)"></input>
+<input id="displayGraduationDisplay"  min="0" max="100" type="range" oninput="displayGraduationY(this.value)" name="profileGraduation" step="0.1" <% if(editing) {%>value="<%=detail.profileGraduation%>"<%}else{%>value="70"<%}
+%>>
+
+
 			<label>
-				Describe the Post
+				Describe Yourself
 			</label>
-			<textarea <% if(editing) {%>value="<%=detail.description%>"<%}%> name="description" placeholder="Describe your Post here"></textarea>
+			<textarea <% if(editing) {%>value="<%=detail.profileDescription%>"<%}%> name="profileDescription" placeholder="Describe yourself here"></textarea>
+
+			<label>
+				Describe About Post You looking for
+			</label>
+			<textarea <% if(editing) {%>value="<%=detail.profilePostDescription%>"<%}%> name="profilePostDescription" placeholder="Describe your desired Post here"></textarea>
 		</div>
             <input id="submit" type="submit" value="<%= editing ? 'Update' : 'Add' %>"/>
 			</div>

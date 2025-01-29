@@ -2,15 +2,15 @@
 <link rel="stylesheet" href="/addJobStyle.css"/>
 <script>
 	function display(a){
-		document.getElementById('displayRange').value=a;
+		document.getElementById('displayRange').value=document.getElementById('displayRangeDisplay').value=a;
 	}
 
 	function displayTraining(a){
-		document.getElementById('displayTrain').value=a;
+		document.getElementById('displayTrain').value=document.getElementById('displayTrainDisplay').value=a;
 	}
 
 	function displayBoundY(a){
-		document.getElementById('displayBound').value=a;
+		document.getElementById('displayBound').value=document.getElementById('displayBoundDisplay').value=a;
 	}
 </script>
 	<body>
@@ -48,16 +48,18 @@
 <label>
 	Min CGPA
 </label>
-<input disabled id="displayRange" class="range" value="7"></input>
-<input type="range" oninput="display(this.value)" min="0" max="10" name="jobCGPA" step="0.1" <% if(editing) {%>value="<%=detail.jobCGPA%>"<%}else{%>value="7"<%}
+<input id="displayRange" class="range"  min="0" max="10" <% if(editing) {%>value="<%=detail.jobCGPA%>"<%}else{%>value="7"<%}
+%>oninput="display(this.value)"></input>
+<input type="range" id="displayRangeDisplay" oninput="display(this.value)" min="0" max="10" name="jobCGPA" step="0.1" <% if(editing) {%>value="<%=detail.jobCGPA%>"<%}else{%>value="7"<%}
 %>>
 
 
 <label>
 	Training Period (*Years)
 </label>
-<input disabled class="range" id="displayTrain" value="2"></input>
-<input type="range" oninput="displayTraining(this.value)" min="0" max="10" name="jobTraining" step="0.1" <% if(editing) {%>value="<%=detail.jobTraining%>"<%}else{%>value="2"<%}
+<input class="range" id="displayTrain"  min="0" max="10" <% if(editing) {%>value="<%=detail.jobTraining%>"<%}else{%>value="2"<%}
+%>oninput="displayTraining(this.value)"></input>
+<input type="range" oninput="displayTraining(this.value)" min="0" max="10" id="displayTrainDisplay" name="jobTraining" step="0.1" <% if(editing) {%>value="<%=detail.jobTraining%>"<%}else{%>value="2"<%}
 %>>
 
 
@@ -65,8 +67,9 @@
 <label>
 	Bound Duration (*Years)
 </label>
-<input disabled class="range" id="displayBound" value="3"></input>
-<input type="range" oninput="displayBoundY(this.value)" min="0" max="10" name="jobBound" step="0.1" <% if(editing) {%>value="<%=detail.jobBound%>"<%}else{%>value="3"<%}
+<input class="range" id="displayBound"  min="0" max="10" <% if(editing) {%>value="<%=detail.jobBound%>"<%}else{%>value="3"<%}
+%>oninput="displayBoundY(this.value)"></input>
+<input type="range" id="displayBoundDisplay" oninput="displayBoundY(this.value)" min="0" max="10" name="jobBound" step="0.1" <% if(editing) {%>value="<%=detail.jobBound%>"<%}else{%>value="3"<%}
 %>>
 
 

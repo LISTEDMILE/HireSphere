@@ -12,11 +12,17 @@ storeRouter.get("/apply",storeController.getApply);
 
 storeRouter.post("/apply",storeController.postApply);
 
+storeRouter.post("/deleteProfile/:profileId",storeController.postDeleteProfile);
+
+
+
 
 
 
 //  profile
 
+
+storeRouter.post("/chooseProfile",storeController.postChooseProfile);
 
 storeRouter.get("/addProfile",storeController.addProfileGet);
 storeRouter.post("/addProfile",storeController.addProfilePost);

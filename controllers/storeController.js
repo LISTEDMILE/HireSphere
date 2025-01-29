@@ -46,8 +46,18 @@ exports.jobList = (req,res,next) => {
 
 exports.storeJobDetails = (req,res,next) => {
     const jobId = req.params.jobId;
-    Job.findById(jobId).then (job => {
-        res.render('store/storeJobDetails',{detail:job,active:"storeJobList",title:"Required Job"});
+    Job.findById(jobId).then (detail => {
+
+        favouriteClass.getFavourites().then((favourites) => {
+            applyClass.getApply().then((applies) => {
+                const detailsWithoutFavObj = favourites.map(fav => fav.jobId);
+                const detailsWithoutApplyObj = applies.map(appl => appl.jobId);
+                detail.apply = detailsWithoutApplyObj.includes((detail._id).toString());
+                detail.fav = detailsWithoutFavObj.includes((detail._id).toString());
+                res.render('store/storeJobDetails',{detail:detail,active:"storeJobList",title:"Required Job"});
+            })
+        })
+        
     })
 };
 
@@ -78,10 +88,22 @@ exports.getFavourites = (req,res,next) => {
 
 exports.getApply = (req,res,next) => {
     applyClass.getApply().then(applies => {
-        applies = applies.map(appl => appl.jobId);
+        favouriteClass.getFavourites().then(favourites => {
+        applies = applies.map(appl => appl.jobId)
+            favourites = favourites.map(fav => fav.jobId);
         const details = Job.fetchAll().then(details => {
             const appliedJobs = details.filter((e) => applies.includes(String(e._id)));
-            res.render('store/applied',{appliedJobs:appliedJobs,title:"Applied",active:"applied"});
+            const detailsWithFavAndApply = appliedJobs.map(detail => {
+                if(favourites.includes(detail._id.toString())){
+                    detail.fav=true;
+                }
+                else{
+                    detail.fav=false;
+                }
+                return detail;
+            })
+            res.render('store/applied',{appliedJobs:detailsWithFavAndApply,title:"Applied",active:"applied"});
+        })
         })
     })
         
@@ -135,6 +157,32 @@ exports.postApply = (req,res,next) => {
 
 
 
+exports.postDeleteProfile = (req,res,next) => {
+    const profileId = req.params.profileId;
+    Profile.deleteById(profileId)
+    .then((profileId) => {
+        favouriteProfileClass.getFavourites().then(favourites => {
+            chooseProfileClass.getApply().then((choosens)=>{
+            favourites = favourites.map(fav => fav.profileId);
+            choosens = choosens.map(choose => choose.jobId);
+            if(favourites.includes(profileId)){
+                favouriteClass.deleteFavourite(profileId);
+            }
+            if(choosens.includes(profileId)){
+                chooseProfileClass.deleteChoosen(profileId);
+            }
+        
+        })
+    })
+    })
+    .then(() => {res.redirect('/host/hostJobList');})
+    .catch(error=>{
+        console.log('Error deleting Job',error);
+    })
+}
+
+
+
 exports.getJobDetails = (req,res,next) => {
     const jobId = req.params.Hid;
     Job.findById(jobId).then((job) => {
@@ -166,7 +214,7 @@ exports.addProfileGet = (req,res,next) => {
 
 
 exports.addProfilePost = (req,res,next) => {
-    const profile = new Profile(req.body.jobCompany,req.body.jobPost,req.body.jobLocation,req.body.jobOwnerEmail,req.body.jobOwnerMobile,req.body.description);
+    const profile = new Profile(req.body.profileName,req.body.profileGender,req.body.profilePost,req.body.profileCourse,req.body.profileSkills,req.body.profileEmail,req.body.profileMobile,req.body.profileTenth,req.body.profileTwelth,req.body.profileGraduation,req.body.profileDescription,req.body.profilePostDescription);
     profile.save();
     res.render('store/addedProfile',{active:"addProfilePost",title:"Profile Added"});
 };
@@ -235,6 +283,30 @@ exports.postDeleteProfile = (req,res,next) => {
     })
 }
 
+
+
+
+exports.postChooseProfile = (req,res,next) => {
+    const profileId = String(req.body._id);
+    chooseProfileClass.getChooseProfiles().then(profiles => {
+        profiles = profiles.map(prof => prof.profileId);
+        if(profiles.includes(profileId)){
+            chooseProfileClass.deleteChoosen(profileId);
+        }
+        else{
+            const prof = new chooseProfileClass(profileId);
+            prof.save()
+            .catch(err => {
+                console.log("Error adding profile fav",err);
+            })
+        }
+    })
+    .then(() => {
+        res.redirect('/store/chooseProfile');
+    })
+   
+    
+};
     
         
         

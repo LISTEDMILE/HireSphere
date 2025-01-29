@@ -1,40 +1,70 @@
 <%- include('../partials/head')%>
-<link rel="stylesheet" href="/style.css"/>
+<link rel="stylesheet" href="/hostJobListStyle.css"/>
     <body>
       <%- include('../partials/navHost')%>
         <div id="body">
     <div id="div">
-        <h1 id="top">Here are the added Vacancies..</h1>
+        <h1 id="top">Selected Candidates</h1>
         <div >
         <% details.forEach(function(detail) { %>
             <li>
+              <div id="topIn">
                 <h1 id="name">
-                    <%= detail.jobCompany %>
+                    <%= detail.profilePost %>
                     
                 </h1>
-                <h1 id="name">
-                    <%= detail.housePrice %>
-                    
-                </h1>
-                <h1 id="name">
-                    <%= detail.houseLocation %>
-                    
-                </h1>
-                <p id="textarea">
-                    <%= detail.description %>
-                </p>
-                <form action="/host/chooseProfile" method = "POST">
-                    <button type ="submit">
-                        Cancel
-                    </button>
-                    <input type="hidden" name="_id" value="<%=detail._id%>"/>
-                </form>
+                <div>
+
+                    <%- include ('../partials/favouriteProfileButton',{profile:detail})%>
+            </div>
+
+              </div>
+              <h2 id="Cname">
+                <%=detail.profileName%>
+              </h2>
+              <h2 id="Salary">
+                10th(%) : 
+                <%=detail.profileTenth%>
+              </h2>
+              <h2 id="Location">
+                12th(%) : 
+                <%=detail.profileTwelth%>
+              </h2>
+              <label class="label1">
+                Skills
+              </label>
+              <h2 id="Skills">
+                <%=detail.profileSkills%>
+              </h2>
+                
+              <form action="/host/chooseProfile" method = "POST">
+                <button id="reject" type ="submit">
+                    Deselect
+                </button>
+                <input type="hidden" name="_id" value="<%=detail._id%>"/>
+            </form> 
+              <a id="openDetails" href="/host/hostProfileDetails/<%= detail._id %>">Details</a>
+
+              
+                
+                
             </li>
         <% });%>
     </div>
-        <p> from / <b><u> test </u></b>/addJob</p>
+        <p> <b><u> test reached last </u></b></p>
     </div>
 </div>
 <%- include ('../partials/footer')%>
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+

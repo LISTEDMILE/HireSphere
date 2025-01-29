@@ -15,6 +15,9 @@ hostRouter.get("/hostApplications",hostController.getApply);
 hostRouter.post("/deleteJob/:jobId",hostController.postDeleteJob);
 
 
+hostRouter.post("/apply",hostController.postApply);
+
+
 //profile
 
 
@@ -27,5 +30,6 @@ hostRouter.post("/favouriteProfile",hostController.postAddProfileFavourites);
 hostRouter.get("/chooseProfile",hostController.getChooseProfiles);
 
 hostRouter.post("/chooseProfile",hostController.postChooseProfile);
+
 
 module.exports = hostRouter;

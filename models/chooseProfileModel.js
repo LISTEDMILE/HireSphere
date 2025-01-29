@@ -7,17 +7,17 @@ module.exports = class chooseProfileClass{
 
     save() {
         const db = getDB();
-        return db.collection('profiles').insertOne(this);
+        return db.collection('chooseProfile').insertOne(this);
     }
 
     static deleteChoosen(profileId){
         const db = getDB();
-        return db.collection('profiles').deleteOne({profileId:profileId.toString()});
+        return db.collection('chooseProfile').deleteOne({profileId:profileId.toString()});
     }
     
     static getChooseProfiles(){
         const db = getDB();
-        return db.collection('profiles').find().toArray();
+        return db.collection('chooseProfile').find().toArray();
     }
 }
 
