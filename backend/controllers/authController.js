@@ -109,4 +109,95 @@ exports.postSignUp = [
     
         
   }
-  ]
+]
+  
+
+exports.getLogin = [
+    check("username")
+        .normalizeEmail().custom(async (value) => {
+          const existingUser = await User.findOne({ username: value });
+          if (!existingUser) {
+            throw new Error("Email/Username not found");
+          }
+          return true;
+        }),
+    
+  check("password")
+    .notEmpty()
+    .withMessage("Password is required"),
+  
+  (req, res, next) => {
+    const { username, password } = req.body;
+
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array().map(err => err.msg),
+        oldInput: {
+          username,
+          password
+        },
+      });
+    }
+
+    User.findOne({ username: username })
+      .then(user => {
+        if (!user) {
+          return res.status(401).json({
+            isLoggedIn: false,
+            errors: ["Invalid credentials"],
+            oldInput: {
+              username,
+              password
+            },
+          });
+        }
+        
+        bcrypt.compare(password, user.password)
+          .then(isMatch => {
+            if (!isMatch) {
+              return res.status(401).json({
+                isLoggedIn: false,
+                errors: ["Invalid credentials"],
+                oldInput: {
+                  username,
+                  password
+                },
+              });
+            }
+            
+            res.status(200).json({
+              isLoggedIn: true,
+              message: "Login successful",
+              userType: user.userType,
+              username: user.username,
+              firstname: user.firstname,
+              lastname: user.lastname
+            });
+          })
+          .catch(err => {
+            console.error("Error comparing passwords:", err);
+            res.status(500).json({
+              isLoggedIn: false,
+              errors: ["An error occurred while logging in. Please try again."],
+              oldInput: {
+                username,
+                password
+              },
+            });
+          });
+      })
+      .catch(err => {
+        console.error("Error finding user:", err);
+        res.status(500).json({
+          isLoggedIn: false,
+          errors: ["An error occurred while logging in. Please try again."],
+          oldInput: {
+            username,
+            password
+          },
+        });
+      });
+  }
+]
