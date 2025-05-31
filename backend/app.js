@@ -14,15 +14,25 @@ const cors = require('cors');
 
 const app = express();
 
-
 app.set('view engine', 'ejs');
 app.set('views','views');
+
+const store = new MongoDBStore({
+    uri: DB_path,
+    collection:'sessions'
+})
 
 app.use(express.static(path.join(rootDir,'public')));
 app.use(express.urlencoded());
 app.use(express.json());
 app.use(cors());
 
+app.use(session({
+    secret: "NodeJs",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+}));
 
 app.use("/",authRouter);
 app.use("/host",hostRouter);

@@ -4,7 +4,7 @@ import Footer from "../compo/Footer";
 import { LoginUserToServer } from "../../../services/Services";
 import { useNavigate } from "react-router-dom";
 import { userActions } from "../../../store";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 export default function LoginPage() {
     const navigate = useNavigate();

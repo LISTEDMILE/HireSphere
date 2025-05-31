@@ -85,7 +85,7 @@ exports.postSignUp = [
           userType: userType
         });
          
-          user.save().then(()=>{
+        user.save().then(() => {
             res.status(201).json({
               message: "User signed up successfully",
             });
@@ -166,15 +166,28 @@ exports.getLogin = [
                 },
               });
             }
+            req.session.isLoggedIn = true;
+            req.session.user = user;
+            req.session.save((err) => {
+              if (err) {
+                console.error("Session save error:", err);
+                return res.status(500).json({
+                  isLoggedIn: false,
+                  errors: ["An error occurred while saving the session."],
+                });
+              }
             
-            res.status(200).json({
-              isLoggedIn: true,
-              message: "Login successful",
-              userType: user.userType,
-              username: user.username,
-              firstname: user.firstname,
-              lastname: user.lastname
+              res.status(200).json({
+                isLoggedIn: true,
+                message: "Login successful",
+                userType: user.userType,
+                username: user.username,
+                firstname: user.firstname,
+                lastname: user.lastname
+              });
             });
+            
+            
           })
           .catch(err => {
             console.error("Error comparing passwords:", err);
@@ -201,3 +214,14 @@ exports.getLogin = [
       });
   }
 ]
+
+exports.postMe = (req, res, next) => {
+  console.log("postMe")
+  console.log(req.session);
+  if (req.session.isLoggedIn) {
+    res.json({first:"first"});
+  }
+  else{
+    res.json({first:"second"})
+  }
+}

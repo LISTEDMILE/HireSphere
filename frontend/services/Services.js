@@ -24,6 +24,5 @@ export const LoginUserToServer = async (user) => {
     });
     const data = await response.json();
     
-    console.log("Login response:", data);
     return data;
 }
