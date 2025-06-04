@@ -176,6 +176,7 @@ exports.getLogin = [
                   errors: ["An error occurred while saving the session."],
                 });
               }
+              
             
               res.status(200).json({
                 isLoggedIn: true,
@@ -216,12 +217,11 @@ exports.getLogin = [
 ]
 
 exports.postMe = (req, res, next) => {
-  console.log("postMe")
-  console.log(req.session);
+  console.log("backend",req.session);
   if (req.session.isLoggedIn) {
     res.json({first:"first"});
   }
   else{
-    res.json({first:"second"})
+    res.json(req.session)
   }
 }
