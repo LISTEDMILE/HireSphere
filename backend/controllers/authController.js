@@ -166,8 +166,8 @@ exports.getLogin = [
                 },
               });
             }
-            req.session.isLoggedIn = true;
-            req.session.user = user;
+            req.session.isLoggedIn = true;  
+           req.session.user = user;
             req.session.save((err) => {
               if (err) {
                 console.error("Session save error:", err);
@@ -216,12 +216,16 @@ exports.getLogin = [
   }
 ]
 
+
+
+
 exports.postMe = (req, res, next) => {
-  console.log("backend",req.session);
-  if (req.session.isLoggedIn) {
-    res.json({first:"first"});
-  }
-  else{
-    res.json(req.session)
-  }
+   if (req.session.isLoggedIn){
+    res.json({
+      isLoggedIn:true,
+      user:req.session.user
+    })
+   }
+  
+ 
 }

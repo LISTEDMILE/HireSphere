@@ -24,6 +24,12 @@ const userSchema = new mongoose.Schema({
       required: [true, "User type is required"],
     enum: ['employee', 'recruiter'],
   },
+  jobsPosted: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job",
+    },
+  ],
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

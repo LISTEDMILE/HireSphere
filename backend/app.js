@@ -46,6 +46,7 @@ app.use(express.json());
 
 app.use((req, res, next) => {
     req.isLoggedIn = req.session.isLoggedIn;
+    req.user = req.session.user;
     next();
 });
       

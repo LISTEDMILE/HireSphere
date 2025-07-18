@@ -9,7 +9,6 @@ export const AddUserToServer = async (user) => {
         body: JSON.stringify(user),
     });
     const data = await response.json();
-   
     return data;
 }
 
@@ -20,7 +19,21 @@ export const LoginUserToServer = async (user) => {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(user),
+    });
+    const data = await response.json();
+    return data;
+}
+
+export const AddJobToServer = async (job) => {
+    const response = await fetch("http://localhost:3000/host/addJob", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(job),
     });
     const data = await response.json();
     return data;
