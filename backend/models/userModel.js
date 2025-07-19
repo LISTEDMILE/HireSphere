@@ -29,8 +29,19 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job",
     },
+  ],profilesPosted: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job",
+    },
   ],
   favourites: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job",
+    },
+  ],
+  profileFavourites: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job",

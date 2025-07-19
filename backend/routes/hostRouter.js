@@ -19,11 +19,11 @@ hostRouter.post("/apply",hostController.postApply);
 //profile
 
 
-hostRouter.get("/profileList",hostController.profileList);
+hostRouter.get("/hostProfileList",hostController.profileList);
 hostRouter.get("/hostProfileDetails/:profileId",hostController.hostProfileDetails);
 hostRouter.get("/favouriteProfile",hostController.getProfileFavourites);
-
-hostRouter.post("/favouriteProfile",hostController.postAddProfileFavourites);
+hostRouter.get("/onlyFavourites",hostController.getOnlyProfileFavourites);
+hostRouter.post("/favouriteProfile/:profileId",hostController.postAddProfileFavourites);
 
 hostRouter.get("/chooseProfile",hostController.getChooseProfiles);
 

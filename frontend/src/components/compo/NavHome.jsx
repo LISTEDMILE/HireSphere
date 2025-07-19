@@ -60,7 +60,7 @@ const NavHome = ({ active }) => {
             Applications</a>
 
 
-            <a href="/host/profileList" class="<%= active === 'profileList' ? 'bg-red-600 shadow-black shadow-lg' : 'hover:shadow-black shadow-lg hover:bg-red-500' %> py-2 px-4 rounded transition duration-300 no-underline">
+            <a href="/host/hostProfileList" class="<%= active === 'profileList' ? 'bg-red-600 shadow-black shadow-lg' : 'hover:shadow-black shadow-lg hover:bg-red-500' %> py-2 px-4 rounded transition duration-300 no-underline">
                 Resumes</a>
 
 

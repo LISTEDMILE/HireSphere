@@ -1,50 +1,77 @@
 
-const {ObjectId} = require('mongodb');
+const User = require('./userModel');
+const mongoose = require('mongoose');
 
-module.exports = class Profile{
-    constructor(profileName,profileGender,profilePost,profileCourse,profileSkills,profileEmail,profileMobile,profileTenth,profileTwelth,profileGraduation,profileDescription,profilePostDescription,_id){
-        this.profileName = profileName;
-        this.profileGender = profileGender;
-        this.profilePost = profilePost;
-        this.profileCourse = profileCourse;
-        this.profileSkills = profileSkills;
-        this.profileEmail  = profileEmail;
-        this.profileMobile = profileMobile;
-        this.profileTenth = profileTenth;
-        this.profileTwelth = profileTwelth;
-        this.profileGraduation = profileGraduation;
-        this.profileDescription = profileDescription;
-        this.profilePostDescription = profilePostDescription;
-        
-        if(_id){
-            this._id = _id;
-        }
+const profileSchema = new mongoose.Schema({
+    profileName: {
+        type: String,
+        required: [true, "Profile Name is required"],
+    },
+    profileGender: {
+        type: String,
+        required: [true, "Mention Gender"],
+    },
+    profilePost: {
+        type: String,
+        required: [true, "Profile Post is required"],
+    },
+    profileCourse: {
+        type: String,
+        required: [true, "Profile Course is required"],
+    },
+    profileSkills: {
+        type: String,
+        required: [true, "Profile Skills are required"],
+    },
+    profileEmail: {
+        type: String,
+        required: [true, "Profile Email is required"],
+    },
+    profileMobile: {
+        type: String,
+        required: [true, "Profile Mobile is required"],
+    },
+    profileTenth: {
+        type: String,
+        required: [true, "Profile Tenth is required"],
+    },
+    profileTwelth: {
+        type: String,
+        required: [true, "Profile Twelth is required"],
+    },
+    profileGraduation: {
+        type: String,
+        required: [true, "Profile Graduation is required"],
+    },
+    profileDescription: {
+        type: String,
+        required: [true, "Profile Description is required"],
+    },
+    profilePostDescription: {
+        type: String,
+        required: [true, "Profile Post Description is required"],
     }
+});
 
-    save() {
-        const db = getDB();
-        if(this._id){// update
-            const updateFields = {profileName:this.profileName,profileGender:this.profileGender,profilePost:this.profilePost,profileCourse:this.profileCourse,profileSkills:this.profileSkills,profileEmail:this.profileEmail,profileMobile:this.profileMobile,profileTenth:this.profileTenth,profileTwelth:this.profileTwelth,profileGraduation:this.profileGraduation,profileDescription:this.profileDescription,profilePostDescription:this.profilePostDescription};
-            return db.collection('profiles').updateOne({_id:new ObjectId(String(this._id))},{$set:updateFields})
-        }
-        else{
-            // to insert 
-            return db.collection('profiles').insertOne(this);
-        }
-    };
+profileSchema.pre('findOneAndDelete', async function(next) {
+    const profileId = this.getQuery()['_id'];
+    await User.findOneAndUpdate(
+        { profilesPosted: profileId },
+        { $pull: { profilesPosted: profileId } }
+    );
+    await User.findOneAndUpdate(
+        { profileFavourites: profileId },
+        { $pull: { profileFavourites: profileId } }
+    );
+    await User.findOneAndUpdate(
+        { chosenProfiles: profileId },
+        { $pull: { chosenProfiles: profileId } }
+    );
+    next();
+});
 
-    static fetchAll(){
-        const db = getDB();
-        return db.collection('profiles').find().toArray();
-    }
+module.exports = mongoose.model('Profile', profileSchema);
 
-    static findById(profileId){
-        const db = getDB();
-        return db.collection('profiles').find({_id:new ObjectId(String(profileId))}).next();
-    }
 
-    static deleteById(profileId,callback){
-        const db = getDB();
-        return db.collection('profiles').deleteOne({_id:new ObjectId(String(profileId))});
-    }
-}
+   
+

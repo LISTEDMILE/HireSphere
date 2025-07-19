@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-// import { getJobs, applyToJob, toggleFavorite } from "../../../../services/JobService";
 
 export default function StoreJobList() {
   const [jobs, setJobs] = useState([]);
@@ -73,7 +72,7 @@ export default function StoreJobList() {
 //   };
 
   // Handle Favorite Toggle
-  const handleFavorite = async (jobId) => {
+  const handleFavourite = async (jobId) => {
     try {
       await fetch(`http://localhost:3000/store/favourite/${jobId}`, {
         method: "POST",
@@ -101,7 +100,7 @@ export default function StoreJobList() {
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{job.jobPost}</h2>
               <button
-                onClick={() => handleFavorite(job._id)}
+                onClick={() => handleFavourite(job._id)}
                 className={`${
                   job.fav ? "text-yellow-500" : "text-gray-500"
                 } hover:underline`}

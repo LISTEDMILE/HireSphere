@@ -8,13 +8,7 @@ const Profile = require("../models/firstProfilemodel");
 const favouriteProfileClass = require("../models/favouriteProfileModel");
 const chooseProfileClass = require("../models/chooseProfileModel");
 
-exports.addJobGet = (req, res, next) => {
-  res.render("host/addJob", {
-    active: "addJob",
-    title: "Add Job",
-    editing: false,
-  });
-};
+
 
 exports.addJobPost = [
     check("jobCompany").notEmpty().withMessage("Job Company is required").trim(),
@@ -114,7 +108,6 @@ exports.getEditJob = (req, res, next) => {
   else {
     Job.findById(jobId).then((job) => {
       if (!job) {
-        console.log("Job not found");
        return res.status(404).send("Job not found");
       }
       else {
@@ -161,8 +154,11 @@ exports.postEditJob = (req, res, next) => {
     req.body.description,
     req.body._id
   );
-  job.save();
-  res.redirect("/host/hostJobList");
+  job.save().then(() => {
+    res.redirect("/host/hostJobList");
+  }).catch((err) => {
+    console.error("Error saving job:", err);
+  });
 };
 
 exports.hostJobList = async (req, res, next) => {
@@ -232,34 +228,14 @@ exports.postApply = (req, res, next) => {
 /// profile
 
 exports.profileList = (req, res, next) => {
-  const details = Profile.fetchAll().then((details) => {
-    favouriteProfileClass.getFavourites().then((favourites) => {
-      chooseProfileClass.getChooseProfiles().then((profiles) => {
-        const detailsWithoutFavObj = favourites.map((fav) => fav.profileId);
-        const detailsWithFav = details.map((detail) => {
-          if (detailsWithoutFavObj.includes(detail._id.toString())) {
-            detail.fav = true;
-          } else {
-            detail.fav = false;
-          }
-          return detail;
-        });
-        const detailsWithoutChoosenObj = profiles.map((prof) => prof.profileId);
-        const detailsWithChoosenAndFav = detailsWithFav.map((detail) => {
-          if (detailsWithoutChoosenObj.includes(detail._id.toString())) {
-            detail.choosen = true;
-          } else {
-            detail.choosen = false;
-          }
-          return detail;
-        });
-        res.render("host/profileList", {
-          details: detailsWithChoosenAndFav,
-          title: "Profile List",
-          active: "profileList",
-        });
-      });
-    });
+  Profile.find().then((profiles) => {
+    res.status(200).json({
+      message: "Profiles fetched successfully",
+      profiles: profiles,
+    })
+  }).catch((err) => {
+    console.error("Error fetching profiles:", err);
+    res.status(500).json({ error: "Failed to fetch profiles" });
   });
 };
 
@@ -287,20 +263,38 @@ exports.hostProfileDetails = (req, res, next) => {
 };
 
 exports.getProfileFavourites = (req, res, next) => {
-  favouriteProfileClass.getFavourites().then((favourites) => {
-    favourites = favourites.map((fav) => fav.profileId);
-    const details = Profile.fetchAll().then((details) => {
-      const favouriteProfiles = details.filter((e) =>
-        favourites.includes(String(e._id))
-      );
-      res.render("host/favouriteProfiles", {
-        favouriteProfiles: favouriteProfiles,
-        title: "Favourites",
-        active: "favouriteProfiles",
-      });
+  const favs = User.findById(req.session.user._id).then(user => {
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.status(200).json({
+      message: "Favourites fetched successfully",
+      favIds: user.profileFavourites,
     });
-  });
+      
+  }).catch((err) => {
+    console.error("Error fetching favourites:", err);
+    return res.status(500).json({ error: "Failed to fetch favourites" });
+  }
+  );
 };
+
+
+exports.getOnlyProfileFavourites = async (req, res, next) => {
+  try{
+    if (!req.session || !req.session.user || !req.session.user._id) {
+      return res.status(401).json({ error: "Unauthorized: Please log in first" });
+    }
+    const favs = await User.findById(req.session.user._id, 'profileFavourites');
+    let favIds = favs.profileFavourites;
+    const profiles = await Profile.find({
+      _id: { $in: favIds }
+    });
+    return res.status(200).json(profiles);
+  } catch (error) {
+    console.error("Error fetching favourites:", error);
+  }
+}
 
 exports.getChooseProfiles = (req, res, next) => {
   chooseProfileClass.getChooseProfiles().then((profiles) => {
@@ -318,25 +312,34 @@ exports.getChooseProfiles = (req, res, next) => {
   });
 };
 
-exports.postAddProfileFavourites = (req, res, next) => {
-  const profileId = String(req.body._id);
-  favouriteProfileClass
-    .getFavourites()
-    .then((favourites) => {
-      favourites = favourites.map((fav) => fav.profileId);
-      if (favourites.includes(profileId)) {
-        favouriteProfileClass.deleteFavourite(profileId);
-      } else {
-        const fav = new favouriteProfileClass(profileId);
-        fav.save().catch((err) => {
-          console.log("Error adding profile fav", err);
-        });
-      }
-    })
-    .then(() => {
-      res.redirect("/host/favouriteProfile");
-    });
-};
+exports.postAddProfileFavourites = async (req, res, next) => {
+  const profileId = req.params.profileId;
+  try {
+    const user = await User.findById(req.session.user._id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    else if (user.userType !== "recruiter") {
+      return res.status(403).json({ error: "Access denied. Only recruiters can add favourites." });
+    }
+
+    if (user.profileFavourites.includes(profileId)) {
+      user.profileFavourites.pull(profileId);
+      await user.save();
+      return res.status(200).json({ message: "Profile removed from favourites" });
+    }
+    else {
+      user.profileFavourites.push(profileId);
+      await user.save();
+      return res.status(200).json({ message: "Profile added to favourites" });
+
+    }
+  }
+  catch (error) {
+    console.error("Error updating favourites:", error);
+    return res.status(500).json({ error: "Failed to update favourites" });
+  }
+}
 
 exports.postChooseProfile = (req, res, next) => {
   const profileId = String(req.body._id);

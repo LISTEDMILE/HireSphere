@@ -24,7 +24,7 @@ storeRouter.post("/deleteProfile/:profileId",storeController.postDeleteProfile);
 
 storeRouter.post("/chooseProfile",storeController.postChooseProfile);
 
-storeRouter.get("/addProfile",storeController.addProfileGet);
+
 storeRouter.post("/addProfile",storeController.addProfilePost);
 storeRouter.get("/storeProfileList",storeController.storeProfileList);
 storeRouter.get("/storeProfileDetails/:profileId",storeController.storeProfileDetails);

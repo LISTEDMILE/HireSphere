@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-// import { getFavouriteJobs, applyToJob, toggleFavorite } from "../../../../services/JobService";
 
 export default function StoreFavourites() {
   const [favouriteJobs, setFavouriteJobs] = useState([]);
@@ -17,7 +16,6 @@ export default function StoreFavourites() {
             },
         });
           const data = await response.json();
-          console.log(data);
           if (data.error || data.length === 0) {
             console.error("Error fetching favourites:", data.error);
             return;

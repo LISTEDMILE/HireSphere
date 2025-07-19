@@ -3,9 +3,10 @@ const Job = require('../models/firstmodel');
 const favouriteClass= require('../models/favouriteModel');
 const applyClass = require('../models/applyModel');
 const User = require('../models/userModel');
+const { check, validationResult } = require('express-validator');
 
 
-// const Profile = require('../models /firstProfilemodel');
+const Profile = require('../models/firstProfilemodel');
 const favouriteProfileClass= require('../models/favouriteProfileModel');
 const chooseProfileClass = require('../models/chooseProfileModel');
 
@@ -25,38 +26,6 @@ exports.jobList = (req, res, next) => {
             });
         }
     );
-    // const details = Job.fetchAll().then((details) => {
-    //     favouriteClass.getFavourites().then((favourites) => { 
-    //         applyClass.getApply().then((applies) =>{
-    //             const detailsWithoutFavObj = favourites.map(fav => fav.jobId);
-    //             const detailsWithFav = details.map(detail => {
-    //                 if(detailsWithoutFavObj.includes((detail._id).toString())){
-    //                     detail.fav=true;
-    //                 }
-    //                 else{
-    //                     detail.fav=false;
-    //                 }
-    //                 return detail;
-                  
-    //             })
-    //             const detailsWithoutApplyObj = applies.map(appl => appl.jobId);
-    //             const detailsWithApplyAndFav = detailsWithFav.map(detail => {
-    //                 if(detailsWithoutApplyObj.includes(detail._id.toString())){
-    //                     detail.apply=true;
-    //                 }
-    //                 else{
-    //                     detail.apply=false;
-    //                 }
-    //                 return detail;
-                  
-    //             })
-    //             res.render('store/jobList',{details:detailsWithApplyAndFav,title:"Job List",active:"jobList"});
-    //         })   
-            
-           
-    //     })
-        
-    // });
 };
 
 
@@ -83,7 +52,6 @@ exports.getFavourites = (req,res,next) => {
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
-        console.log("id",user.favourites)
         return res.status(200).json({
             message: "Favourites fetched successfully",
             favIds: user.favourites,
@@ -240,31 +208,142 @@ exports.getJobDetails = (req,res,next) => {
 
 
 
-exports.addProfileGet = (req,res,next) => {
-    res.render('store/addProfile',{active:"addProfile",title:"Add Profile",editing:false});
-};
 
 
 
-exports.addProfilePost = (req,res,next) => {
-    const profile = new Profile(req.body.profileName,req.body.profileGender,req.body.profilePost,req.body.profileCourse,req.body.profileSkills,req.body.profileEmail,req.body.profileMobile,req.body.profileTenth,req.body.profileTwelth,req.body.profileGraduation,req.body.profileDescription,req.body.profilePostDescription);
-    profile.save();
-    res.render('store/addedProfile',{active:"addProfilePost",title:"Profile Added"});
-};
 
-exports.getEditProfile = (req,res,next) => {
-    const profileId = req.params.profileId;
-    const editing = req.query.editing === 'true';
-    Profile.findById(profileId).then (profile => {
-        if(!profile){
-            console.log("Profile not found");
-            res.redirect("store/storeProfileList");
-        }
-        
-        res.render('store/addProfile',{detail:profile,active:"storeProfileList",title:"Edit Profile",editing:editing});
-    })
+exports.addProfilePost = [
     
+    check("profileName").notEmpty().withMessage("Profile Name is required").trim(),
+    check("profileGender").notEmpty().withMessage("Profile Gender is required").trim(),
+    check("profilePost").notEmpty().withMessage("Profile Post is required").trim(),
+    check("profileCourse").notEmpty().withMessage("Profile Course is required").trim(),
+    check("profileSkills").notEmpty().withMessage("Profile Skills is required").trim(),
+    check("profileEmail").isEmail().withMessage("Profile Email is required").normalizeEmail(),
+    check("profileMobile").notEmpty().withMessage("Profile Mobile is required").trim(), check("profileTenth").notEmpty().withMessage("Profile Tenth is required").trim(),
+    check("profileTwelth").notEmpty().withMessage("Profile Twelth is required").trim(),
+    check("profileGraduation").notEmpty().withMessage("Profile Graduation is required").trim(),
+    check("profileDescription").notEmpty().withMessage("Profile Description is required").trim(), check("profilePostDescription").notEmpty().withMessage("Profile Post Description is required").trim(),
+        
+   async (req, res, next) => {
+        const errors = validationResult(req);
+
+        const {_id, profileName, profileGender, profilePost, profileCourse, profileSkills, profileEmail, profileMobile, profileTenth, profileTwelth, profileGraduation, profileDescription, profilePostDescription } = req.body;
+
+        if (!errors.isEmpty()) {
+            console.log("Validation errors:", errors.array());
+            return res.status(400).json({
+                message: "Validation failed",
+                errors: errors.array().map(err => err.msg),
+                oldInput: {
+                    _id,
+                    profileName,
+                    profileGender,
+                    profilePost,
+                    profileCourse,
+                    profileSkills,
+                    profileEmail,
+                    profileMobile,
+                    profileTenth,
+                    profileTwelth,
+                    profileGraduation,
+                    profileDescription, profilePostDescription
+                }
+
+            })
+        }
+
+        try {
+            const user = await User.findById(req.session.user._id);
+            if (!user) {
+                return res.status(404).json({ errors: ["User not found"] });
+            }
+
+            if (user.userType !== 'employee') {
+                return res.status(403).json({ errors: ["Forbidden: Only employees can add profiles"] });
+            }
+
+            let savedProfile;
+
+            let existingProfile = await Profile.findById(_id);
+            if (existingProfile) {
+                existingProfile.profileName = profileName;
+                existingProfile.profileGender = profileGender;
+                existingProfile.profilePost = profilePost;
+                existingProfile.profileCourse = profileCourse;
+                existingProfile.profileSkills = profileSkills;
+                existingProfile.profileEmail = profileEmail;
+                existingProfile.profileMobile = profileMobile;
+                existingProfile.profileTenth = profileTenth;
+                existingProfile.profileTwelth = profileTwelth;
+                existingProfile.profileGraduation = profileGraduation;
+                existingProfile.profileDescription = profileDescription;
+                existingProfile.profilePostDescription = profilePostDescription;
+
+                savedProfile = await existingProfile.save();
+            }
+
+            else {
+                
+                const newProfile = new Profile({ profileName, profileGender, profilePost, profileCourse, profileSkills, profileEmail, profileMobile, profileTenth, profileTwelth, profileGraduation, profileDescription, profilePostDescription });
+                savedProfile = await newProfile.save();
+            }
+
+
+            user.profilesPosted.push(savedProfile._id);
+            await user.save();
+
+            return res.status(201).json({
+                message: "Profile added successfully",
+            });
+
+        }
+        catch (error) {
+            console.error("Error adding profile:", error);
+            return res.status(500).json({ errors: ["Internal server error"] });
+        }
+
+    }
+        
+];
+        
+exports.getEditProfile = (req, res, next) => {
+    const profileId = req.params.profileId;
+    if (!profileId) {
+        return res.status(400).json({ error: "Profile ID is required" });
+    }
+    else {
+        Profile.findById(profileId).then((profile) => {
+            if (!profile) {
+                return res.status(404).json({ error: "Profile not found" });
+            }
+            else {
+                res.status(200).json({
+                    _id: profile._id,
+                    profileName: profile.profileName,
+                    profileGender: profile.profileGender,
+                    profilePost: profile.profilePost,
+                    profileCourse: profile.profileCourse,
+                    profileSkills: profile.profileSkills,
+                    profileEmail: profile.profileEmail,
+                    profileMobile: profile.profileMobile,
+                    profileTenth: profile.profileTenth,
+                    profileTwelth: profile.profileTwelth,
+                    profileGraduation: profile.profileGraduation,
+                    profileDescription: profile.profileDescription,
+                    profilePostDescription: profile.profilePostDescription
+
+                });
+            }
+        }).catch((error) => {
+            console.error("Error fetching profile:", error);
+            return res.status(500).json({ error: "Internal server error" });
+        });
+    }
 };
+   
+
+
 
 exports.getChooseProfiles = (req,res,next) => {
     chooseProfileClass.getChooseProfiles().then(profiles => {
@@ -279,17 +358,50 @@ exports.getChooseProfiles = (req,res,next) => {
 };
 
 
-exports.postEditProfile = (req,res,next) => {
-    const profile = new Profile(req.body.jobCompany,req.body.jobPost,req.body.jobLocation,req.body.jobOwnerEmail,req.body.jobOwnerMobile,req.body.description,req.body._id);
-    job.save();
-    res.redirect('/store/storeProfileList');
+exports.postEditProfile = (req, res, next) => {
+    const profile = new Profile(
+        req.body._id,
+        req.body.profileName,
+        req.body.profileGender,
+        req.body.profilePost,
+        req.body.profileCourse,
+        req.body.profileSkills,
+        req.body.profileEmail,
+        req.body.profileMobile,
+        req.body.profileTenth,
+        req.body.profileTwelth,
+        req.body.profileGraduation,
+        req.body.profileDescription,
+        req.body.profilePostDescription
+    );
+    profile.save()
+    .then(() => {
+        res.redirect('/store/storeProfileList');
+    })
+        .catch(error => {
+            console.log('Error updating Profile', error);
+        })
 };
 
-exports.storeProfileList = (req,res,next) => {
-    const details = Profile.fetchAll().then((details) => {
-        res.render('store/storeProfileList',{active:"storeProfileList",title:"Profiles added by you",details:details});
-    });
-};
+
+exports.storeProfileList = async (req, res, next) => {
+    try {
+        if (!req.session || !req.session.user || !req.session.user._id) {
+            return res.status(401).json({ error: "Unauthorized: Please log in first" });
+        }
+        const profilesAdder = await User.findById(req.session.user._id, 'profilesPosted');
+        let profileIds = profilesAdder.profilesPosted;
+
+        const profiles = await Profile.find({
+            _id: { $in: profileIds }
+        });
+        return res.status(200).json(profiles);
+
+    }
+    catch (error) {
+        console.error("Error fetching profiles:", error);
+    }
+}
 
 exports.storeProfileDetails = (req,res,next) => {
     const profileId = req.params.profileId;
@@ -298,23 +410,23 @@ exports.storeProfileDetails = (req,res,next) => {
     })
 };
 
-
-exports.postDeleteProfile = (req,res,next) => {
-    const profileId = req.params.profileId;
-    Profile.deleteById(profileId)
-    .then((profileId) => {
-        favouriteProfileClass.getFavourites().then(favourites => {
-            favourites = favourites.map(fav => fav.profileId);
-            if(favourites.includes(profileId)){
-                favouriteProfileClass.deleteFavourite(profileId);
+    exports.postDeleteProfile = async (req, res, next) => {
+        const profileId = req.params.profileId;
+        try {
+            const result = await Profile.findByIdAndDelete(profileId);
+            if (!result) {
+                return res.status(404).json({ error: "Profile not found" });
             }
-        })
-    })
-    .then(() => {res.redirect('/store/storeProfileList');})
-    .catch(error=>{
-        console.log('Error deleting Profile',error);
-    })
-}
+            res.status(200).json({
+                message: "Profile deleted successfully",
+                profileId: result._id
+            });
+        } catch (error) {
+            console.error("Error deleting profile:", error);
+            res.status(500).json({ error: "Internal server error" });
+        }
+    };
+
 
 
 

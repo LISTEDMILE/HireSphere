@@ -5,8 +5,8 @@ import { AddJobToServer } from "../../../../services/Services";
 export default function AddJob() {
 
   const [errors, setErrors] = useState(null);
-  const { jobId } = useParams(); // Extract the job ID from the URL
-  const location = useLocation(); // Access the current location
+  const { jobId } = useParams(); 
+  const location = useLocation(); 
   const editing = new URLSearchParams(location.search).get("editing") === "true"; // Check if editing is true
 
   const [formData, setFormData] = useState({

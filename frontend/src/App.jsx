@@ -12,9 +12,15 @@ import { useDispatch } from "react-redux";
 import { userActions } from "../store";
 import StoreJobList from "./components/pages/store/storeJobList";
 import StoreFavourites from "./components/pages/store/storeFavourites";
+import StoreAddProfile from "./components/pages/store/storeAddProfile";
+import StoreProfilesList from "./components/pages/store/storeProfileList";
+import HostProfileList from "./components/pages/host/hostProfileList";
+import FavouriteProfileList from "./components/pages/host/hostFavouriteProfiles";
 
 
 function App() {
+
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -57,7 +63,13 @@ function App() {
     { path: "/host/addJob", element: <AddJob /> },
     { path: "/host/hostJobList", element: <HostJobList /> },
     { path: "/store/storeJobList", element: <StoreJobList /> },
-    {path:"/store/favourite", element: <StoreFavourites />},
+    { path: "/store/favourite", element: <StoreFavourites /> },
+    { path: "/store/addProfile", element: <StoreAddProfile /> },
+    { path: "/store/addProfile/:profileId", element: <StoreAddProfile /> },
+    { path: "/store/storeProfileList", element: <StoreProfilesList /> },
+    {path:"/host/hostProfileList", element:<HostProfileList/>},
+    {path:"/host/favouriteProfile",element:<FavouriteProfileList/>}
+    
   ]);
   return <RouterProvider router={route}></RouterProvider>;
 }

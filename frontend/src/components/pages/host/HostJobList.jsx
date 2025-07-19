@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-// import { getJobs, deleteJob } from "../../../../services/JobService";
+
 
 export default function HostJobList() {
   const [jobs, setJobs] = useState([]);
