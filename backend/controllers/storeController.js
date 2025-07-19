@@ -2,45 +2,61 @@
 const Job = require('../models/firstmodel');
 const favouriteClass= require('../models/favouriteModel');
 const applyClass = require('../models/applyModel');
+const User = require('../models/userModel');
 
 
-const Profile = require('../models/firstProfilemodel');
+// const Profile = require('../models /firstProfilemodel');
 const favouriteProfileClass= require('../models/favouriteProfileModel');
 const chooseProfileClass = require('../models/chooseProfileModel');
 
-exports.jobList = (req,res,next) => {
-    const details = Job.fetchAll().then((details) => {
-        favouriteClass.getFavourites().then((favourites) => { 
-            applyClass.getApply().then((applies) =>{
-                const detailsWithoutFavObj = favourites.map(fav => fav.jobId);
-                const detailsWithFav = details.map(detail => {
-                    if(detailsWithoutFavObj.includes((detail._id).toString())){
-                        detail.fav=true;
-                    }
-                    else{
-                        detail.fav=false;
-                    }
-                    return detail;
+exports.jobList = (req, res, next) => {
+    
+    const details = Job.find().then((details) => {
+        res.status(200).json({
+            message: "Job List fetched successfully",
+            details: details
+        })
+    })
+        .catch(err => {
+            console.log("Error fetching job list", err);
+            res.status(500).json({
+                message: "Error fetching job list",
+                error: err
+            });
+        }
+    );
+    // const details = Job.fetchAll().then((details) => {
+    //     favouriteClass.getFavourites().then((favourites) => { 
+    //         applyClass.getApply().then((applies) =>{
+    //             const detailsWithoutFavObj = favourites.map(fav => fav.jobId);
+    //             const detailsWithFav = details.map(detail => {
+    //                 if(detailsWithoutFavObj.includes((detail._id).toString())){
+    //                     detail.fav=true;
+    //                 }
+    //                 else{
+    //                     detail.fav=false;
+    //                 }
+    //                 return detail;
                   
-                })
-                const detailsWithoutApplyObj = applies.map(appl => appl.jobId);
-                const detailsWithApplyAndFav = detailsWithFav.map(detail => {
-                    if(detailsWithoutApplyObj.includes(detail._id.toString())){
-                        detail.apply=true;
-                    }
-                    else{
-                        detail.apply=false;
-                    }
-                    return detail;
+    //             })
+    //             const detailsWithoutApplyObj = applies.map(appl => appl.jobId);
+    //             const detailsWithApplyAndFav = detailsWithFav.map(detail => {
+    //                 if(detailsWithoutApplyObj.includes(detail._id.toString())){
+    //                     detail.apply=true;
+    //                 }
+    //                 else{
+    //                     detail.apply=false;
+    //                 }
+    //                 return detail;
                   
-                })
-                res.render('store/jobList',{details:detailsWithApplyAndFav,title:"Job List",active:"jobList"});
-            })   
+    //             })
+    //             res.render('store/jobList',{details:detailsWithApplyAndFav,title:"Job List",active:"jobList"});
+    //         })   
             
            
-        })
+    //     })
         
-    });
+    // });
 };
 
 
@@ -63,28 +79,39 @@ exports.storeJobDetails = (req,res,next) => {
 
 
 exports.getFavourites = (req,res,next) => {
-    favouriteClass.getFavourites().then(favourites => {
-        favourites = favourites.map(fav => fav.jobId);
-        const details = Job.fetchAll().then(details => {
-            applyClass.getApply().then((applies) =>{
-                const favouriteJobs = details.filter((e) => favourites.includes(String(e._id)));
-                const detailsWithoutApplyObj = applies.map(appl => appl.jobId);
-                const detailsWithApplyAndFav = favouriteJobs.map(detail => {
-                    if(detailsWithoutApplyObj.includes(detail._id.toString())){
-                        detail.apply=true;
-                    }
-                    else{
-                        detail.apply=false;
-                    }
-                    return detail;
-                })
-                res.render('store/favourite',{favouriteJobs:detailsWithApplyAndFav,title:"Favourites",active:"favourite"});
-            })
-         })
-    })
-     
-
+    const favs = User.findById(req.session.user._id).then(user => {
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        console.log("id",user.favourites)
+        return res.status(200).json({
+            message: "Favourites fetched successfully",
+            favIds: user.favourites,
+        }); 
+    }).catch(err => {
+        console.error("Error fetching favourites:", err);
+        return res.status(500).json({ error: "Internal server error" });
+    });
 };
+
+exports.getOnlyFavourites = async (req,res,next) => {
+    try{
+        if(!req.session || !req.session.user || !req.session.user._id){
+            return res.status(401).json({ error: "Unauthorized: Please log in first" });  
+        }
+        const favs = await User.findById(req.session.user._id, 'favourites');
+        let favIds = favs.favourites;
+
+        const jobs = await Job.find({
+            _id:{$in:favIds}
+        })
+        return res.status(200).json(jobs);
+    }
+    catch(error){
+        console.error("Error fetching favourites:", error);
+    }
+
+}
 
 exports.getApply = (req,res,next) => {
     applyClass.getApply().then(applies => {
@@ -110,27 +137,33 @@ exports.getApply = (req,res,next) => {
 
 };
 
-exports.postAddFavourites = (req,res,next) => {
-    const jobId = String(req.body._id);
-    favouriteClass.getFavourites().then(favourites => {
-        favourites = favourites.map(fav => fav.jobId);
-        if(favourites.includes(jobId)){
-            favouriteClass.deleteFavourite(jobId);
+exports.postAddFavourites = async (req,res,next)  => {
+    const jobId = req.params.jobId;
+    try{
+        const user = await User.findById(req.session.user._id);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        else if (user.userType !== 'employee') { 
+            return res.status(403).json({ error: "Forbidden: Only employees can add favourites" });
+        }
+
+        if(user.favourites.includes(jobId)){
+            user.favourites.pull(jobId);
+            await user.save();
+            return res.status(200).json({message: "Job removed from favourites"});
         }
         else{
-            const fav = new favouriteClass(jobId);
-            fav.save()
-            .catch(err => {
-                console.log("Error adding fav",err);
-            })
+            user.favourites.push(jobId);
+            await user.save();
+            return res.status(200).json({message: "Job added to favourites"});
         }
-    })
-    .then(() => {
-        res.redirect('/store/favourite');
-    })
-   
-    
-};
+    }
+    catch(err){
+        console.error("Error updating favourites:", err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
 
 
 exports.postApply = (req,res,next) => {

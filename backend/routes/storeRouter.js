@@ -2,11 +2,11 @@ const express = require('express');
 const storeController = require('../controllers/storeController');
 const storeRouter = express.Router();
 
-storeRouter.get("/jobList",storeController.jobList);
+storeRouter.get("/storeJobList",storeController.jobList);
 storeRouter.get("/storeJobDetails/:jobId",storeController.storeJobDetails);
 storeRouter.get("/favourite",storeController.getFavourites);
-
-storeRouter.post("/favourite",storeController.postAddFavourites);
+storeRouter.get("/onlyFavourites",storeController.getOnlyFavourites);
+storeRouter.post("/favourite/:jobId",storeController.postAddFavourites);
 
 storeRouter.get("/apply",storeController.getApply);
 

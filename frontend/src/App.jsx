@@ -10,6 +10,8 @@ import AddJob from "./components/pages/host/AddJob";
 import HostJobList from "./components/pages/host/HostJobList";
 import { useDispatch } from "react-redux";
 import { userActions } from "../store";
+import StoreJobList from "./components/pages/store/storeJobList";
+import StoreFavourites from "./components/pages/store/storeFavourites";
 
 
 function App() {
@@ -53,7 +55,9 @@ function App() {
     { path: "/login", element: <LoginPage /> },
     { path: "/host/addJob/:jobId", element: <AddJob /> },
     { path: "/host/addJob", element: <AddJob /> },
-    {path: "/host/hostJobList", element: <HostJobList />}
+    { path: "/host/hostJobList", element: <HostJobList /> },
+    { path: "/store/storeJobList", element: <StoreJobList /> },
+    {path:"/store/favourite", element: <StoreFavourites />},
   ]);
   return <RouterProvider router={route}></RouterProvider>;
 }

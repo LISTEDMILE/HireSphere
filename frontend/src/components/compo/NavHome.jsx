@@ -31,7 +31,7 @@ const NavHome = ({ active }) => {
         <a href="/store/favourite" class="<%= active === 'favourite' ? 'bg-red-600 shadow-black shadow-lg' : 'hover:shadow-black shadow-lg hover:bg-red-500' %> py-2 px-4 rounded transition duration-300 no-underline">
         Favourites</a>
 
-    <a href="/store/jobList" class="<%= active === 'jobList' ? 'bg-red-600 shadow-black shadow-lg' : 'hover:shadow-black shadow-lg hover:bg-red-500' %> py-2 px-4 rounded transition duration-300 no-underline">
+    <a href="/store/storeJobList" class="<%= active === 'jobList' ? 'bg-red-600 shadow-black shadow-lg' : 'hover:shadow-black shadow-lg hover:bg-red-500' %> py-2 px-4 rounded transition duration-300 no-underline">
         Vacancies</a>
 
         <a href="/store/apply" class="<%= active === 'applied' ? 'bg-red-600 shadow-black shadow-lg' : 'hover:shadow-black shadow-lg hover:bg-red-500' %> py-2 px-4 rounded transition duration-300 no-underline">

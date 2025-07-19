@@ -166,9 +166,13 @@ exports.postEditJob = (req, res, next) => {
 };
 
 exports.hostJobList = async (req, res, next) => {
+  try {
+    if (!req.session || !req.session.user || !req.session.user._id) {
+      return res.status(401).json({ error: "Unauthorized: Please log in first" });
+    }
   const jobProvider = await User.findById(req.session.user._id, 'jobsPosted');
   jobList = jobProvider.jobsPosted;
-    try {
+   
       const jobs = await Job.find({
         _id : { $in: jobList }
       });

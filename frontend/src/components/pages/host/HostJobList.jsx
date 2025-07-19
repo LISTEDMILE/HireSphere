@@ -23,7 +23,6 @@ export default function HostJobList() {
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
-      console.log(jobs);
     };
 
     fetchJobs();
