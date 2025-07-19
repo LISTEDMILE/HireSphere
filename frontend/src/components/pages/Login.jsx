@@ -26,17 +26,19 @@ export default function LoginPage() {
   const handleSubmit =async (e) => {
       e.preventDefault();
       let user =await LoginUserToServer(formData);
-      setErrors(user.errors ? user.errors : null);
-      if (errors === null) {
+      if (!user.errors) {
           dispatch(userActions.Login({
               username: user.username,
               firstname: user.firstname,
               userType: user.userType,
               lastname: user.lastname,
           }))
-          
         navigate("/");
-      }
+          
+    }
+      else {
+        setErrors(user.errors);
+    }
   };
 
   return (

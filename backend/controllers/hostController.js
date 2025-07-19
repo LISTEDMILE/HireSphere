@@ -17,7 +17,6 @@ exports.addJobGet = (req, res, next) => {
 };
 
 exports.addJobPost = [
-    // ✅ Validations
     check("jobCompany").notEmpty().withMessage("Job Company is required").trim(),
     check("jobPost").notEmpty().withMessage("Job Post is required").trim(),
     check("jobLocation").notEmpty().withMessage("Job Location is required").trim(),
@@ -29,6 +28,7 @@ exports.addJobPost = [
     async (req, res) => {
       const errors = validationResult(req);
       const {
+        _id,
         jobCompany,
         jobPost,
         jobLocation,
@@ -41,6 +41,7 @@ exports.addJobPost = [
         return res.status(400).json({
           errors: errors.array().map((err) => err.msg),
           oldInput: {
+            _id,
             jobCompany,
             jobPost,
             jobLocation,
@@ -58,28 +59,45 @@ exports.addJobPost = [
           return res.status(404).json({ errors: ["User not found"] });
         }
        
-  
-       
         if (user.userType !== "recruiter") {
           return res.status(403).json({ errors: ["Access denied. Only recruiters can post jobs."] });
         }
   
-        const job = new Job({
-          jobCompany,
-          jobPost,
-          jobLocation,
-          jobOwnerMobile,
-          jobOwnerEmail,
-          description,
-        });
+        
+
+      let savedJob;
+        
+
+        let existingJob = await Job.findById(_id);
+        if (existingJob) {
+          existingJob.jobCompany = jobCompany;
+          existingJob.jobPost = jobPost;
+          existingJob.jobLocation = jobLocation;
+          existingJob.jobOwnerMobile = jobOwnerMobile;
+          existingJob.jobOwnerEmail = jobOwnerEmail;
+          existingJob.description = description;
+         savedJob=  await existingJob.save();
+        }
+        else{
+
+          const job = new Job({
+            jobCompany,
+            jobPost,
+            jobLocation,
+            jobOwnerMobile,
+            jobOwnerEmail,
+            description,
+          });
+
+          savedJob = await job.save();
+        }
   
-        const savedJob = await job.save();
+         
   
         user.jobsPosted.push(savedJob._id);
         await user.save();
-  
+
         return res.status(201).json({ message: "Post Added Successfully" });
-  
       } catch (err) {
         console.error(err);
         return res.status(500).json({ errors: ["Something went wrong"] });
@@ -89,21 +107,32 @@ exports.addJobPost = [
 
 
 exports.getEditJob = (req, res, next) => {
-  const jobId = req.params.jobId;
-  const editing = req.query.editing === "true";
-  Job.findById(jobId).then((job) => {
-    if (!job) {
-      console.log("Job not found");
-      res.redirect("host/hostJobList");
-    }
-
-    res.render("host/addJob", {
-      detail: job,
-      active: "hostJobList",
-      title: "Edit Job",
-      editing: editing,
+ const jobId = req.params.jobId;
+  if (!jobId) {
+    return res.status(400).send({ error: "Job ID is required" });
+  }
+  else {
+    Job.findById(jobId).then((job) => {
+      if (!job) {
+        console.log("Job not found");
+       return res.status(404).send("Job not found");
+      }
+      else {
+        res.status(200).json({
+          _id: job._id,
+          jobCompany: job.jobCompany,
+          jobPost: job.jobPost,
+          jobLocation: job.jobLocation,
+          jobOwnerMobile: job.jobOwnerMobile,
+          jobOwnerEmail: job.jobOwnerEmail,
+          description: job.description,
+        });
+      }
+    }).catch((err) => {
+      console.error("Error fetching job details:", err);
+      res.status(500).json({ error: "Failed to fetch job details" });
     });
-  });
+  }
 };
 
 exports.getApply = (req, res, next) => {
@@ -136,14 +165,17 @@ exports.postEditJob = (req, res, next) => {
   res.redirect("/host/hostJobList");
 };
 
-exports.hostJobList = (req, res, next) => {
-  const details = Job.fetchAll().then((details) => {
-    res.render("host/hostJobList", {
-      active: "hostJobList",
-      title: "Post added by you",
-      details: details,
-    });
-  });
+exports.hostJobList = async (req, res, next) => {
+  const jobProvider = await User.findById(req.session.user._id, 'jobsPosted');
+  jobList = jobProvider.jobsPosted;
+    try {
+      const jobs = await Job.find({
+        _id : { $in: jobList }
+      });
+      return res.status(200).json(jobs);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
 };
 
 exports.hostJobDetails = (req, res, next) => {
@@ -157,29 +189,20 @@ exports.hostJobDetails = (req, res, next) => {
   });
 };
 
-exports.postDeleteJob = (req, res, next) => {
+exports.postDeleteJob = async (req, res, next) => {
   const jobId = req.params.jobId;
-  Job.deleteById(jobId)
-    .then((jobId) => {
-      favouriteClass.getFavourites().then((favourites) => {
-        applyClass.getApply().then((applies) => {
-          favourites = favourites.map((fav) => fav.jobId);
-          applies = applies.map((appl) => appl.jobId);
-          if (favourites.includes(jobId)) {
-            favouriteClass.deleteFavourite(jobId);
-          }
-          if (applies.includes(jobId)) {
-            applyClass.deleteApply(jobId);
-          }
-        });
-      });
-    })
-    .then(() => {
-      res.redirect("/host/hostJobList");
-    })
-    .catch((error) => {
-      console.log("Error deleting Job", error);
-    });
+
+  try {
+    const result = await Job.findByIdAndDelete(jobId);
+
+    if (!result) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+    res.status(200).json({ message: "Job deleted successfully", jobId: result._id });
+  } catch (error) {
+    console.error("Error deleting job:", error);
+    res.status(500).json({ error: "Failed to delete job" });
+  }
 };
 
 exports.postApply = (req, res, next) => {

@@ -7,6 +7,7 @@ import AboutPage from "./components/pages/AboutPage";
 import SignUpPage from "./components/pages/SignUp";
 import LoginPage from "./components/pages/Login";
 import AddJob from "./components/pages/host/AddJob";
+import HostJobList from "./components/pages/host/HostJobList";
 import { useDispatch } from "react-redux";
 import { userActions } from "../store";
 
@@ -50,7 +51,9 @@ function App() {
     { path: "/about", element: <AboutPage /> },
     { path: "/signUp", element: <SignUpPage /> },
     { path: "/login", element: <LoginPage /> },
-    {path: "/host/addJob", element: <AddJob />}
+    { path: "/host/addJob/:jobId", element: <AddJob /> },
+    { path: "/host/addJob", element: <AddJob /> },
+    {path: "/host/hostJobList", element: <HostJobList />}
   ]);
   return <RouterProvider router={route}></RouterProvider>;
 }

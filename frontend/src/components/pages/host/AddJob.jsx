@@ -1,19 +1,54 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { AddJobToServer } from "../../../../services/Services";
 
-export default function AddJob({ editing, detail = {}, onSubmit }) {
-    const [errors, setErrors] = useState(null);
-    const [formData, setFormData] = useState({
-        _id: detail._id || "",
-        jobCompany: detail.jobCompany || "",
-        jobPost: detail.jobPost || "",
-        jobLocation: detail.jobLocation || "",
-        jobOwnerEmail: detail.jobOwnerEmail || "",
-        jobOwnerMobile: detail.jobOwnerMobile || "",
-        description: detail.description || "",
-      });
+export default function AddJob() {
 
+  const [errors, setErrors] = useState(null);
+  const { jobId } = useParams(); // Extract the job ID from the URL
+  const location = useLocation(); // Access the current location
+  const editing = new URLSearchParams(location.search).get("editing") === "true"; // Check if editing is true
+
+  const [formData, setFormData] = useState({
+    jobCompany: "",
+    jobPost: "",
+    jobLocation: "",
+    jobOwnerEmail: "",
+    jobOwnerMobile: "",
+    description: "",
+  });
+
+
+  useEffect(() => {
+    if (editing) {
+      fetchJobDetails();
+    }
+  }, [editing]);
+
+  const fetchJobDetails = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/host/editJob/${jobId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      const data = await response.json();
+      setFormData({
+        _id: data._id,
+        jobCompany: data.jobCompany,
+        jobPost: data.jobPost,
+        jobLocation: data.jobLocation,
+        jobOwnerEmail: data.jobOwnerEmail,
+        jobOwnerMobile: data.jobOwnerMobile,
+        description: data.description,
+      });
+    } catch (error) {
+      console.error("Error fetching job details:", error);
+    }
+  };
+    
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
