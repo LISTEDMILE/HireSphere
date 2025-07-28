@@ -62,6 +62,22 @@ exports.getFavourites = (req,res,next) => {
     });
 };
 
+
+exports.getAppliedJobs = (req, res, next) => {
+    const user = User.findById(req.session.user._id).then(user => {
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        return res.status(200).json({
+            message: "Applied jobs fetched successfully",
+            appliedIds: user.appliedJobs,
+        });
+    }).catch(err => {   
+        console.error("Error fetching applied jobs:", err);
+        return res.status(500).json({ error: "Internal server error" });
+    });
+};
+        
 exports.getOnlyFavourites = async (req,res,next) => {
     try{
         if(!req.session || !req.session.user || !req.session.user._id){
@@ -81,29 +97,23 @@ exports.getOnlyFavourites = async (req,res,next) => {
 
 }
 
-exports.getApply = (req,res,next) => {
-    applyClass.getApply().then(applies => {
-        favouriteClass.getFavourites().then(favourites => {
-        applies = applies.map(appl => appl.jobId)
-            favourites = favourites.map(fav => fav.jobId);
-        const details = Job.fetchAll().then(details => {
-            const appliedJobs = details.filter((e) => applies.includes(String(e._id)));
-            const detailsWithFavAndApply = appliedJobs.map(detail => {
-                if(favourites.includes(detail._id.toString())){
-                    detail.fav=true;
-                }
-                else{
-                    detail.fav=false;
-                }
-                return detail;
-            })
-            res.render('store/applied',{appliedJobs:detailsWithFavAndApply,title:"Applied",active:"applied"});
-        })
-        })
-    })
-        
-
-};
+exports.getOnlyAppliedJobs = async (req, res, next) => {
+    try {
+        if (!req.session || !req.session.user || !req.session.user._id) {
+            return res.status(401).json({ error: "Unauthorized: Please log in first" });
+        }
+        const user = await User.findById(req.session.user._id, 'appliedJobs');
+        let appliedIds = user.appliedJobs;
+        const jobs = await Job.find({
+            _id: { $in: appliedIds }
+        });
+        return res.status(200).json(jobs);
+    }
+    catch (error) {
+        console.error("Error fetching applied jobs:", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
 
 exports.postAddFavourites = async (req,res,next)  => {
     const jobId = req.params.jobId;
@@ -134,27 +144,47 @@ exports.postAddFavourites = async (req,res,next)  => {
 }
 
 
-exports.postApply = (req,res,next) => {
-    const jobId = String(req.body._id);
-    applyClass.getApply().then(applies => {
-        applies = applies.map(appl => appl.jobId);
-        if(applies.includes(jobId)){
-            applyClass.deleteApply(jobId);
+exports.postApply = async (req, res, next) => {
+    const jobId = req.params.jobId;
+    try {
+        const user = await User.findById(req.session.user._id);
+        const userhost = await User.findOne({ jobsPosted: jobId });
+        
+       
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
         }
-        else{
-            const appl = new applyClass(jobId);
-            appl.save()
-            .catch(err => {
-                console.log("Error adding fav",err);
-            })
+        else if (user.userType !== 'employee') {
+            return res.status(403).json({ error: "Forbidden: Only employees can apply for jobs" });
         }
-    })
-    .then(() => {
-        res.redirect('/store/apply');
-    })
-   
-    
-};
+        if (!userhost) {
+            return res.status(404).json({ error: "Job not found" });
+        }
+        else if (userhost.userType !== 'recruiter') {
+            return res.status(403).json({ error: "Forbidden: Only recruiters can post jobs" });
+        }
+
+        if (user.appliedJobs.includes(jobId)) {
+            user.appliedJobs.pull(jobId);
+            userhost.applications.pull({ job: jobId, applierProfile: user._id });
+            await user.save();
+            return res.status(200).json({ message: "Job application cancelled" });
+        }
+        else {
+            user.appliedJobs.push(jobId);
+            userhost.applications.push({
+                job: jobId,
+                applierProfile: user._id
+            });
+            await userhost.save();
+            await user.save();
+            return res.status(200).json({ message: "Job applied successfully" });
+        }
+    } catch (err) {
+        console.error("Error applying for job:", err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
 
 
 

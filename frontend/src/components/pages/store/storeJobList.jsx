@@ -41,10 +41,26 @@ export default function StoreJobList() {
         }
   
         const favIds = favs.favIds;
+
+        const applyResponse = await fetch("http://localhost:3000/store/appliedJobs", {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const appliedData = await applyResponse.json();
+        if (appliedData.error) {
+          console.error("Error fetching applied jobs:", appliedData.error);
+          return;
+        }
+        const appliedIds = appliedData.appliedIds;
   
-        // Merge fav info into job list
+        // Merge fav info into job list and applied list
         const updatedJobs = jobList.map(job =>
           favIds.includes(job._id) ? { ...job, fav: true } : job
+        ).map(job =>
+          appliedIds.includes(job._id) ? { ...job, applied: true } : { ...job, applied: false }
         );
   
         setJobs(updatedJobs); // ✅ update once with combined data
@@ -58,18 +74,27 @@ export default function StoreJobList() {
   
 
 //   // Handle Apply/Cancel Apply
-//   const handleApply = async (jobId, isApplied) => {
-//     try {
-//       await applyToJob(jobId, isApplied); // Replace with your API call
-//       setJobs((prevJobs) =>
-//         prevJobs.map((job) =>
-//           job._id === jobId ? { ...job, apply: !isApplied } : job
-//         )
-//       );
-//     } catch (error) {
-//       console.error("Error applying to job:", error);
-//     }
-//   };
+  const handleApply = async (jobId) => {
+    try {
+      await fetch(`http://localhost:3000/store/apply/${jobId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job._id === jobId ? { ...job, applied: !job.applied } : job
+        )
+      );
+    }
+  
+  catch (error) {
+      console.error("Error applying to job:", error);
+    }
+  };
+  
 
   // Handle Favorite Toggle
   const handleFavourite = async (jobId) => {
@@ -114,12 +139,12 @@ export default function StoreJobList() {
               <p className="text-gray-800">{job.jobLocation}</p>
             </div>
 
-            {/* <button
-              onClick={() => handleApply(job._id, job.apply)}
+             <button
+              onClick={() => handleApply(job._id)}
               className="mt-4 bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 transition"
             >
-              {job.apply ? "Cancel Apply" : "Apply"}
-            </button> */}
+              {job.applied ? "Cancel Apply" : "Apply"}
+            </button> 
             <Link
               to={`/store/storeJobDetails/${job._id}`}
               className="text-teal-600 hover:underline mt-4 block"

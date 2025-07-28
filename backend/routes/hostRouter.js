@@ -8,7 +8,7 @@ hostRouter.get("/hostJobDetails/:jobId",hostController.hostJobDetails);
 
 hostRouter.get("/editJob/:jobId",hostController.getEditJob);
 
-hostRouter.get("/hostApplications",hostController.getApply);
+hostRouter.get("/hostApplications",hostController.getApplications);
 
 hostRouter.post("/deleteJob/:jobId",hostController.postDeleteJob);
 

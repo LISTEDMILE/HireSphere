@@ -16,11 +16,10 @@ import StoreAddProfile from "./components/pages/store/storeAddProfile";
 import StoreProfilesList from "./components/pages/store/storeProfileList";
 import HostProfileList from "./components/pages/host/hostProfileList";
 import FavouriteProfileList from "./components/pages/host/hostFavouriteProfiles";
-
+import AppliedJobs from "./components/pages/store/applied";
+import Applications from "./components/pages/host/Applications";
 
 function App() {
-
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -67,9 +66,10 @@ function App() {
     { path: "/store/addProfile", element: <StoreAddProfile /> },
     { path: "/store/addProfile/:profileId", element: <StoreAddProfile /> },
     { path: "/store/storeProfileList", element: <StoreProfilesList /> },
-    {path:"/host/hostProfileList", element:<HostProfileList/>},
-    {path:"/host/favouriteProfile",element:<FavouriteProfileList/>}
-    
+    { path: "/host/hostProfileList", element: <HostProfileList /> },
+    { path: "/host/favouriteProfile", element: <FavouriteProfileList /> },
+    { path: "/store/appliedJobs", element: <AppliedJobs /> },
+    { path: "/host/hostApplications", element: <Applications /> },
   ]);
   return <RouterProvider router={route}></RouterProvider>;
 }

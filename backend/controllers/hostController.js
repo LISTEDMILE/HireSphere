@@ -128,20 +128,28 @@ exports.getEditJob = (req, res, next) => {
   }
 };
 
-exports.getApply = (req, res, next) => {
-  applyClass.getApply().then((applies) => {
-    applies = applies.map((appl) => appl.jobId);
-    const details = Job.fetchAll().then((details) => {
-      const appliedJobs = details.filter((e) =>
-        applies.includes(String(e._id))
-      );
-      res.render("host/hostApplications", {
-        appliedJobs: appliedJobs,
-        title: "Applied",
-        active: "hostApplied",
-      });
+exports.getApplications = async (req, res, next) => {
+  if(!req.session || !req.session.user || !req.session.user._id) {
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
+  }
+  try {
+    const user = await User.findById(req.session.user._id, 'applications');
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const applicationIds = user.applications.map(app => app.job);
+    const applications = await Job.find({ _id: { $in: applicationIds } });
+    res.status(200).json({
+      message: "Applications fetched successfully",
+      applications: applications,
     });
-  });
+
+    
+  }
+  catch (error) {
+    console.error("Error fetching applications:", error);
+    res.status(500).json({ error: "Failed to fetch applications" });
+  }
 };
 
 exports.postEditJob = (req, res, next) => {
@@ -167,7 +175,7 @@ exports.hostJobList = async (req, res, next) => {
       return res.status(401).json({ error: "Unauthorized: Please log in first" });
     }
   const jobProvider = await User.findById(req.session.user._id, 'jobsPosted');
-  jobList = jobProvider.jobsPosted;
+    jobList = jobProvider.jobsPosted;
    
       const jobs = await Job.find({
         _id : { $in: jobList }

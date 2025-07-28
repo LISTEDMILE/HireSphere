@@ -47,6 +47,23 @@ const userSchema = new mongoose.Schema({
       ref: "Job",
     },
   ],
+  appliedJobs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job",
+    },
+  ],
+  applications: [{
+    job:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job",
+    },
+    applierProfile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  }
+  ]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

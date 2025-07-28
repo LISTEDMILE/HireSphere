@@ -42,6 +42,14 @@ jobSchema.pre('findOneAndDelete', async function(next) {
         { favourites: jobId },
         { $pull: { favourites: jobId } }
     );
+    await User.findOneAndUpdate(
+        { appliedJobs: jobId },
+        { $pull: { appliedJobs: jobId } }
+    );
+    await User.findOneAndUpdate(
+        { applications: { job: jobId } },
+        { $pull: { applications: { job: jobId } } }
+    );
     next();
 });
 

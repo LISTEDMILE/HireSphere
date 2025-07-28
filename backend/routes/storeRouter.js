@@ -8,9 +8,9 @@ storeRouter.get("/favourite",storeController.getFavourites);
 storeRouter.get("/onlyFavourites",storeController.getOnlyFavourites);
 storeRouter.post("/favourite/:jobId",storeController.postAddFavourites);
 
-storeRouter.get("/apply",storeController.getApply);
-
-storeRouter.post("/apply",storeController.postApply);
+storeRouter.get("/onlyAppliedJobs",storeController.getOnlyAppliedJobs);
+storeRouter.get("/appliedJobs",storeController.getAppliedJobs);
+storeRouter.post("/apply/:jobId",storeController.postApply);
 
 storeRouter.post("/deleteProfile/:profileId",storeController.postDeleteProfile);
 
@@ -31,6 +31,8 @@ storeRouter.get("/storeProfileDetails/:profileId",storeController.storeProfileDe
 
 storeRouter.get("/editProfile/:profileId",storeController.getEditProfile);
 storeRouter.post("/editProfile",storeController.postEditProfile);
+
+
 
 storeRouter.get("/chooseProfile",storeController.getChooseProfiles);
 
