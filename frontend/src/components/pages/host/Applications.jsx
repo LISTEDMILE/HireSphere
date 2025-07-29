@@ -15,13 +15,13 @@ export default function Applications() {
           },
         });
 
-        // const data = await response.json();
-        // if (data.error) {
-        //   console.error("Error fetching applications:", data.error);
-        //   return;
-        // }
+        const data = await response.json();
+        if (data.error) {
+          console.error("Error fetching applications:", data.error);
+          return;
+        }
 
-        // setApplications(data.applications);
+        setApplications(data.applications);
       } catch (error) {
         console.error("Error fetching applications:", error);
       }
@@ -86,7 +86,7 @@ export default function Applications() {
             <div className="mt-6 bg-gray-50 p-4 rounded-lg shadow-inner">
               <h3 className="text-lg font-bold mb-2">Applier Profile</h3>
               <p className="text-gray-700">
-                <strong>Name:</strong> {application.applierProfile?.name || "N/A"}
+                <strong>Name:</strong> {application.applierProfile?.firstname || "N/A"}
               </p>
               <p className="text-gray-700">
                 <strong>Email:</strong> {application.applierProfile?.email || "N/A"}

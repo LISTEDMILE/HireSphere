@@ -148,7 +148,8 @@ exports.postApply = async (req, res, next) => {
     const jobId = req.params.jobId;
     try {
         const user = await User.findById(req.session.user._id);
-        const userhost = await User.findOne({ jobsPosted: jobId });
+        const userhost = await User.findOne({jobsPosted: jobId });
+        console.log(userhost);
         
        
         if (!user) {
@@ -167,15 +168,13 @@ exports.postApply = async (req, res, next) => {
         if (user.appliedJobs.includes(jobId)) {
             user.appliedJobs.pull(jobId);
             userhost.applications.pull({ job: jobId, applierProfile: user._id });
+            await userhost.save();
             await user.save();
             return res.status(200).json({ message: "Job application cancelled" });
         }
         else {
             user.appliedJobs.push(jobId);
-            userhost.applications.push({
-                job: jobId,
-                applierProfile: user._id
-            });
+            userhost.applications.push({ job: jobId, applierProfile: user._id });
             await userhost.save();
             await user.save();
             return res.status(200).json({ message: "Job applied successfully" });

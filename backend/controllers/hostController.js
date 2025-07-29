@@ -137,12 +137,33 @@ exports.getApplications = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    const applicationIds = user.applications.map(app => app.job);
-    const applications = await Job.find({ _id: { $in: applicationIds } });
-    res.status(200).json({
+    const applicationIds = user.applications;
+    if (!applicationIds) {
+      return res.status(404).json({ error: "No applications found for this user" });
+    }
+
+
+    const applications = await Promise.all(applicationIds.map(async (detail) => {
+      let job = await Job.findById(detail.job);
+      let applier = await User.findById(detail.applierProfile);
+      if (!job || !applier) {
+        console.error("Job or Applier not found for ID:", detail);
+        return null; // Skip this application if job or applier is not found
+      }
+      return (
+        {
+          job: job,
+          applierProfile: applier,
+        }
+      );
+    }));
+    const filteredApplications = applications.filter(app => !app.applierProfile == []); // Remove any null entries
+    return res.status(200).json({
       message: "Applications fetched successfully",
-      applications: applications,
+      applications: filteredApplications,
     });
+    
+
 
     
   }
