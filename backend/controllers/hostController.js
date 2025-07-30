@@ -1,175 +1,278 @@
 const Job = require("../models/firstmodel");
 const User = require("../models/userModel");
-const {check, validationResult } = require("express-validator");
-const favouriteClass = require("../models/favouriteModel");
-const applyClass = require("../models/applyModel");
+const { check, validationResult } = require("express-validator");
 
 const Profile = require("../models/firstProfilemodel");
-const favouriteProfileClass = require("../models/favouriteProfileModel");
-const chooseProfileClass = require("../models/chooseProfileModel");
-
-
 
 exports.addJobPost = [
-    check("jobCompany").notEmpty().withMessage("Job Company is required").trim(),
-    check("jobPost").notEmpty().withMessage("Job Post is required").trim(),
-    check("jobLocation").notEmpty().withMessage("Job Location is required").trim(),
-    check("jobOwnerMobile").notEmpty().withMessage("Job Owner Mobile is required").trim(),
-    check("jobOwnerEmail").notEmpty().withMessage("Job Owner Email is required")
-      .isEmail().withMessage("Invalid email format").normalizeEmail(),
-    check("description").notEmpty().withMessage("Job Description is required").trim(),
-  
-    async (req, res) => {
-      const errors = validationResult(req);
-      const {
-        _id,
-        jobCompany,
-        jobPost,
-        jobLocation,
-        jobOwnerMobile,
-        jobOwnerEmail,
-        description,
-      } = req.body;
-  
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          errors: errors.array().map((err) => err.msg),
-          oldInput: {
-            _id,
-            jobCompany,
-            jobPost,
-            jobLocation,
-            jobOwnerMobile,
-            jobOwnerEmail,
-            description,
-          },
-        });
+  check("jobCompany").notEmpty().withMessage("Job Company is required").trim(),
+  check("jobPost").notEmpty().withMessage("Job Post is required").trim(),
+  check("jobLocation")
+    .notEmpty()
+    .withMessage("Job Location is required")
+    .trim(),
+  check("jobOwnerMobile")
+    .notEmpty()
+    .withMessage("Job Owner Mobile is required")
+    .trim(),
+  check("jobOwnerEmail")
+    .notEmpty()
+    .withMessage("Job Owner Email is required")
+    .isEmail()
+    .withMessage("Invalid email format")
+    .normalizeEmail(),
+  check("description")
+    .notEmpty()
+    .withMessage("Job Description is required")
+    .trim(),
+
+  async (req, res) => {
+    const errors = validationResult(req);
+    const {
+      _id,
+      jobCompany,
+      jobPost,
+      jobLocation,
+      jobOwnerMobile,
+      jobOwnerEmail,
+      description,
+    } = req.body;
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array().map((err) => err.msg),
+        oldInput: {
+          _id,
+          jobCompany,
+          jobPost,
+          jobLocation,
+          jobOwnerMobile,
+          jobOwnerEmail,
+          description,
+        },
+      });
+    }
+
+    try {
+      const user = await User.findById(req.session.user._id);
+
+      if (!user) {
+        return res.status(404).json({ errors: ["User not found"] });
       }
-  
-      try {
-        const user = await User.findById(req.session.user._id);
-  
-        if (!user) {
-          return res.status(404).json({ errors: ["User not found"] });
-        }
-       
-        if (user.userType !== "recruiter") {
-          return res.status(403).json({ errors: ["Access denied. Only recruiters can post jobs."] });
-        }
-  
-        
+
+      if (user.userType !== "recruiter") {
+        return res
+          .status(403)
+          .json({ errors: ["Access denied. Only recruiters can post jobs."] });
+      }
 
       let savedJob;
-        
 
-        let existingJob = await Job.findById(_id);
-        if (existingJob) {
-          existingJob.jobCompany = jobCompany;
-          existingJob.jobPost = jobPost;
-          existingJob.jobLocation = jobLocation;
-          existingJob.jobOwnerMobile = jobOwnerMobile;
-          existingJob.jobOwnerEmail = jobOwnerEmail;
-          existingJob.description = description;
-         savedJob=  await existingJob.save();
-        }
-        else{
+      let existingJob = await Job.findById(_id);
+      if (existingJob) {
+        existingJob.jobCompany = jobCompany;
+        existingJob.jobPost = jobPost;
+        existingJob.jobLocation = jobLocation;
+        existingJob.jobOwnerMobile = jobOwnerMobile;
+        existingJob.jobOwnerEmail = jobOwnerEmail;
+        existingJob.description = description;
+        savedJob = await existingJob.save();
+      } else {
+        const job = new Job({
+          jobCompany,
+          jobPost,
+          jobLocation,
+          jobOwnerMobile,
+          jobOwnerEmail,
+          description,
+        });
 
-          const job = new Job({
-            jobCompany,
-            jobPost,
-            jobLocation,
-            jobOwnerMobile,
-            jobOwnerEmail,
-            description,
-          });
-
-          savedJob = await job.save();
-        }
-  
-         
-  
-        user.jobsPosted.push(savedJob._id);
-        await user.save();
-
-        return res.status(201).json({ message: "Post Added Successfully" });
-      } catch (err) {
-        console.error(err);
-        return res.status(500).json({ errors: ["Something went wrong"] });
+        savedJob = await job.save();
       }
-    }
-  ];
 
+      user.jobsPosted.push(savedJob._id);
+      await user.save();
+
+      return res.status(201).json({ message: "Post Added Successfully" });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ errors: ["Something went wrong"] });
+    }
+  },
+];
 
 exports.getEditJob = (req, res, next) => {
- const jobId = req.params.jobId;
+  const jobId = req.params.jobId;
   if (!jobId) {
     return res.status(400).send({ error: "Job ID is required" });
-  }
-  else {
-    Job.findById(jobId).then((job) => {
-      if (!job) {
-       return res.status(404).send("Job not found");
-      }
-      else {
-        res.status(200).json({
-          _id: job._id,
-          jobCompany: job.jobCompany,
-          jobPost: job.jobPost,
-          jobLocation: job.jobLocation,
-          jobOwnerMobile: job.jobOwnerMobile,
-          jobOwnerEmail: job.jobOwnerEmail,
-          description: job.description,
-        });
-      }
-    }).catch((err) => {
-      console.error("Error fetching job details:", err);
-      res.status(500).json({ error: "Failed to fetch job details" });
-    });
+  } else {
+    Job.findById(jobId)
+      .then((job) => {
+        if (!job) {
+          return res.status(404).send("Job not found");
+        } else {
+          res.status(200).json({
+            _id: job._id,
+            jobCompany: job.jobCompany,
+            jobPost: job.jobPost,
+            jobLocation: job.jobLocation,
+            jobOwnerMobile: job.jobOwnerMobile,
+            jobOwnerEmail: job.jobOwnerEmail,
+            description: job.description,
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching job details:", err);
+        res.status(500).json({ error: "Failed to fetch job details" });
+      });
   }
 };
 
 exports.getApplications = async (req, res, next) => {
-  if(!req.session || !req.session.user || !req.session.user._id) {
+  if (!req.session || !req.session.user || !req.session.user._id) {
     return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   try {
-    const user = await User.findById(req.session.user._id, 'applications');
+    const user = await User.findById(req.session.user._id, "applications");
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
     const applicationIds = user.applications;
     if (!applicationIds) {
-      return res.status(404).json({ error: "No applications found for this user" });
+      return res
+        .status(404)
+        .json({ error: "No applications found for this user" });
     }
 
-
-    const applications = await Promise.all(applicationIds.map(async (detail) => {
-      let job = await Job.findById(detail.job);
-      let applier = await User.findById(detail.applierProfile);
-      if (!job || !applier) {
-        console.error("Job or Applier not found for ID:", detail);
-        return null; // Skip this application if job or applier is not found
-      }
-      return (
-        {
+    const applications = await Promise.all(
+      applicationIds.map(async (detail) => {
+        let job = await Job.findById(detail.job);
+        let applier = await User.findById(detail.applierProfile);
+        if (!job || !applier) {
+          console.error("Job or Applier not found for ID:", detail);
+          return null; // Skip this application if job or applier is not found
+        }
+        return {
           job: job,
           applierProfile: applier,
-        }
-      );
-    }));
-    const filteredApplications = applications.filter(app => !app.applierProfile == []); // Remove any null entries
+          status: detail.status,
+        };
+      })
+    );
+    const filteredApplications = applications.filter(
+      (app) => !app.applierProfile == []
+    ); // Remove any null entries
     return res.status(200).json({
       message: "Applications fetched successfully",
       applications: filteredApplications,
     });
-    
-
-
-    
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error fetching applications:", error);
     res.status(500).json({ error: "Failed to fetch applications" });
+  }
+};
+
+exports.ignoreApplication = async (req, res, next) => {
+  const jobId = req.params.jobId;
+  if (!req.session || !req.session.user || !req.session.user._id) {
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
+  }
+  try {
+    const user = await User.findById(req.session.user._id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.applications = user.applications.filter(
+      (app) => app.job.toString() !== jobId
+    );
+    await user.save();
+    return res
+      .status(200)
+      .json({ message: "Application ignored successfully" });
+  } catch (error) {
+    console.error("Error ignoring application:", error);
+    return res.status(500).json({ error: "Failed to ignore application" });
+  }
+};
+
+exports.acceptApplication = async (req, res, next) => {
+  const jobId = req.params.jobId;
+  if (!req.session || !req.session.user || !req.session.user._id) {
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
+  }
+  try {
+    const user = await User.findById(req.session.user._id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const application = user.applications.find(
+      (app) => app.job.toString() === jobId
+    );
+    if (!application) {
+      return res.status(404).json({ error: "Application not found" });
+    }
+    application.status = "accepted"; // Mark the application as accepted
+    const userEmployee = await User.findById(application.applierProfile);
+    if (!userEmployee) {
+      return res.status(404).json({ error: "Applier not found" });
+    }
+    if (!userEmployee.acceptedJobs.includes(jobId)) {
+      userEmployee.acceptedJobs.push(jobId); // Add the job to the accepted jobs of the applier
+    }
+    if (userEmployee.rejectedJobs.includes(jobId)) {
+      userEmployee.rejectedJobs = userEmployee.rejectedJobs.filter(
+        (job) => job.toString() !== jobId
+      ); // Remove the job from rejected jobs if it was rejected
+    }
+    await userEmployee.save();
+    await user.save();
+    return res
+      .status(200)
+      .json({ message: "Application accepted successfully" });
+  } catch (error) {
+    console.error("Error accepting application:", error);
+    return res.status(500).json({ error: "Failed to accept application" });
+  }
+};
+
+exports.rejectApplication = async (req, res, next) => {
+  const jobId = req.params.jobId;
+  if (!req.session || !req.session.user || !req.session.user._id) {
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
+  }
+  try {
+    const user = await User.findById(req.session.user._id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const application = user.applications.find(
+      (app) => app.job.toString() === jobId
+    );
+    if (!application) {
+      return res.status(404).json({ error: "Application not found" });
+    }
+    application.status = "rejected"; // Mark the application as rejected
+    const userEmployee = await User.findById(application.applierProfile);
+    if (!userEmployee) {
+      return res.status(404).json({ error: "Applier not found" });
+    }
+    if (userEmployee.acceptedJobs.includes(jobId)) {
+      userEmployee.acceptedJobs = userEmployee.acceptedJobs.filter(
+        (job) => job.toString() !== jobId
+      ); // Remove the job from accepted jobs if it was accepted
+    }
+
+    if (!userEmployee.rejectedJobs.includes(jobId)) {
+      userEmployee.rejectedJobs.push(jobId); // Add the job to the rejected jobs of the applier
+    }
+
+    await userEmployee.save();
+    await user.save();
+    res.status(200).json({ message: "Application rejected successfully" });
+  } catch (error) {
+    console.error("Error rejecting application:", error);
+    return res.status(500).json({ error: "Failed to reject application" });
   }
 };
 
@@ -183,39 +286,33 @@ exports.postEditJob = (req, res, next) => {
     req.body.description,
     req.body._id
   );
-  job.save().then(() => {
-    res.redirect("/host/hostJobList");
-  }).catch((err) => {
-    console.error("Error saving job:", err);
-  });
+  job
+    .save()
+    .then(() => {
+      res.redirect("/host/hostJobList");
+    })
+    .catch((err) => {
+      console.error("Error saving job:", err);
+    });
 };
 
 exports.hostJobList = async (req, res, next) => {
   try {
     if (!req.session || !req.session.user || !req.session.user._id) {
-      return res.status(401).json({ error: "Unauthorized: Please log in first" });
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: Please log in first" });
     }
-  const jobProvider = await User.findById(req.session.user._id, 'jobsPosted');
+    const jobProvider = await User.findById(req.session.user._id, "jobsPosted");
     jobList = jobProvider.jobsPosted;
-   
-      const jobs = await Job.find({
-        _id : { $in: jobList }
-      });
-      return res.status(200).json(jobs);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-};
 
-exports.hostJobDetails = (req, res, next) => {
-  const jobId = req.params.jobId;
-  Job.findById(jobId).then((job) => {
-    res.render("host/hostJobDetails", {
-      detail: job,
-      active: "hostJobList",
-      title: "Required Job",
+    const jobs = await Job.find({
+      _id: { $in: jobList },
     });
-  });
+    return res.status(200).json(jobs);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
 };
 
 exports.postDeleteJob = async (req, res, next) => {
@@ -227,118 +324,63 @@ exports.postDeleteJob = async (req, res, next) => {
     if (!result) {
       return res.status(404).json({ message: "Job not found" });
     }
-    res.status(200).json({ message: "Job deleted successfully", jobId: result._id });
+    res
+      .status(200)
+      .json({ message: "Job deleted successfully", jobId: result._id });
   } catch (error) {
     console.error("Error deleting job:", error);
     res.status(500).json({ error: "Failed to delete job" });
   }
 };
 
-exports.postApply = (req, res, next) => {
-  const jobId = String(req.body._id);
-  applyClass
-    .getApply()
-    .then((applies) => {
-      applies = applies.map((appl) => appl.jobId);
-      if (applies.includes(jobId)) {
-        applyClass.deleteApply(jobId);
-      } else {
-        const appl = new applyClass(jobId);
-        appl.save().catch((err) => {
-          console.log("Error adding fav", err);
-        });
-      }
-    })
-    .then(() => {
-      res.redirect("/host/hostApplications");
-    });
-};
-
-/// profile
 
 exports.profileList = (req, res, next) => {
-  Profile.find().then((profiles) => {
-    res.status(200).json({
-      message: "Profiles fetched successfully",
-      profiles: profiles,
-    })
-  }).catch((err) => {
-    console.error("Error fetching profiles:", err);
-    res.status(500).json({ error: "Failed to fetch profiles" });
-  });
-};
-
-exports.hostProfileDetails = (req, res, next) => {
-  const profileId = req.params.profileId;
-  Profile.findById(profileId).then((detail) => {
-    favouriteProfileClass.getFavourites().then((favourites) => {
-      chooseProfileClass.getChooseProfiles().then((choosens) => {
-        const detailsWithoutFavObj = favourites.map((fav) => fav.profileId);
-        const detailsWithoutChooseObj = choosens.map(
-          (choosens) => choosens.profileId
-        );
-        detail.fav = detailsWithoutFavObj.includes(detail._id.toString());
-        detail.choosen = detailsWithoutChooseObj.includes(
-          detail._id.toString()
-        );
-        res.render("host/hostProfileDetails", {
-          detail: detail,
-          active: "profileList",
-          title: "Required Profile",
-        });
+  Profile.find()
+    .then((profiles) => {
+      res.status(200).json({
+        message: "Profiles fetched successfully",
+        profiles: profiles,
       });
+    })
+    .catch((err) => {
+      console.error("Error fetching profiles:", err);
+      res.status(500).json({ error: "Failed to fetch profiles" });
     });
-  });
 };
 
 exports.getProfileFavourites = (req, res, next) => {
-  const favs = User.findById(req.session.user._id).then(user => {
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    return res.status(200).json({
-      message: "Favourites fetched successfully",
-      favIds: user.profileFavourites,
+  const favs = User.findById(req.session.user._id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      return res.status(200).json({
+        message: "Favourites fetched successfully",
+        favIds: user.profileFavourites,
+      });
+    })
+    .catch((err) => {
+      console.error("Error fetching favourites:", err);
+      return res.status(500).json({ error: "Failed to fetch favourites" });
     });
-      
-  }).catch((err) => {
-    console.error("Error fetching favourites:", err);
-    return res.status(500).json({ error: "Failed to fetch favourites" });
-  }
-  );
 };
 
-
 exports.getOnlyProfileFavourites = async (req, res, next) => {
-  try{
+  try {
     if (!req.session || !req.session.user || !req.session.user._id) {
-      return res.status(401).json({ error: "Unauthorized: Please log in first" });
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: Please log in first" });
     }
-    const favs = await User.findById(req.session.user._id, 'profileFavourites');
+    const favs = await User.findById(req.session.user._id, "profileFavourites");
     let favIds = favs.profileFavourites;
     const profiles = await Profile.find({
-      _id: { $in: favIds }
+      _id: { $in: favIds },
     });
     return res.status(200).json(profiles);
   } catch (error) {
     console.error("Error fetching favourites:", error);
   }
-}
-
-exports.getChooseProfiles = (req, res, next) => {
-  chooseProfileClass.getChooseProfiles().then((profiles) => {
-    profiles = profiles.map((prof) => prof.profileId);
-    const details = Profile.fetchAll().then((details) => {
-      const choosenProfiles = details.filter((e) =>
-        profiles.includes(String(e._id))
-      );
-      res.render("host/choosenProfiles", {
-        details: choosenProfiles,
-        title: "Choosen",
-        active: "choosenProfiles",
-      });
-    });
-  });
 };
 
 exports.postAddProfileFavourites = async (req, res, next) => {
@@ -347,61 +389,104 @@ exports.postAddProfileFavourites = async (req, res, next) => {
     const user = await User.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
-    }
-    else if (user.userType !== "recruiter") {
-      return res.status(403).json({ error: "Access denied. Only recruiters can add favourites." });
+    } else if (user.userType !== "recruiter") {
+      return res
+        .status(403)
+        .json({ error: "Access denied. Only recruiters can add favourites." });
     }
 
     if (user.profileFavourites.includes(profileId)) {
       user.profileFavourites.pull(profileId);
       await user.save();
-      return res.status(200).json({ message: "Profile removed from favourites" });
-    }
-    else {
+      return res
+        .status(200)
+        .json({ message: "Profile removed from favourites" });
+    } else {
       user.profileFavourites.push(profileId);
       await user.save();
       return res.status(200).json({ message: "Profile added to favourites" });
-
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error updating favourites:", error);
     return res.status(500).json({ error: "Failed to update favourites" });
   }
-}
-
-exports.postChooseProfile = (req, res, next) => {
-  const profileId = String(req.body._id);
-  chooseProfileClass
-    .getChooseProfiles()
-    .then((profiles) => {
-      profiles = profiles.map((prof) => prof.profileId);
-      if (profiles.includes(profileId)) {
-        chooseProfileClass.deleteChoosen(profileId);
-      } else {
-        const prof = new chooseProfileClass(profileId);
-        prof.save().catch((err) => {
-          console.log("Error adding profile fav", err);
-        });
-      }
-    })
-    .then(() => {
-      res.redirect("/host/chooseProfile");
-    });
 };
 
-exports.getProfileDetails = (req, res, next) => {
-  const profileId = req.params.Hid;
-  Profile.findById(profileId).then((profile) => {
-    if (!profile) {
-      console.log("profile not found");
-      res.redirect("/host/profileList");
-    } else {
-      res.render("host/profileDetails", {
-        title: "Details",
-        active: "profileList",
-        profile: profile,
-      });
+exports.getOnlyChoosenProfiles = async (req, res, next) => {
+  try {
+    if (!req.session || !req.session.user || !req.session.user._id) {
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: Please log in first" });
     }
-  });
+    const user = await User.findById(req.session.user._id, "choosenProfiles");
+    let choosenProfileIds = user.choosenProfiles;
+    const profiles = await Profile.find({
+      _id: { $in: choosenProfileIds },
+    });
+    return res.status(200).json(profiles);
+  } catch (error) {
+    console.error("Error fetching choosen profiles:", error);
+  }
+};
+
+exports.postHireProfile = async (req, res, next) => {
+  const profileId = req.params.profileId;
+  try {
+    const user = await User.findById(req.session.user._id);
+    const userEmployee = await User.findOne({ profilesPosted: profileId });
+    if (!user) {
+      return res.status(404).json({ error: "User or Employee not found" });
+    } else if (user.userType !== "recruiter") {
+      return res
+        .status(403)
+        .json({ error: "Access denied. Only recruiters can hire profiles." });
+    }
+    if (!userEmployee) {
+      return res.status(404).json({ error: "Profile not found" });
+    } else if (userEmployee.userType !== "employee") {
+      return res
+        .status(403)
+        .json({ error: "Access denied. Only employees can be hired." });
+    }
+    if (user.choosenProfiles.includes(profileId)) {
+      user.choosenProfiles.pull(profileId);
+      userEmployee.offers.pull({ profile: profileId, offeredBy: user._id });
+      await userEmployee.save();
+      await user.save();
+      return res
+        .status(200)
+        .json({ message: "Profile removed from choosen profiles" });
+    } else {
+      user.choosenProfiles.push(profileId);
+      userEmployee.offers.push({ profile: profileId, offeredBy: user._id });
+      await userEmployee.save();
+      await user.save();
+      return res
+        .status(200)
+        .json({ message: "Profile added to choosen profiles" });
+    }
+  } catch (error) {
+    console.error("Error updating choosen profiles:", error);
+    return res.status(500).json({ error: "Failed to update choosen profiles" });
+  }
+};
+
+exports.getChoosenProfiles = async (req, res, next) => {
+  const user = await User.findById(req.session.user._id)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      return res.status(200).json({
+        message: "Choosen profiles fetched successfully",
+        choosenProfiles: user.choosenProfiles,
+      });
+    })
+    .catch((err) => {
+      console.error("Error fetching choosen profiles:", err);
+      return res
+        .status(500)
+        .json({ error: "Failed to fetch choosen profiles" });
+    });
 };

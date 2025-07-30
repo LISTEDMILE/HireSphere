@@ -11,7 +11,6 @@ const { default: mongoose } = require('mongoose');
 const DB_path = "mongodb+srv://place:place@placement.4nretom.mongodb.net/";
 const cors = require('cors');
 
-
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -30,7 +29,6 @@ app.use(express.static(path.join(rootDir,'public')));
 app.use(express.urlencoded());
 app.use(express.json());
 
-
     app.use(session({
         secret: "NodeJs",
         resave: false,
@@ -38,26 +36,22 @@ app.use(express.json());
         store: store,
         cookie: {
           httpOnly: true,
-          secure: false, // true if you're using HTTPS
-          sameSite: 'lax' // or 'none' if using secure + HTTPS
+          secure: false, 
+          sameSite: 'lax' 
         }
       }));
       
-
 app.use((req, res, next) => {
     req.isLoggedIn = req.session.isLoggedIn;
     req.user = req.session.user;
     next();
 });
       
-
 app.use("/", authRouter);
 app.use("/host",hostRouter);
 app.use("/store",storeRouter);
 
 app.use(errorr.errorr);
-
-
 
 PORT = 3000;
 

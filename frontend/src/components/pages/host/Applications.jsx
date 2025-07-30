@@ -20,8 +20,8 @@ export default function Applications() {
           console.error("Error fetching applications:", data.error);
           return;
         }
-
         setApplications(data.applications);
+        
       } catch (error) {
         console.error("Error fetching applications:", error);
       }
@@ -30,12 +30,55 @@ export default function Applications() {
     fetchApplications();
   }, []);
 
+
   // Handle Reject Application
-  const handleReject = async (jobId) => {
+  const handleIgnore = async (jobId) => {
     try {
-      await rejectApplication(jobId); // Replace with your API call
+       await fetch(`http://localhost:3000/host/ignoreApplication/${jobId}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
       setApplications((prevApplications) =>
         prevApplications.filter((application) => application._id !== jobId)
+      ); // Remove the rejected application from the list
+    } catch (error) {
+      console.error("Error rejecting application:", error);
+    }
+  };
+
+  const handleAccept = async (jobId) => {
+    try {
+      await fetch(`http://localhost:3000/host/acceptApplication/${jobId}`, {
+        method: "POST",
+        
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setApplications((prevApplications) =>
+        prevApplications.map((application) => application._id == jobId ? { ...application, status: "accepted" } : application) // Mark the application as accepted
+      ); // Remove the accepted application from the list
+    } catch (error) {
+      console.error("Error accepting application:", error);
+    }
+  };
+
+  const handleReject = async (jobId) => {
+    try {
+      await fetch(`http://localhost:3000/host/rejectApplication/${jobId}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setApplications((prevApplications) =>
+        prevApplications.map((application) => application._id == jobId ? { ...application, status: "rejected" } : application) // Mark the application as rejected
       ); // Remove the rejected application from the list
     } catch (error) {
       console.error("Error rejecting application:", error);
@@ -52,17 +95,27 @@ export default function Applications() {
               <h2 className="text-xl font-semibold">{application.jobPost}</h2>
               <div className="flex space-x-2">
                 <Link
-                  to={`/host/editJob/${application._id}?editing=true`}
+                  to={`/host/editJob/${application.job._id}?editing=true`}
                   className="text-blue-500 hover:underline"
                 >
                   ✏️
                 </Link>
                 <button
-                  onClick={() => handleReject(application._id)}
+                  onClick={() => handleIgnore(application._id)}
                   className="text-red-500 hover:underline"
                 >
                   ✘
                 </button>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+            onClick={() => handleReject(application.job._id)}>
+              Reject
+            </button>
+            <button
+              onClick={() => handleAccept(application.job._id)} // Replace with your accept function
+              className="bg-green-500 text-white px-4 py-2 rounded mt-4 ml-2">
+              Accept
+            </button>
+                
               </div>
             </div>
             <h3 className="text-gray-700">Company: {application.jobCompany}</h3>
@@ -104,7 +157,9 @@ export default function Applications() {
                 <strong>Description:</strong> {application.applierProfile?.description || "N/A"}
               </p>
             </div>
+            
           </li>
+          
         ))}
       </ul>
     </div>

@@ -18,6 +18,8 @@ import HostProfileList from "./components/pages/host/hostProfileList";
 import FavouriteProfileList from "./components/pages/host/hostFavouriteProfiles";
 import AppliedJobs from "./components/pages/store/applied";
 import Applications from "./components/pages/host/Applications";
+import ChoosenProfiles from "./components/pages/host/Choosens";
+import Offers from "./components/pages/store/Offers";
 
 function App() {
   const dispatch = useDispatch();
@@ -70,6 +72,8 @@ function App() {
     { path: "/host/favouriteProfile", element: <FavouriteProfileList /> },
     { path: "/store/appliedJobs", element: <AppliedJobs /> },
     { path: "/host/hostApplications", element: <Applications /> },
+    { path: "host/choosenProfiles", element: <ChoosenProfiles /> },
+    { path: "store/offers", element: <Offers /> },
   ]);
   return <RouterProvider router={route}></RouterProvider>;
 }

@@ -36,10 +36,28 @@ export default function HostProfileList() {
                 }
                 const favIds = favs.favIds;
 
-                const updatedProfiles = profileList.map(profile =>
+                const ProfilesWithFav = profileList.map(profile =>
                     favIds.includes(profile._id) ? { ...profile, fav: true } : profile
                 );
 
+              
+              const choosenResponse = await fetch("http://localhost:3000/host/getChoosenProfiles", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+              });
+              const choosenData = await choosenResponse.json();
+              if (choosenData.error) {
+                  console.error("Error fetching choosen profiles:", choosenData.error);
+                return;
+              }
+            
+              const choosenIds = choosenData.choosenProfiles;
+              const updatedProfiles = ProfilesWithFav.map(profile =>
+                choosenIds.includes(profile._id) ? { ...profile, choosen: true } : { ...profile, choosen: false }
+              );
                 setProfiles(updatedProfiles); // ✅ update once with combined data
             } catch (error) {
                 console.error("Error fetching profiles:", error);
@@ -64,7 +82,31 @@ export default function HostProfileList() {
         } catch (error) {
             console.error("Error toggling favourite:", error);
         }
-    };
+  };
+  
+  const handleHireProfile = async (profileId) => {
+    try {
+        const response = await fetch(`http://localhost:3000/host/hireProfile/${profileId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
+
+        const data = await response.json();
+        if (data.error) {
+            alert("Error hiring profile: " + data.error);
+            return;
+        }
+
+        setProfiles(profiles.map(profile =>
+            profile._id === profileId ? { ...profile, choosen: !profile.choosen } : profile
+        ));
+    } catch (error) {
+        console.error("Error hiring profile:", error);
+    }
+  };
 
     
 
@@ -101,21 +143,16 @@ export default function HostProfileList() {
               <label className="block font-semibold mt-4">Skills</label>
               <p className="text-sm mb-4">{detail.profileSkills}</p>
 
-              <form
-                action="/host/chooseProfile"
-                method="POST"
-                className="flex items-center gap-3"
-              >
-                <input type="hidden" name="_id" value={detail._id} />
-                <button
-                  type="submit"
+             
+              <button
+                onClick={() => handleHireProfile(detail._id)}
                   className={`px-4 py-2 rounded-lg font-semibold text-white ${
                     detail.choosen ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
                   }`}
                 >
                   {detail.choosen ? "Deselect" : "Select"}
                 </button>
-              </form>
+              
 
               <div className="mt-4">
                 <Link

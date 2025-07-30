@@ -53,6 +53,14 @@ const userSchema = new mongoose.Schema({
       ref: "Job",
     },
   ],
+  choosenProfiles: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
+    },
+  ],
+
+ 
   applications: [{
     job:{
       type: mongoose.Schema.Types.ObjectId,
@@ -62,8 +70,60 @@ const userSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    status: {
+      type: String,
+      enum: ['pending', 'accepted', 'rejected'],
+      default: 'pending',
+    },
   }
-  ]
+  ],
+  acceptedJobs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job",
+    },
+  ],
+  rejectedJobs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job",
+    },
+  ],
+  acceptedProfiles: [
+    { type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
+    },
+  ],
+
+  offers: [
+    {profile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'accepted', 'rejected', 'ignored'],
+      default: 'pending',
+      },
+    offeredBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    }],
+
+  acceptedOffers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
+    },
+  ],
+  rejectedOffers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
+    },
+  ],
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

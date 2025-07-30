@@ -9,7 +9,7 @@ export default function AppliedJobs() {
     const fetchAppliedJobs = async () => {
       try {
        
-        const response = await fetch("http://localhost:3000/store/onlyAppliedJobs", {
+        const response = await fetch(`http://localhost:3000/store/onlyAppliedJobs`, {
           method: "GET",
           credentials: "include",
           headers: {
