@@ -20,6 +20,8 @@ import AppliedJobs from "./components/pages/store/applied";
 import Applications from "./components/pages/host/Applications";
 import ChoosenProfiles from "./components/pages/host/Choosens";
 import Offers from "./components/pages/store/Offers";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 function App() {
   const dispatch = useDispatch();

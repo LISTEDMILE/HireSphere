@@ -4,7 +4,6 @@ const hostRouter = express.Router();
 
 hostRouter.post("/addJob", hostController.addJobPost);
 hostRouter.get("/hostJobList", hostController.hostJobList);
-hostRouter.get("/hostJobDetails/:jobId", hostController.hostJobDetails);
 
 hostRouter.get("/editJob/:jobId", hostController.getEditJob);
 
