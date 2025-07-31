@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="mt-5 bg-gray-900 text-white flex justify-around py-5">
+    <footer className="mt-5 bg-gray-900 w-full text-white flex justify-around py-5 z-30">
       {/* Social Media Section */}
       <div className="flex flex-col space-y-4">
         <h1 className="text-4xl mb-2">Our Social Media...</h1>

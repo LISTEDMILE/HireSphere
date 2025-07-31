@@ -5,6 +5,7 @@ import { LoginUserToServer } from "../../../services/Services";
 import { useNavigate } from "react-router-dom";
 import { userActions } from "../../../store";
 import { useDispatch } from "react-redux";
+import { BackgroundAnimation } from "../compo/anima";
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -42,15 +43,17 @@ export default function LoginPage() {
   };
 
   return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-          <NavHome active="signUpPage"/>
+      <div className="relative w-full flex flex-col items-center justify-center min-h-screen bg-black">
+      <NavHome active="login"/>
+      <BackgroundAnimation />
+      
       <h1 className="text-4xl font-bold mb-6">Login</h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-lg p-8 w-full max-w-sm"
+        className="bg-[#121614] relative shadow-lg rounded-lg p-8 w-full max-w-sm"
           >
               {errors && (
-            <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+            <div className="bg-[#330e0e] border-2 border-white  text-white p-3 rounded-md mb-4">
               {errors.map((error) => {
                 return (
                   <li>{error}</li>
@@ -59,7 +62,7 @@ export default function LoginPage() {
             </div>
           )}
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block text-white font-medium mb-2">
             Username
           </label>
           <input
@@ -68,11 +71,11 @@ export default function LoginPage() {
             value={formData.username}
             onChange={handleChange}
             placeholder="Enter your username"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded text-white"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block text-white font-medium mb-2">
             Password
           </label>
           <input
@@ -81,12 +84,12 @@ export default function LoginPage() {
             value={formData.password}
             onChange={handleChange}
             placeholder="Enter your password"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded text-white"
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+          className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-900 transition"
         >
           Login
         </button>

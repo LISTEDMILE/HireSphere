@@ -5,8 +5,8 @@ const NavHome = () => {
   const { isLoggedIn, userType } = useSelector((store) => store.userInfo);
 
   return (
-    <header className="bg-cyan-950  flex items-center justify-around py-2 w-full mb-5 text-white">
-      <a href="/" className="underline bg-red-600 text-white rounded-lg px-6 py-2 text-xl">
+    <header className="bg-cyan-950  flex items-center justify-between py-2 w-full mb-5 text-white z-30">
+      <a href="/" className="underline bg-red-600 text-white rounded-md px-4 py-1.5 text-xl ml-8">
         Home
       </a>
       {!isLoggedIn && (
@@ -26,13 +26,14 @@ const NavHome = () => {
       )}
       {
         !isLoggedIn && (
-          <div className="flex items-center space-x-8">
-            <a href="/login" className="bg-orange-600 underline text-white rounded-lg px-6 py-2 text-xl ">
-        Login
-      </a>
-      <a href="/signUp" className="border-2 border-orange-600 underline text-white rounded-lg px-6 py-2 text-xl">
+          <div className="flex items-center space-x-8 mr-8">
+            <a href="/signUp" className="border-2 border-orange-600 underline text-white rounded-lg px-4 py-1.5 text-xl">
         SignUp
       </a>
+            <a href="/login" className="bg-orange-600 underline text-white rounded-lg px-4 py-1.5 text-xl ">
+        Login
+      </a>
+      
           </div>
         )
       }
