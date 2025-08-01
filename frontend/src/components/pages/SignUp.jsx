@@ -3,6 +3,7 @@ import NavHome from "../compo/NavHome";
 import Footer from "../compo/Footer";
 import { AddUserToServer } from "../../../services/Services";
 import { useNavigate } from "react-router-dom";
+import { BackgroundAnimation } from "../compo/anima";
 
 
 
@@ -44,16 +45,18 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="relative w-full flex flex-col items-center justify-center min-h-screen bg-black">
       <NavHome active="signUpPage" />
-      <div className="flex-grow flex items-center justify-center">
+      <BackgroundAnimation />
+      <h1 className="text-4xl font-bold mb-6 text-white">Sign Up</h1>
+     
         <form
           onSubmit={handleSubmit}
-          className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md"
+          className="bg-[#121614] relative shadow-lg text-white rounded-lg p-8 w-[400px]"
         >
-          <h1 className="text-3xl font-bold text-center mb-6">Sign Up</h1>
+          
           {errors && (
-            <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+            <div className="bg-[#330e0e] border-2 border-white  text-white p-3 rounded-md mb-4">
               {errors.map((error) => {
                 return (
                   <li>{error}</li>
@@ -62,7 +65,7 @@ const SignUpPage = () => {
             </div>
           )}
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block font-medium mb-2">
               First Name
             </label>
             <input
@@ -76,7 +79,7 @@ const SignUpPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block font-medium mb-2">
               Last Name
             </label>
             <input
@@ -90,7 +93,7 @@ const SignUpPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block  font-medium mb-2">
               Username (Email)
             </label>
             <input
@@ -104,7 +107,7 @@ const SignUpPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block  font-medium mb-2">
               Password
             </label>
             <input
@@ -118,7 +121,7 @@ const SignUpPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block  font-medium mb-2">
               Confirm Password
             </label>
             <input
@@ -132,7 +135,7 @@ const SignUpPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block  font-medium mb-2">
               User Type
             </label>
             <div className="flex items-center space-x-4">
@@ -163,12 +166,12 @@ const SignUpPage = () => {
           
           <button
             type="submit"
-            className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+            className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-900 transition"
           >
             Sign Up
           </button>
         </form>
-      </div>
+    
       <Footer />
     </div>
   );

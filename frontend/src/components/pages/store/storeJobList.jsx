@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import NavHome from "../../compo/NavHome";
+import Footer from "../../compo/Footer";
 
 export default function StoreJobList() {
   const [jobs, setJobs] = useState([]);
@@ -117,11 +119,13 @@ export default function StoreJobList() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-6 text-center">Added Vacancies</h1>
-      <ul className="space-y-4">
+    <div className="w-full bg-black flex flex-col items-center">
+      <NavHome active="storeJobList"/>
+      <div className="w-[70%] mt-12 pb-12 rounded-lg flex flex-col items-center bg-[#20332e3b]">
+      <h1 className="w-full  text-gray-300 text-5xl mb-12 py-6 font-bold  underline text-center">Vacancies</h1>
+      <ul className="space-y-8 w-[90%] ">
         {jobs.map((job) => (
-          <li key={job._id} className="bg-white shadow-md rounded-lg p-4">
+          <li key={job._id} className="bg-[#0e201c] w-full shadow-md rounded-lg p-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{job.jobPost}</h2>
               <button
@@ -153,7 +157,9 @@ export default function StoreJobList() {
             </Link>
           </li>
         ))}
-      </ul>
+        </ul>
+      </div>
+      <Footer/>
     </div>
   );
 }

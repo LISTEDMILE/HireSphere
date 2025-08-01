@@ -47,10 +47,10 @@ export default function LoginPage() {
       <NavHome active="login"/>
       <BackgroundAnimation />
       
-      <h1 className="text-4xl font-bold mb-6">Login</h1>
+      <h1 className="text-4xl font-bold mb-6 text-white">Login</h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-[#121614] relative shadow-lg rounded-lg p-8 w-full max-w-sm"
+        className="bg-[#121614] relative shadow-lg rounded-lg p-8 w-[400px] "
           >
               {errors && (
             <div className="bg-[#330e0e] border-2 border-white  text-white p-3 rounded-md mb-4">

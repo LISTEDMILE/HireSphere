@@ -343,9 +343,9 @@ const LandingPage = () => {
             {steps.map((step) => {
               return (
                 <div className=" steps bg-black w-full mb-4">
-                  <div className="flex flex-col p-6 w-full  bg-[#0E1F1B]/40 rounded-lg">
+                  <div className="flex flex-col  w-full  bg-[#0E1F1B]/40 rounded-lg">
                     <button
-                      className="flex items-center w-full"
+                      className="flex p-6 items-center w-full"
                       onClick={() => {
                         if (stepsDescription === step.title) {
                           setStepsDescription(null);
@@ -370,7 +370,7 @@ const LandingPage = () => {
                       </span>
                     </button>
                     {stepsDescription === step.title && (
-                      <p className="w-full text-white text-lg">
+                      <p className="w-full text-white text-lg px-12 pb-6">
                         {step.description}
                       </p>
                     )}
