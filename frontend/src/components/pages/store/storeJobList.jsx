@@ -56,7 +56,9 @@ export default function StoreJobList() {
           console.error("Error fetching applied jobs:", appliedData.error);
           return;
         }
-        const appliedIds = appliedData.appliedIds;
+        let appliedIds = appliedData.appliedIds;
+
+        appliedIds = appliedIds.map(app => app.Ids);
   
         // Merge fav info into job list and applied list
         const updatedJobs = jobList.map(job =>

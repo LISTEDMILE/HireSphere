@@ -67,7 +67,7 @@ export default function AddJob() {
       if (data.errors) {
         setErrors(data.errors);
       } else {
-        navigate("/");
+        navigate("/host/hostJobList");
       }
 
   };

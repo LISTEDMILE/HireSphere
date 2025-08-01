@@ -12,6 +12,7 @@ export default function LoginPage() {
     const [errors, setErrors] = useState(null);
     const dispatch = useDispatch();
   const [formData, setFormData] = useState({
+    userType:"employee",
     username: "",
     password: "",
   });
@@ -53,7 +54,7 @@ export default function LoginPage() {
         className="bg-[#121614] relative shadow-lg rounded-lg p-8 w-[400px] "
           >
               {errors && (
-            <div className="bg-[#330e0e] border-2 border-white  text-white p-3 rounded-md mb-4">
+            <div className=" border-2  bg-red-100 text-red-900  p-3 rounded-md mb-4">
               {errors.map((error) => {
                 return (
                   <li>{error}</li>
@@ -62,6 +63,18 @@ export default function LoginPage() {
             </div>
           )}
         <div className="mb-4">
+         <div className="flex justify-around w-full border-b-2 border-b-white pb-4 mb-6">
+          <button
+          type="button"
+            name="userType" value="recruiter" 
+         className={`${formData.userType == "recruiter"? "text-yellow-400 underline":"text-white"} text-lg `}
+            onClick={handleChange}>Recruiter</button>
+          
+          <button
+          type = "button"  name="userType" value="employee" 
+         className={`${formData.userType == "employee"? "text-yellow-400 underline":"text-white"} text-lg`}
+              onClick={handleChange}>Employee</button>
+            </div>
           <label className="block text-white font-medium mb-2">
             Username
           </label>
@@ -71,7 +84,7 @@ export default function LoginPage() {
             value={formData.username}
             onChange={handleChange}
             placeholder="Enter your username"
-            className="w-full p-2 border rounded text-white"
+            className="w-full p-2 border rounded bg-blue-100"
           />
         </div>
         <div className="mb-4">

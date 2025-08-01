@@ -1,7 +1,7 @@
 const Job = require("../models/firstmodel");
-const User = require("../models/userModel");
+const UserEmployee = require("../models/userEmployee");
+const UserRecruiter = require("../models/userRecruiter");
 const { check, validationResult } = require("express-validator");
-
 const Profile = require("../models/firstProfilemodel");
 
 exports.jobList = (req, res, next) => {
@@ -22,7 +22,7 @@ exports.jobList = (req, res, next) => {
 };
 
 exports.getFavourites = (req, res, next) => {
-  const favs = User.findById(req.session.user._id)
+  const favs = UserEmployee.findById(req.session.user._id)
     .then((user) => {
       if (!user) {
         return res.status(404).json({ error: "User not found" });
@@ -43,7 +43,7 @@ exports.getOffers = async (req, res, next) => {
     return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   try {
-    const user = await User.findById(req.session.user._id, "offers");
+    const user = await UserEmployee.findById(req.session.user._id, "offers");
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -55,7 +55,7 @@ exports.getOffers = async (req, res, next) => {
     const offers = await Promise.all(
       offerIds.map(async (detail) => {
         const profile = await Profile.findById(detail.profile);
-        let offeredBy = await User.findById(detail.offeredBy);
+        let offeredBy = await UserRecruiter.findById(detail.offeredBy);
         if (!profile || !offeredBy) {
           return null; // Skip this offer if profile or offeredBy is not found
         }
@@ -92,13 +92,32 @@ exports.ignoreOffer = async (req, res, next) => {
       .json({ error: "Profile ID is required or user not logged in" });
   }
   try {
-    const user = await User.findById(req.session.user._id);
+   
+    const user = await UserEmployee.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+    const offer = user.offers.find((off) => off.profile.toString() === profileId);
     user.offers = user.offers.filter(
       (offer) => offer.profile._id.toString() !== profileId
     );
+    const userRecruiter = await UserRecruiter.findById(offer.offeredBy);
+    userRecruiter.choosenProfiles = userRecruiter.choosenProfiles.map((off) => {
+      if (off.Ids == profileId) {
+        return { ...off, status: "ignored" }
+      }
+      else {
+        return off;
+      }
+    });
+    user.acceptedOffers = user.acceptedOffers.filter(
+      (offer) => offer._id.toString() !== profileId
+    );
+    user.rejectedOffers = user.rejectedOffers.filter(
+      (offer) => offer._id.toString() !== profileId
+    );
+
+    await userRecruiter.save();
     await user.save();
     return res.status(200).json({ message: "Offer ignored successfully" });
   } catch (error) {
@@ -120,7 +139,7 @@ exports.acceptOffer = async (req, res, next) => {
       .json({ error: "Profile ID is required or user not logged in" });
   }
   try {
-    const user = await User.findById(req.session.user._id);
+    const user = await UserEmployee.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -131,20 +150,27 @@ exports.acceptOffer = async (req, res, next) => {
       return res.status(404).json({ error: "Offer not found" });
     }
     offer.status = "accepted";
-    const userhost = await User.findById(offer.offeredBy);
-    console.log("Userhost:", userhost);
-    if (!userhost) {
+    const userRecruiter = await UserRecruiter.findById(offer.offeredBy);
+    if (!userRecruiter) {
       return res.status(404).json({ error: "Offer provider not found" });
     }
-    if (!userhost.acceptedOffers.includes(profileId)) {
-      userhost.acceptedOffers.push(profileId);
+    if (!user.acceptedOffers.includes(profileId)) {
+      user.acceptedOffers.push(profileId);
     }
-    if (userhost.rejectedOffers.includes(profileId)) {
-      userhost.rejectedOffers = userhost.rejectedOffers.filter(
+    if (user.rejectedOffers.includes(profileId)) {
+      user.rejectedOffers = user.rejectedOffers.filter(
         (offer) => offer._id.toString() !== profileId
       );
     }
-    await userhost.save();
+    userRecruiter.choosenProfiles = userRecruiter.choosenProfiles.map((off) => {
+      if (off.Ids == profileId) {
+        return { ...off, status: "accepted" }
+      }
+      else {
+        return off;
+      }
+    });
+    await userRecruiter.save();
     await user.save();
     return res.status(200).json({ message: "Offer accepted successfully" });
   } catch (error) {
@@ -166,7 +192,7 @@ exports.rejectOffer = async (req, res, next) => {
       .json({ error: "Profile ID is required or user not logged in" });
   }
   try {
-    const user = await User.findById(req.session.user._id);
+    const user = await UserEmployee.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -177,19 +203,27 @@ exports.rejectOffer = async (req, res, next) => {
       return res.status(404).json({ error: "Offer not found" });
     }
     offer.status = "rejected";
-    const userhost = await User.findById(offer.offeredBy);
-    if (!userhost) {
+    const userRecruiter = await UserRecruiter.findById(offer.offeredBy);
+    if (!userRecruiter) {
       return res.status(404).json({ error: "Offer provider not found" });
     }
-    if (!userhost.rejectedOffers.includes(profileId)) {
-      userhost.rejectedOffers.push(profileId);
+    if (!user.rejectedOffers.includes(profileId)) {
+      user.rejectedOffers.push(profileId);
     }
-    if (userhost.acceptedOffers.includes(profileId)) {
-      userhost.acceptedOffers = userhost.acceptedOffers.filter(
+    if (user.acceptedOffers.includes(profileId)) {
+      user.acceptedOffers = user.acceptedOffers.filter(
         (offer) => offer._id.toString() !== profileId
       );
     }
-    await userhost.save();
+    userRecruiter.choosenProfiles = userRecruiter.choosenProfiles.map((off) => {
+      if (off.Ids == profileId) {
+        return { ...off, status: "rejected" }
+      }
+      else {
+        return off;
+      }
+    });
+    await userRecruiter.save();
     await user.save();
     return res.status(200).json({ message: "Offer rejected successfully" });
   } catch (error) {
@@ -199,7 +233,7 @@ exports.rejectOffer = async (req, res, next) => {
 };
 
 exports.getAppliedJobs = (req, res, next) => {
-  const user = User.findById(req.session.user._id)
+  const user = UserEmployee.findById(req.session.user._id)
     .then((user) => {
       if (!user) {
         return res.status(404).json({ error: "User not found" });
@@ -222,7 +256,7 @@ exports.getOnlyFavourites = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const favs = await User.findById(req.session.user._id, "favourites");
+    const favs = await UserEmployee.findById(req.session.user._id, "favourites");
     let favIds = favs.favourites;
 
     const jobs = await Job.find({
@@ -241,8 +275,8 @@ exports.getOnlyAppliedJobs = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const user = await User.findById(req.session.user._id, "appliedJobs");
-    let appliedIds = user.appliedJobs;
+    const user = await UserEmployee.findById(req.session.user._id, "appliedJobs");
+    let appliedIds = user.appliedJobs.map(ids => ids.Ids);
     const jobs = await Job.find({
       _id: { $in: appliedIds },
     });
@@ -256,7 +290,7 @@ exports.getOnlyAppliedJobs = async (req, res, next) => {
 exports.postAddFavourites = async (req, res, next) => {
   const jobId = req.params.jobId;
   try {
-    const user = await User.findById(req.session.user._id);
+    const user = await UserEmployee.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     } else if (user.userType !== "employee") {
@@ -283,8 +317,8 @@ exports.postAddFavourites = async (req, res, next) => {
 exports.postApply = async (req, res, next) => {
   const jobId = req.params.jobId;
   try {
-    const user = await User.findById(req.session.user._id);
-    const userhost = await User.findOne({ jobsPosted: jobId });
+    const user = await UserEmployee.findById(req.session.user._id);
+    const userhost = await UserRecruiter.findOne({ jobsPosted: jobId });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -301,14 +335,16 @@ exports.postApply = async (req, res, next) => {
         .json({ error: "Forbidden: Only recruiters can post jobs" });
     }
 
-    if (user.appliedJobs.includes(jobId)) {
-      user.appliedJobs.pull(jobId);
+    let appliedIds = user.appliedJobs.map(app => app.Ids);
+    if(appliedIds.includes(jobId)){
+
+      user.appliedJobs = user.appliedJobs.filter(app => app.Ids !== jobId);
       userhost.applications.pull({ job: jobId, applierProfile: user._id });
       await userhost.save();
       await user.save();
       return res.status(200).json({ message: "Job application cancelled" });
     } else {
-      user.appliedJobs.push(jobId);
+      user.appliedJobs.push({Ids:jobId,status:"pending"});
       userhost.applications.push({
         job: jobId,
         applierProfile: user._id,
@@ -417,7 +453,7 @@ exports.addProfilePost = [
     }
 
     try {
-      const user = await User.findById(req.session.user._id);
+      const user = await UserEmployee.findById(req.session.user._id);
       if (!user) {
         return res.status(404).json({ errors: ["User not found"] });
       }
@@ -477,11 +513,16 @@ exports.addProfilePost = [
   },
 ];
 
-exports.getEditProfile = (req, res, next) => {
+exports.getEditProfile = async (req, res, next) => {
   const profileId = req.params.profileId;
   if (!profileId) {
     return res.status(400).json({ error: "Profile ID is required" });
-  } else {
+  }
+  const user = await UserEmployee.findById(req.session.user);
+  if (!user || !user.profilesPosted.includes(profileId)) {
+    return res.status(400).json({error:"Unauthorized access"})
+  }
+  else {
     Profile.findById(profileId)
       .then((profile) => {
         if (!profile) {
@@ -544,7 +585,7 @@ exports.storeProfileList = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const profilesAdder = await User.findById(
+    const profilesAdder = await UserEmployee.findById(
       req.session.user._id,
       "profilesPosted"
     );

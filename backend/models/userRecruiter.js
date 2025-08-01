@@ -22,20 +22,9 @@ const userSchema = new mongoose.Schema({
   userType: {
       type: String,
       required: [true, "User type is required"],
-    enum: ['employee', 'recruiter'],
+    enum: [ 'recruiter'],
   },
   jobsPosted: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Job",
-    },
-  ],profilesPosted: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Job",
-    },
-  ],
-  favourites: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job",
@@ -47,18 +36,18 @@ const userSchema = new mongoose.Schema({
       ref: "Job",
     },
   ],
-  appliedJobs: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Job",
-    },
-  ],
-  choosenProfiles: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Profile",
-    },
-  ],
+  choosenProfiles: [{
+    Ids:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Profile",
+        },
+       status: {
+        type: String,
+        enum: ['pending', 'accepted', 'rejected', 'ignored'],
+        default: 'pending',
+        },
+      },
+      ],
 
  
   applications: [{
@@ -68,7 +57,7 @@ const userSchema = new mongoose.Schema({
     },
     applierProfile: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "UserEnployee",
     },
     status: {
       type: String,
@@ -87,40 +76,6 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job",
-    },
-  ],
-  acceptedProfiles: [
-    { type: mongoose.Schema.Types.ObjectId,
-      ref: "Profile",
-    },
-  ],
-
-  offers: [
-    {profile: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Profile",
-    },
-    status: {
-      type: String,
-      enum: ['pending', 'accepted', 'rejected', 'ignored'],
-      default: 'pending',
-      },
-    offeredBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    }],
-
-  acceptedOffers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Profile",
-    },
-  ],
-  rejectedOffers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Profile",
     },
   ],
 

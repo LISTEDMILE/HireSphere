@@ -1,5 +1,6 @@
 const Job = require("../models/firstmodel");
-const User = require("../models/userModel");
+const UserEmployee = require("../models/userEmployee");
+const UserRecruiter = require("../models/userRecruiter");
 const { check, validationResult } = require("express-validator");
 
 const Profile = require("../models/firstProfilemodel");
@@ -54,7 +55,7 @@ exports.addJobPost = [
     }
 
     try {
-      const user = await User.findById(req.session.user._id);
+      const user = await UserRecruiter.findById(req.session.user._id);
 
       if (!user) {
         return res.status(404).json({ errors: ["User not found"] });
@@ -101,11 +102,22 @@ exports.addJobPost = [
   },
 ];
 
-exports.getEditJob = (req, res, next) => {
+exports.getEditJob = async (req, res, next) => {
+  const user = await UserRecruiter.findById(req.session.user._id);
+
+      if (!user) {
+        return res.status(404).json({ errors: ["User not found"] });
+      }
   const jobId = req.params.jobId;
   if (!jobId) {
     return res.status(400).send({ error: "Job ID is required" });
-  } else {
+  }
+
+  if (!user.jobsPosted.includes(jobId)) {
+    return res.status(400).json({ error: "Unautorized Access" });
+  }
+  
+  else {
     Job.findById(jobId)
       .then((job) => {
         if (!job) {
@@ -134,7 +146,7 @@ exports.getApplications = async (req, res, next) => {
     return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   try {
-    const user = await User.findById(req.session.user._id, "applications");
+    const user = await UserRecruiter.findById(req.session.user._id, "applications");
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -148,7 +160,7 @@ exports.getApplications = async (req, res, next) => {
     const applications = await Promise.all(
       applicationIds.map(async (detail) => {
         let job = await Job.findById(detail.job);
-        let applier = await User.findById(detail.applierProfile);
+        let applier = await UserEmployee.findById(detail.applierProfile);
         if (!job || !applier) {
           console.error("Job or Applier not found for ID:", detail);
           return null; // Skip this application if job or applier is not found
@@ -179,13 +191,34 @@ exports.ignoreApplication = async (req, res, next) => {
     return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   try {
-    const user = await User.findById(req.session.user._id);
+    const user = await UserRecruiter.findById(req.session.user._id);
+    
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+    const application = user.applications.find(
+      (app) => app.job.toString() === jobId
+    );
     user.applications = user.applications.filter(
       (app) => app.job.toString() !== jobId
     );
+    console.log(application);
+    const userEmployee = await UserEmployee.findById(application.applierProfile);
+    userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
+      if (appl.Ids == jobId) {
+        return { ...appl, status: "ignored" }
+      }
+      else {
+        return appl;
+      }
+    });
+    user.acceptedJobs = user.acceptedJobs.filter(
+      (job) => job.toString() !== jobId
+    );
+    user.rejectedJobs = user.rejectedJobs.filter(
+      (job) => job.toString() !== jobId
+    );
+    await userEmployee.save();
     await user.save();
     return res
       .status(200)
@@ -202,7 +235,7 @@ exports.acceptApplication = async (req, res, next) => {
     return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   try {
-    const user = await User.findById(req.session.user._id);
+    const user = await UserRecruiter.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -213,18 +246,26 @@ exports.acceptApplication = async (req, res, next) => {
       return res.status(404).json({ error: "Application not found" });
     }
     application.status = "accepted"; // Mark the application as accepted
-    const userEmployee = await User.findById(application.applierProfile);
+    const userEmployee = await UserEmployee.findById(application.applierProfile);
     if (!userEmployee) {
       return res.status(404).json({ error: "Applier not found" });
     }
-    if (!userEmployee.acceptedJobs.includes(jobId)) {
-      userEmployee.acceptedJobs.push(jobId); // Add the job to the accepted jobs of the applier
+    if (!user.acceptedJobs.includes(jobId)) {
+      user.acceptedJobs.push(jobId); // Add the job to the accepted jobs of the applier
     }
-    if (userEmployee.rejectedJobs.includes(jobId)) {
-      userEmployee.rejectedJobs = userEmployee.rejectedJobs.filter(
+    if (user.rejectedJobs.includes(jobId)) {
+      user.rejectedJobs = user.rejectedJobs.filter(
         (job) => job.toString() !== jobId
       ); // Remove the job from rejected jobs if it was rejected
     }
+    userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
+      if (appl.Ids == jobId) {
+        return { ...appl, status: "accepted" }
+      }
+      else {
+        return appl;
+      }
+    });
     await userEmployee.save();
     await user.save();
     return res
@@ -242,7 +283,7 @@ exports.rejectApplication = async (req, res, next) => {
     return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   try {
-    const user = await User.findById(req.session.user._id);
+    const user = await UserRecruiter.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -253,19 +294,29 @@ exports.rejectApplication = async (req, res, next) => {
       return res.status(404).json({ error: "Application not found" });
     }
     application.status = "rejected"; // Mark the application as rejected
-    const userEmployee = await User.findById(application.applierProfile);
+    const userEmployee = await UserEmployee.findById(application.applierProfile);
     if (!userEmployee) {
       return res.status(404).json({ error: "Applier not found" });
     }
-    if (userEmployee.acceptedJobs.includes(jobId)) {
-      userEmployee.acceptedJobs = userEmployee.acceptedJobs.filter(
+    if (user.acceptedJobs.includes(jobId)) {
+      user.acceptedJobs = user.acceptedJobs.filter(
         (job) => job.toString() !== jobId
       ); // Remove the job from accepted jobs if it was accepted
+     
     }
 
-    if (!userEmployee.rejectedJobs.includes(jobId)) {
-      userEmployee.rejectedJobs.push(jobId); // Add the job to the rejected jobs of the applier
+    if (!user.rejectedJobs.includes(jobId)) {
+      user.rejectedJobs.push(jobId); // Add the job to the rejected jobs of the applier
     }
+    userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
+      if (appl.Ids == jobId) {
+        return { ...appl, status: "rejected" }
+      }
+      else {
+        return appl;
+      }
+    });
+    
 
     await userEmployee.save();
     await user.save();
@@ -303,7 +354,7 @@ exports.hostJobList = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const jobProvider = await User.findById(req.session.user._id, "jobsPosted");
+    const jobProvider = await UserRecruiter.findById(req.session.user._id, "jobsPosted");
     jobList = jobProvider.jobsPosted;
 
     const jobs = await Job.find({
@@ -349,7 +400,7 @@ exports.profileList = (req, res, next) => {
 };
 
 exports.getProfileFavourites = (req, res, next) => {
-  const favs = User.findById(req.session.user._id)
+  const favs = UserRecruiter.findById(req.session.user._id)
     .then((user) => {
       if (!user) {
         return res.status(404).json({ error: "User not found" });
@@ -372,7 +423,7 @@ exports.getOnlyProfileFavourites = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const favs = await User.findById(req.session.user._id, "profileFavourites");
+    const favs = await UserRecruiter.findById(req.session.user._id, "profileFavourites");
     let favIds = favs.profileFavourites;
     const profiles = await Profile.find({
       _id: { $in: favIds },
@@ -386,7 +437,7 @@ exports.getOnlyProfileFavourites = async (req, res, next) => {
 exports.postAddProfileFavourites = async (req, res, next) => {
   const profileId = req.params.profileId;
   try {
-    const user = await User.findById(req.session.user._id);
+    const user = await UserRecruiter.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     } else if (user.userType !== "recruiter") {
@@ -419,7 +470,7 @@ exports.getOnlyChoosenProfiles = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const user = await User.findById(req.session.user._id, "choosenProfiles");
+    const user = await UserRecruiter.findById(req.session.user._id, "choosenProfiles");
     let choosenProfileIds = user.choosenProfiles;
     const profiles = await Profile.find({
       _id: { $in: choosenProfileIds },
@@ -433,8 +484,8 @@ exports.getOnlyChoosenProfiles = async (req, res, next) => {
 exports.postHireProfile = async (req, res, next) => {
   const profileId = req.params.profileId;
   try {
-    const user = await User.findById(req.session.user._id);
-    const userEmployee = await User.findOne({ profilesPosted: profileId });
+    const user = await UserRecruiter.findById(req.session.user._id);
+    const userEmployee = await UserEmployee.findOne({ profilesPosted: profileId });
     if (!user) {
       return res.status(404).json({ error: "User or Employee not found" });
     } else if (user.userType !== "recruiter") {
@@ -473,7 +524,7 @@ exports.postHireProfile = async (req, res, next) => {
 };
 
 exports.getChoosenProfiles = async (req, res, next) => {
-  const user = await User.findById(req.session.user._id)
+  const user = await UserRecruiter.findById(req.session.user._id)
     .then((user) => {
       if (!user) {
         return res.status(404).json({ error: "User not found" });

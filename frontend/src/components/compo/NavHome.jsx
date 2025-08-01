@@ -5,19 +5,23 @@ const NavHome = () => {
   const { isLoggedIn, userType } = useSelector((store) => store.userInfo);
 
   return (
-    <header className="bg-cyan-950  flex items-center justify-between py-2 w-full mb-5 text-white z-30">
-      <a href="/" className="underline bg-red-600 text-white rounded-md px-4 py-1.5 text-xl ml-8">
+    <header className="  flex items-center justify-between py-4 w-full mb-5 text-white z-30 ">
+      <a href="/" className=" bg-red-800 text-white rounded-md px-4 py-1.5 text-xl ml-8 hover:underline hover:bg-red-600 transition-all duration-300 ease-in-out">
         Home
       </a>
       {!isLoggedIn && (
-        <div className="flex items-center space-x-8 underline">
-          <a href="/help" className="">
+        <div className="flex items-center text-lg space-x-14">
+          <a href="/help" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
             Help
           </a>
-          <a href="/contact" className="">
+          <a href="/contact" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Contact-Us
           </a>
-          <a href="/about" className="">
+          <a href="/about" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             About-Us
           </a>
           
@@ -27,10 +31,10 @@ const NavHome = () => {
       {
         !isLoggedIn && (
           <div className="flex items-center space-x-8 mr-8">
-            <a href="/signUp" className="border-2 border-orange-600 underline text-white rounded-lg px-4 py-1.5 text-xl">
+            <a href="/signUp" className="border-2 border-orange-600 text-white rounded-lg px-4 py-1.5 text-xl hover:bg-orange-800 hover:underline transition-all duration-300 ease-in-out">
         SignUp
       </a>
-            <a href="/login" className="bg-orange-600 underline text-white rounded-lg px-4 py-1.5 text-xl ">
+            <a href="/login" className="bg-orange-800 text-white rounded-lg px-4 py-1.5 text-xl hover:bg-orange-600 hover:underline transition-all duration-300 ease-in-out">
         Login
       </a>
       
@@ -39,60 +43,84 @@ const NavHome = () => {
       }
 
       {isLoggedIn && userType === "employee" && (
-        <div className="flex items-center space-x-4">
-          <a href="/store/favourite" className="">
+        <div className="flex items-center space-x-4 text-lg">
+          <a href="/store/favourite" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Favourites
           </a>
 
-          <a href="/store/storeJobList" className="">
+          <a href="/store/storeJobList" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Vacancies
           </a>
 
-          <a href="/store/appliedJobs" className="">
+          <a href="/store/appliedJobs" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Applied
           </a>
 
-          <a href="/store/addProfile" className="">
+          <a href="/store/addProfile" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Add Resume
           </a>
 
-          <a href="/store/storeProfileList" className="">
+          <a href="/store/storeProfileList" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Resumes
           </a>
 
-          <a href="/store/chooseProfile/" className="">
+          <a href="/store/chooseProfile/" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Choosens
           </a>
         </div>
       )}
 
       {isLoggedIn && userType === "recruiter" && (
-        <div className="flex items-center space-x-4">
-          <a href="/host/addJob" className="">
+        <div className="flex items-center space-x-4 texl-lg">
+          <a href="/host/addJob" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Add Vacancy
           </a>
 
-          <a href="/host/hostJobList" className="">
+          <a href="/host/hostJobList" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Added by you
           </a>
 
-          <a href="/host/hostApplications" className="">
+          <a href="/host/hostApplications" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Applications
           </a>
 
-          <a href="/host/hostProfileList" className="">
+          <a href="/host/hostProfileList" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Resumes
           </a>
 
-          <a href="/host/favouriteProfile" className="">
+          <a href="/host/favouriteProfile" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Favourites
           </a>
 
-          <a href="/host/chooseProfile" cclassName="">
+          <a href="/host/chooseProfile" className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Choosens
           </a>
         </div>
       )}
+
+{
+        isLoggedIn && (
+          <div className="flex items-center space-x-8 mr-8">
+            <a href="/signUp" className=" bg-orange-600 text-white rounded-lg px-4 py-1.5 text-xl hover:bg-orange-800 hover:underline transition-all duration-300 ease-in-out">
+        LogOut
+      </a>
+          
+      
+          </div>
+        )
+      }
     </header>
   );
 };

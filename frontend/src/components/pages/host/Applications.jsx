@@ -95,13 +95,13 @@ export default function Applications() {
               <h2 className="text-xl font-semibold">{application.jobPost}</h2>
               <div className="flex space-x-2">
                 <Link
-                  to={`/host/editJob/${application.job._id}?editing=true`}
+                  to={`/host/addJob/${application.job._id}?editing=true`}
                   className="text-blue-500 hover:underline"
                 >
                   ✏️
                 </Link>
                 <button
-                  onClick={() => handleIgnore(application._id)}
+                  onClick={() => handleIgnore(application.job._id)}
                   className="text-red-500 hover:underline"
                 >
                   ✘

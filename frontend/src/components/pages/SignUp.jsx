@@ -64,7 +64,19 @@ const SignUpPage = () => {
               })}
             </div>
           )}
-          <div className="mb-4">
+        <div className="mb-4">
+        <div className="flex justify-around w-full border-b-2 border-b-white pb-4 mb-6">
+          <button
+          type="button"
+            name="userType" value="recruiter" 
+         className={`${formData.userType == "recruiter"? "text-yellow-400 underline":"text-white"} text-lg `}
+            onClick={handleChange}>Recruiter</button>
+          
+          <button
+          type = "button"  name="userType" value="employee" 
+         className={`${formData.userType == "employee"? "text-yellow-400 underline":"text-white"} text-lg`}
+              onClick={handleChange}>Employee</button>
+            </div>
             <label className="block font-medium mb-2">
               First Name
             </label>

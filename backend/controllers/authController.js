@@ -1,5 +1,6 @@
 const { check, validationResult } = require("express-validator");
-const User = require("../models/userModel");
+const UserEmployee = require("../models/userEmployee");
+const UserRecruiter = require("../models/userRecruiter")
 const bcrypt = require("bcryptjs");
 
 exports.postSignUp = [
@@ -22,9 +23,15 @@ exports.postSignUp = [
     .withMessage("Please enter a valid email address")
     .normalizeEmail()
     .custom(async (value) => {
-      const existingUser = await User.findOne({ username: value });
-      if (existingUser) {
+      const existingRecruiter = await UserRecruiter.findOne({ username: value });
+      if (existingRecruiter) {
         throw new Error("Email/Username is already in use");
+      }
+      const existingEmployee = await UserEmployee.findOne({
+        username: value
+      });
+      if (existingEmployee) {
+        throw new Error("Email/Username is already in use")
       }
       return true;
     }),
@@ -57,7 +64,8 @@ exports.postSignUp = [
     .withMessage("User Type must be either 'Employee' or 'Recruiter''"),
 
   (req, res, next) => {
-    const { firstname, lastname, username, password, userType } = req.body;
+    if (req.body.userType == "recruiter") {
+      const { firstname, lastname, username, password, userType } = req.body;
 
     const errors = validationResult(req);
 
@@ -74,7 +82,7 @@ exports.postSignUp = [
       });
     }
     bcrypt.hash(password, 12).then((hashedPassword) => {
-      const user = new User({
+      const user = new UserRecruiter({
         firstname: firstname,
         lastname: lastname,
         username: username,
@@ -104,24 +112,10 @@ exports.postSignUp = [
           });
         });
     });
-  },
-];
+    }
 
-exports.getLogin = [
-  check("username")
-    .normalizeEmail()
-    .custom(async (value) => {
-      const existingUser = await User.findOne({ username: value });
-      if (!existingUser) {
-        throw new Error("Email/Username not found");
-      }
-      return true;
-    }),
-
-  check("password").notEmpty().withMessage("Password is required"),
-
-  (req, res, next) => {
-    const { username, password } = req.body;
+    else {
+      const { firstname, lastname, username, password, userType } = req.body;
 
     const errors = validationResult(req);
 
@@ -129,25 +123,158 @@ exports.getLogin = [
       return res.status(400).json({
         errors: errors.array().map((err) => err.msg),
         oldInput: {
+          firstname,
+          lastname,
+          username,
+          password,
+          userType,
+        },
+      });
+    }
+    bcrypt.hash(password, 12).then((hashedPassword) => {
+      const user = new UserEmployee({
+        firstname: firstname,
+        lastname: lastname,
+        username: username,
+        password: hashedPassword,
+        userType: userType,
+      });
+
+      user
+        .save()
+        .then(() => {
+          res.status(201).json({
+            message: "User signed up successfully",
+          });
+        })
+        .catch((err) => {
+          console.error("Error saving user:", err);
+          res.status(500).json({
+            isLoggedIn: false,
+            errors: ["An error occurred while signing up. Please try again."],
+            oldInput: {
+              firstname,
+              lastname,
+              username,
+              password,
+              userType,
+            },
+          });
+        });
+    });
+    }
+    
+  },
+];
+
+exports.getLogin = [
+  check("userType")
+  .notEmpty()
+  .withMessage("User Type is required")
+  .isIn(["employee", "recruiter"])
+  .withMessage("User Type must be either 'Employee' or 'Recruiter''"),
+  check("username")
+    .normalizeEmail()
+    .custom(async (value, userType) => {
+      if (userType == "recruiter") {
+        const existingRecruiter = await UserRecruiter.findOne({ username: value });
+        if ( !existingRecruiter) {
+          throw new Error("Email/Username not found");
+        }
+      }
+      else if (userType == "employee") {
+        const existingEmployee = await UserEmployee.findOne({
+          username: value
+        });
+        if (!existingEmployee) {
+          throw new Error("Email/Username not found");
+        }
+      }
+      
+      return true;
+    }),
+
+  check("password").notEmpty().withMessage("Password is required"),
+
+  
+
+ async (req, res, next)  => {
+    const { username, password, userType } = req.body;
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array().map((err) => err.msg),
+        oldInput: {
+          userType,
           username,
           password,
         },
       });
-    }
+   }
+   let user;
 
-    User.findOne({ username: username })
-      .then((user) => {
-        if (!user) {
-          return res.status(401).json({
+   if (userType == "recruiter") {
+     try {
+        user = await UserRecruiter.findOne({ username: username })
+        
+       if (!user) {
+         return res.status(401).json({
+           isLoggedIn: false,
+           errors: ["Invalid credentials"],
+           oldInput: {
+             userType,
+             username,
+             password,
+           },
+         });
+       }
+     }
+        catch(err){
+          console.error("Error finding user:", err);
+          res.status(500).json({
             isLoggedIn: false,
-            errors: ["Invalid credentials"],
+            errors: ["An error occurred while logging in. Please try again."],
             oldInput: {
+              userType,
               username,
               password,
             },
           });
+        };
+      }
+   else {
+     try {
+       user = await UserEmployee.findOne({ username: username })
+          
+       if (!user) {
+         return res.status(401).json({
+           isLoggedIn: false,
+           errors: ["Invalid credentials"],
+           oldInput: {
+             userType,
+             username,
+             password,
+           },
+         });
+       }
+     }
+         catch(err)  {
+            console.error("Error finding user:", err);
+            res.status(500).json({
+              isLoggedIn: false,
+              errors: ["An error occurred while logging in. Please try again."],
+              oldInput: {
+                userType,
+                username,
+                password,
+              },
+            });
+          };
+    
+   
         }
-
         bcrypt
           .compare(password, user.password)
           .then((isMatch) => {
@@ -156,6 +283,7 @@ exports.getLogin = [
                 isLoggedIn: false,
                 errors: ["Invalid credentials"],
                 oldInput: {
+                  userType,
                   username,
                   password,
                 },
@@ -188,24 +316,15 @@ exports.getLogin = [
               isLoggedIn: false,
               errors: ["An error occurred while logging in. Please try again."],
               oldInput: {
+                userType,
                 username,
                 password,
               },
             });
           });
-      })
-      .catch((err) => {
-        console.error("Error finding user:", err);
-        res.status(500).json({
-          isLoggedIn: false,
-          errors: ["An error occurred while logging in. Please try again."],
-          oldInput: {
-            username,
-            password,
-          },
-        });
-      });
-  },
+      }
+      
+ 
 ];
 
 exports.postMe = (req, res, next) => {

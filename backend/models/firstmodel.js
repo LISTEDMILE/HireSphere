@@ -1,4 +1,5 @@
-const User = require("./userModel");
+const UserEmployee = require("../models/userEmployee");
+const UserRecruiter = require("../models/userRecruiter");
 const mongoose = require("mongoose");
 
 const jobSchema = new mongoose.Schema({
@@ -30,23 +31,23 @@ const jobSchema = new mongoose.Schema({
 
 jobSchema.pre("findOneAndDelete", async function (next) {
   const jobId = this.getQuery()["_id"];
-  await User.findOneAndUpdate(
+  await UserRecruiter.findOneAndUpdate(
     { jobsPosted: jobId },
     { $pull: { jobsPosted: jobId } }
   );
-  await User.findOneAndUpdate(
+  await UserEmployee.findOneAndUpdate(
     { favourites: jobId },
     { $pull: { favourites: jobId } }
   );
-  await User.findOneAndUpdate(
+  await UserEmployee.findOneAndUpdate(
     { appliedJobs: jobId },
     { $pull: { appliedJobs: jobId } }
   );
-  await User.findOneAndUpdate(
-    { applications: { job: jobId } },
-    { $pull: { applications: { job: jobId } } }
+  await UserRecruiter.findOneAndUpdate(
+    { 'applications.job': jobId },
+    { $pull: { applications: {job:jobId} }  }
   );
-  await User.findOneAndUpdate(
+  await UserRecruiter.findOneAndUpdate(
     { acceptedJobs: jobId },
     { $pull: { acceptedJobs: jobId } }
   );
