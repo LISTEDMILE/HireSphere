@@ -69,7 +69,7 @@ const NavHome = () => {
             Resumes
           </a>
 
-          <a href="/store/chooseProfile/" className="hover:underline hover:text-red-100 bg-transparent
+          <a href="/store/offers/" className="hover:underline hover:text-red-100 bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out">
             Choosens
           </a>

@@ -2,6 +2,7 @@ const UserEmployee = require("../models/userEmployee");
 const UserRecruiter = require("../models/userRecruiter");
 const mongoose = require("mongoose");
 
+ 
 const jobSchema = new mongoose.Schema({
   jobCompany: {
     type: String,
@@ -30,7 +31,8 @@ const jobSchema = new mongoose.Schema({
 });
 
 jobSchema.pre("findOneAndDelete", async function (next) {
-  const jobId = this.getQuery()["_id"];
+  const jobId = new mongoose.Types.ObjectId(this.getQuery()["_id"]);
+  console.log(jobId);
   await UserRecruiter.findOneAndUpdate(
     { jobsPosted: jobId },
     { $pull: { jobsPosted: jobId } }
@@ -40,8 +42,8 @@ jobSchema.pre("findOneAndDelete", async function (next) {
     { $pull: { favourites: jobId } }
   );
   await UserEmployee.findOneAndUpdate(
-    { appliedJobs: jobId },
-    { $pull: { appliedJobs: jobId } }
+    { 'appliedJobs.Ids': jobId },
+    { $pull: { appliedJobs: { Ids: jobId } } }
   );
   await UserRecruiter.findOneAndUpdate(
     { 'applications.job': jobId },
@@ -50,6 +52,10 @@ jobSchema.pre("findOneAndDelete", async function (next) {
   await UserRecruiter.findOneAndUpdate(
     { acceptedJobs: jobId },
     { $pull: { acceptedJobs: jobId } }
+  );
+  await UserRecruiter.findOneAndUpdate(
+    { rejectedJobs: jobId },
+    { $pull: { rejectedJobs: jobId } }
   );
   next();
 });

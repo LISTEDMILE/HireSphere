@@ -202,7 +202,6 @@ exports.ignoreApplication = async (req, res, next) => {
     user.applications = user.applications.filter(
       (app) => app.job.toString() !== jobId
     );
-    console.log(application);
     const userEmployee = await UserEmployee.findById(application.applierProfile);
     userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
       if (appl.Ids == jobId) {
@@ -500,17 +499,21 @@ exports.postHireProfile = async (req, res, next) => {
         .status(403)
         .json({ error: "Access denied. Only employees can be hired." });
     }
-    if (user.choosenProfiles.includes(profileId)) {
-      user.choosenProfiles.pull(profileId);
+
+    let choosenIds = user.choosenProfiles.map(pro => pro.Ids.toString());
+    if (choosenIds.includes(profileId.toString())) {
+      user.choosenProfiles = user.choosenProfiles.filter(pro => pro.Ids.toString() !== profileId.toString());
       userEmployee.offers.pull({ profile: profileId, offeredBy: user._id });
+      userEmployee.acceptedOffers.pull(profileId);
+      userEmployee.rejectedOffers.pull(profileId);
       await userEmployee.save();
       await user.save();
       return res
         .status(200)
         .json({ message: "Profile removed from choosen profiles" });
     } else {
-      user.choosenProfiles.push(profileId);
-      userEmployee.offers.push({ profile: profileId, offeredBy: user._id });
+      user.choosenProfiles.push({Ids:profileId,status:"pending"});
+      userEmployee.offers.push({ profile: profileId, offeredBy: user._id , status:"pending" });
       await userEmployee.save();
       await user.save();
       return res

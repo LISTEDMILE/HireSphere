@@ -17,6 +17,7 @@ export default function AppliedJobs() {
           },
         });
         const data = await response.json();
+        console.log(data);
         if (data.error) {
           console.error("Error fetching applied jobs:", data.error);
           return;
@@ -118,6 +119,7 @@ export default function AppliedJobs() {
             </div>
             <h3 className="text-gray-700">Company: {job.jobCompany}</h3>
             <h3 className="text-gray-700">Expected Salary: {job.jobSalaryOffered}</h3>
+            <h3 className="">status:{job.status}</h3>
             <div className="mt-2">
               <label className="block text-gray-600 font-medium">Location:</label>
               <p className="text-gray-800">{job.jobLocation}</p>

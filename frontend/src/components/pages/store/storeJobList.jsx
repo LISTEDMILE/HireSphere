@@ -56,9 +56,10 @@ export default function StoreJobList() {
           console.error("Error fetching applied jobs:", appliedData.error);
           return;
         }
-        let appliedIds = appliedData.appliedIds;
+        let appliedWhole = appliedData.appliedIds;
 
-        appliedIds = appliedIds.map(app => app.Ids);
+        let appliedIds = appliedWhole.map(app => app.Ids);
+        
   
         // Merge fav info into job list and applied list
         const updatedJobs = jobList.map(job =>
@@ -66,8 +67,25 @@ export default function StoreJobList() {
         ).map(job =>
           appliedIds.includes(job._id) ? { ...job, applied: true } : { ...job, applied: false }
         );
+
+        let status;
+
+        const updatedJobsWithStatus = updatedJobs.map(e => {
+          if (e.applied == false) {
+            return e;
+          }
+          else if (e.applied == true) {
+            appliedWhole.forEach(ele => {
+              if (ele.Ids == e._id) {
+                 status = ele.status;
+              }
+            })
+            return ({ ...e, status: status });
+         }
+        })
+        console.log(updatedJobsWithStatus)
   
-        setJobs(updatedJobs); // ✅ update once with combined data
+        setJobs(updatedJobsWithStatus); // ✅ update once with combined data
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -89,7 +107,7 @@ export default function StoreJobList() {
       });
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
-          job._id === jobId ? { ...job, applied: !job.applied } : job
+          job._id === jobId ? { ...job, applied: !job.applied , status:"pending" } : job
         )
       );
     }
@@ -139,6 +157,7 @@ export default function StoreJobList() {
                 {job.fav ? "★" : "☆"}
               </button>
             </div>
+            <h3 className="text-white"> status: {job.status}</h3>
             <h3 className="text-gray-700">Company: {job.jobCompany}</h3>
             <div className="mt-2">
               <label className="block text-gray-600 font-medium">Location:</label>

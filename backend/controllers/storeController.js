@@ -277,9 +277,18 @@ exports.getOnlyAppliedJobs = async (req, res, next) => {
     }
     const user = await UserEmployee.findById(req.session.user._id, "appliedJobs");
     let appliedIds = user.appliedJobs.map(ids => ids.Ids);
-    const jobs = await Job.find({
+    let jobs = await Job.find({
       _id: { $in: appliedIds },
     });
+    let status;
+     jobs = jobs.map(ele => {
+       user.appliedJobs.forEach(e => {
+         if (e.Ids.toString() === ele._id.toString()) {
+           status = e.status;
+         }
+       });
+       return ({ ...ele, status: status });
+     })
     return res.status(200).json(jobs);
   } catch (error) {
     console.error("Error fetching applied jobs:", error);
@@ -335,11 +344,14 @@ exports.postApply = async (req, res, next) => {
         .json({ error: "Forbidden: Only recruiters can post jobs" });
     }
 
-    let appliedIds = user.appliedJobs.map(app => app.Ids);
-    if(appliedIds.includes(jobId)){
+    let appliedIds = user.appliedJobs.map(app => app.Ids.toString());
+    
+    if (appliedIds.includes(jobId.toString())) {
 
-      user.appliedJobs = user.appliedJobs.filter(app => app.Ids !== jobId);
+      user.appliedJobs = user.appliedJobs.filter(app => app.Ids.toString() !== jobId.toString());
       userhost.applications.pull({ job: jobId, applierProfile: user._id });
+      userhost.acceptedJobs.pull(jobId);
+      userhost.rejectedJobs.pull(jobId);
       await userhost.save();
       await user.save();
       return res.status(200).json({ message: "Job application cancelled" });
