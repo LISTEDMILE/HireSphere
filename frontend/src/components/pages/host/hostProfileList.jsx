@@ -54,11 +54,29 @@ export default function HostProfileList() {
                 return;
               }
             
-              const choosenIds = choosenData.choosenProfiles;
+              let choosenWhole = choosenData.choosenProfiles;
+              const choosenIds = choosenWhole.map(pro => pro.Ids);
+
+
               const updatedProfiles = ProfilesWithFav.map(profile =>
                 choosenIds.includes(profile._id) ? { ...profile, choosen: true } : { ...profile, choosen: false }
               );
-                setProfiles(updatedProfiles); // ✅ update once with combined data
+              let status;
+
+              const updatedProfilesWithstatus = updatedProfiles.map(e => {
+                if (e.choosen == false) {
+                  return e;
+                }
+                else if (e.choosen == true) {
+                  choosenWhole.forEach(ele => {
+                    if (ele.Ids == e._id) {
+                      status = ele.status;
+                    }
+                  })
+                  return ({ ...e, status: status });
+                }
+              })
+                setProfiles(updatedProfilesWithstatus ); // ✅ update once with combined data
             } catch (error) {
                 console.error("Error fetching profiles:", error);
             }
@@ -101,7 +119,7 @@ export default function HostProfileList() {
         }
 
         setProfiles(profiles.map(profile =>
-            profile._id === profileId ? { ...profile, choosen: !profile.choosen } : profile
+            profile._id === profileId ? { ...profile, choosen: !profile.choosen, status:profile.choosen==true?null:"pending"  } : profile
         ));
     } catch (error) {
         console.error("Error hiring profile:", error);
@@ -132,6 +150,7 @@ export default function HostProfileList() {
               </div>
 
               <h3 className="text-lg font-medium text-gray-700">{detail.profileName}</h3>
+              <h2>status{detail.status}</h2>
 
               <p className="text-sm mt-2">
                 <span className="font-semibold">10th (%):</span> {detail.profileTenth}

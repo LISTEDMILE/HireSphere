@@ -54,7 +54,8 @@ const profileSchema = new mongoose.Schema({
 });
 
 profileSchema.pre("findOneAndDelete", async function (next) {
-  const profileId = new mongoose.Types.ObjectId(this.getQuery()["_id"]);
+  const queryId = this.getQuery()["_id"];
+  const profileId = typeof queryId === "string" ? new mongoose.Types.ObjectId(queryId) : queryId;
   await UserEmployee.findOneAndUpdate(
     { profilesPosted: profileId },
     { $pull: { profilesPosted: profileId } }
@@ -64,8 +65,8 @@ profileSchema.pre("findOneAndDelete", async function (next) {
     { $pull: { profileFavourites: profileId } }
   );
   await UserRecruiter.findOneAndUpdate(
-    { choosenProfiles: profileId },
-    { $pull: { chosenProfiles: profileId } }
+    { 'choosenProfiles.Ids': profileId },
+    { $pull: { choosenProfiles: {Ids:profileId} } }
   );
   await UserEmployee.findOneAndUpdate(
     { 'offers.profile': profileId  },

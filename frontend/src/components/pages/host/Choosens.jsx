@@ -23,8 +23,10 @@ export default function ChoosenProfiles() {
               return;
             }
             else {
-              var choosenProfilesWithoutFav = data.map(profile => ({ ...profile, choosen: true })); // Add choosen property
+              let ans = data.map(e => ({ ...e._doc,status:e.status }));
+              var choosenProfilesWithoutFav = ans.map(profile => ({ ...profile, choosen: true })); // Add choosen property
             }
+            
 
             const favResponse = await fetch("http://localhost:3000/host/favouriteProfile", {
               method: "GET",
@@ -40,11 +42,15 @@ export default function ChoosenProfiles() {
               return;
             }
             const favIds = favs.favIds;
+
             let choosenProfiles = choosenProfilesWithoutFav.map(profile =>
               favIds.includes(profile._id) ? { ...profile, fav: true } : { ...profile, fav: false }
             );
 
+            console.log(choosenProfiles);
+
             setProfiles(choosenProfiles);
+            console.log(choosenProfiles);
           } catch (error) {
             console.error("Error fetching choosen profiles:", error);
           }
@@ -64,7 +70,7 @@ export default function ChoosenProfiles() {
         },
       });
       setProfiles((prevProfiles) =>
-        prevProfiles.map((profile) => profile._id === profileId ? { ...profile, hired: !profile.hired } : profile)
+        prevProfiles.map((profile) => profile._id === profileId ? { ...profile, hired: !profile.hired , status:profile.choosen==true?null:"pending"  } : profile)
       );
     } catch (error) {
       console.error("Error hiring profile:", error);
@@ -117,7 +123,10 @@ export default function ChoosenProfiles() {
               <p className="text-gray-800">{profile.profileSkills}</p>
             </div>
             <button
-              onClick={() => handleHire(profile._id)}
+              onClick={() => {
+                console.log(profile._id);
+                console.log(profile.profileName); handleHire(profile._id)
+              }}
               className="mt-4 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition"
             >
               Deselect

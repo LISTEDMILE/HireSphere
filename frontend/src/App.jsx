@@ -22,6 +22,7 @@ import ChoosenProfiles from "./components/pages/host/Choosens";
 import Offers from "./components/pages/store/Offers";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ApplicantProfiles from "./components/pages/host/ApplicantProfiles";
 
 function App() {
   const dispatch = useDispatch();
@@ -76,6 +77,8 @@ function App() {
     { path: "/host/hostApplications", element: <Applications /> },
     { path: "host/choosenProfiles", element: <ChoosenProfiles /> },
     { path: "store/offers", element: <Offers /> },
+    { path: "host/applicantProfiles/:applicantId", element: <ApplicantProfiles /> }
+    
   ]);
   return <RouterProvider router={route}></RouterProvider>;
 }

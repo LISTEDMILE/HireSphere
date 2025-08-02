@@ -83,7 +83,6 @@ export default function StoreJobList() {
             return ({ ...e, status: status });
          }
         })
-        console.log(updatedJobsWithStatus)
   
         setJobs(updatedJobsWithStatus); // ✅ update once with combined data
       } catch (error) {
@@ -107,7 +106,7 @@ export default function StoreJobList() {
       });
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
-          job._id === jobId ? { ...job, applied: !job.applied , status:"pending" } : job
+          job._id === jobId ? { ...job, applied: !job.applied , status:job.applied==true?null:"pending" } : job
         )
       );
     }

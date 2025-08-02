@@ -32,7 +32,6 @@ const jobSchema = new mongoose.Schema({
 
 jobSchema.pre("findOneAndDelete", async function (next) {
   const jobId = new mongoose.Types.ObjectId(this.getQuery()["_id"]);
-  console.log(jobId);
   await UserRecruiter.findOneAndUpdate(
     { jobsPosted: jobId },
     { $pull: { jobsPosted: jobId } }

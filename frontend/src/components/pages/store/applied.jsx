@@ -17,13 +17,13 @@ export default function AppliedJobs() {
           },
         });
         const data = await response.json();
-        console.log(data);
         if (data.error) {
           console.error("Error fetching applied jobs:", data.error);
           return;
         }
         else {
-           var appliedJobsWithoutFav = data.map(job => ({ ...job, applied: true })); // Add applied property
+          let ans = data.map(e => ({...e._doc,status:e.status}));
+           var appliedJobsWithoutFav = ans.map(job => ({ ...job, applied: true })); // Add applied property
         }
       
 
@@ -69,7 +69,7 @@ export default function AppliedJobs() {
       });
       setAppliedJobs((prevJobs) =>
         prevJobs.map((job) =>
-          job._id === jobId ? { ...job, applied: !job.applied } : job
+          job._id === jobId ? { ...job, applied: !job.applied, status:job.applied==true?null:"pending"  } : job
         )
       );
     }

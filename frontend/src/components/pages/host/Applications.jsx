@@ -80,10 +80,12 @@ export default function Applications() {
       setApplications((prevApplications) =>
         prevApplications.map((application) => application._id == jobId ? { ...application, status: "rejected" } : application) // Mark the application as rejected
       ); // Remove the rejected application from the list
+      
     } catch (error) {
       console.error("Error rejecting application:", error);
     }
   };
+
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-gray-100">
@@ -156,6 +158,9 @@ export default function Applications() {
               <p className="text-gray-700">
                 <strong>Description:</strong> {application.applierProfile?.description || "N/A"}
               </p>
+
+              <Link
+              to={`/host/applicantProfiles/${application.applierProfile._id}`}>Get Resumes</Link>
             </div>
             
           </li>

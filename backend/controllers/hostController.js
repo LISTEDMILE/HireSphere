@@ -470,10 +470,19 @@ exports.getOnlyChoosenProfiles = async (req, res, next) => {
         .json({ error: "Unauthorized: Please log in first" });
     }
     const user = await UserRecruiter.findById(req.session.user._id, "choosenProfiles");
-    let choosenProfileIds = user.choosenProfiles;
-    const profiles = await Profile.find({
+    let choosenProfileIds = user.choosenProfiles.map(ids => ids.Ids);
+    let profiles = await Profile.find({
       _id: { $in: choosenProfileIds },
     });
+    let status;
+    profiles = profiles.map(ele => {
+      user.choosenProfiles.forEach(e => {
+        if (e.Ids.toString() === ele._id.toString()) {
+          status = e.status;
+        }
+      });
+      return ({ ...ele, status: status });
+    })
     return res.status(200).json(profiles);
   } catch (error) {
     console.error("Error fetching choosen profiles:", error);
@@ -543,4 +552,23 @@ exports.getChoosenProfiles = async (req, res, next) => {
         .status(500)
         .json({ error: "Failed to fetch choosen profiles" });
     });
+};
+
+
+exports.getApplicantProfiles = async (req, res, next) => {
+  try {
+    const applicantId = req.params.applicantId;
+    const profilesAdder = await UserEmployee.findById(
+      applicantId,
+      "profilesPosted"
+    );
+    let profileIds = profilesAdder.profilesPosted;
+
+    const profiles = await Profile.find({
+      _id: { $in: profileIds },
+    });
+    return res.status(200).json(profiles);
+  } catch (error) {
+    console.error("Error fetching profiles:", error);
+  }
 };

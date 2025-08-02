@@ -28,7 +28,6 @@ export default function Offers() {
             console.error("Error fetching Offers:", error);
         }
       };
-      console.log(offers);
     fetchOffers();
     
     },[]);
@@ -140,6 +139,7 @@ export default function Offers() {
             >
               More..
             </Link>
+            
           </li>
         ))}
       </ul>

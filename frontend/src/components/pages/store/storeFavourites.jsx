@@ -39,13 +39,29 @@ export default function StoreFavourites() {
           return;
         }
         else {
-          let appliedJobIds = appliedData.appliedIds;
-          let favouriteJobs = favouriteJobsWithoutApplied.map(job =>
-            appliedJobIds.includes(job._id) ? { ...job, applied: true } : { ...job, applied: false }
+          let appliedWhole = appliedData.appliedIds;
+          let appliedIds = appliedWhole.map(app => app.Ids);
+          let favouriteJobsComplete = favouriteJobsWithoutApplied.map(job =>
+            appliedIds.includes(job._id) ? { ...job, applied: true } : { ...job, applied: false }
           );
 
+          let status;
 
-          setFavouriteJobs(favouriteJobs);
+          const favouriteJobsCompleteWithStatus = favouriteJobsComplete.map(e => {
+            if (e.applied == false) {
+              return e;
+            }
+            else if (e.applied == true) {
+              appliedWhole.forEach(ele => {
+                if (ele.Ids == e._id) {
+                  status = ele.status;
+                }
+              })
+              return ({ ...e, status: status });
+            }
+          })
+
+          setFavouriteJobs(favouriteJobsCompleteWithStatus);
         
         }
 
@@ -70,7 +86,7 @@ const handleApply = async (jobId) => {
     });
     setFavouriteJobs((prevJobs) =>
       prevJobs.map((job) =>
-        job._id === jobId ? { ...job, applied: !job.applied } : job
+        job._id === jobId ? { ...job, applied: !job.applied , status:job.applied==true?null:"pending" } : job
       )
     );
   }
@@ -108,6 +124,7 @@ catch (error) {
           <li key={job._id} className="bg-white shadow-md rounded-lg p-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">{job.jobPost}</h2>
+              <h2>status:{job.status}</h2>
               <button
                 onClick={() => handleFavorite(job._id)}
                 className={`${
