@@ -134,7 +134,7 @@ export default function Offers() {
              Accept
             </button>
             <Link
-              to={`/store/hostProfileDetails/${offer.profile._id}`}
+              to={`/store/storeProfileDetails/${offer.profile._id}`}
               className="text-teal-600 hover:underline mt-4 block"
             >
               More..

@@ -21,6 +21,23 @@ exports.jobList = (req, res, next) => {
     });
 };
 
+exports.getStoreJobDetails = (req, res, next) => {
+  const detail = Job.findById(req.params.jobId)
+    .then((detail) => {
+      res.status(200).json({
+        message: "Job List fetched successfully",
+        detail: detail,
+      });
+    })
+    .catch((err) => {
+      console.log("Error fetching job list", err);
+      res.status(500).json({
+        message: "Error fetching job list",
+        error: err,
+      });
+    });
+};
+
 exports.getFavourites = (req, res, next) => {
   const favs = UserEmployee.findById(req.session.user._id)
     .then((user) => {
@@ -607,6 +624,28 @@ exports.storeProfileList = async (req, res, next) => {
       _id: { $in: profileIds },
     });
     return res.status(200).json(profiles);
+  } catch (error) {
+    console.error("Error fetching profiles:", error);
+  }
+};
+
+exports.getStoreProfileDetails = async (req, res, next) => {
+  try {
+    if (!req.session || !req.session.user || !req.session.user._id) {
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: Please log in first" });
+    }
+    const profilesAdder = await UserEmployee.findById(
+      req.session.user._id,
+      "profilesPosted"
+    );
+    let profileIds = profilesAdder.profilesPosted;
+
+    const profileId = req.params.profileId;
+
+    const profile = await Profile.findById(profileId);
+    return res.status(200).json(profile);
   } catch (error) {
     console.error("Error fetching profiles:", error);
   }

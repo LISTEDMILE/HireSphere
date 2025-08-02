@@ -26,4 +26,7 @@ storeRouter.delete("/ignoreOffer/:profileId", storeController.ignoreOffer);
 storeRouter.post("/acceptOffer/:profileId", storeController.acceptOffer);
 storeRouter.post("/rejectOffer/:profileId", storeController.rejectOffer);
 
+storeRouter.get("/storeJobDetails/:jobId", storeController.getStoreJobDetails);
+storeRouter.get("/storeProfileDetails/:profileId", storeController.getStoreProfileDetails);
+
 module.exports = storeRouter;

@@ -26,5 +26,7 @@ hostRouter.get("/getChoosenProfiles", hostController.getChoosenProfiles);
 hostRouter.post("/hireProfile/:profileId", hostController.postHireProfile);
 
 hostRouter.get("/hostApplicantProfiles/:applicantId", hostController.getApplicantProfiles);
+hostRouter.get("/hostJobDetails/:jobId", hostController.getHostJobDetails);
+hostRouter.get("/hostProfileDetails/:profileId", hostController.getHostProfileDetails);
 
 module.exports = hostRouter;

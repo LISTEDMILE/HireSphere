@@ -365,6 +365,25 @@ exports.hostJobList = async (req, res, next) => {
   }
 };
 
+
+exports.getHostJobDetails = async (req, res, next) => {
+  try {
+    if (!req.session || !req.session.user || !req.session.user._id) {
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: Please log in first" });
+    }
+    const jobProvider = await UserRecruiter.findById(req.session.user._id, "jobsPosted");
+    jobList = jobProvider.jobsPosted;
+    const jobId = req.params.jobId;
+
+    const job = await Job.findById(jobId);
+    return res.status(200).json(job);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+};
+
 exports.postDeleteJob = async (req, res, next) => {
   const jobId = req.params.jobId;
 
@@ -390,6 +409,20 @@ exports.profileList = (req, res, next) => {
       res.status(200).json({
         message: "Profiles fetched successfully",
         profiles: profiles,
+      });
+    })
+    .catch((err) => {
+      console.error("Error fetching profiles:", err);
+      res.status(500).json({ error: "Failed to fetch profiles" });
+    });
+};
+
+exports.getHostProfileDetails = (req, res, next) => {
+  Profile.findById(req.params.profileId)
+    .then((profile) => {
+      res.status(200).json({
+        message: "Profile fetched successfully",
+        profile: profile,
       });
     })
     .catch((err) => {

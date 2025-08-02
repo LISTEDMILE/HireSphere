@@ -84,12 +84,12 @@ export default function HostJobList() {
               <p className="text-gray-800">{job.jobLocation}</p>
             </div>
             
-            {/* <Link
+            <Link
               to={`/host/hostJobDetails/${job._id}`}
               className="text-teal-600 hover:underline mt-4 block"
             >
               More..
-            </Link> */}
+            </Link>
           </li>
         ))}
       </ul>
