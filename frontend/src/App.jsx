@@ -1,6 +1,10 @@
-import LandingPage from "./components/pages/LandingPage";
 import React, { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { userActions } from "../store";
+
+//routes
+import LandingPage from "./components/pages/LandingPage";
 import HelpPage from "./components/pages/HelpPage";
 import ContactPage from "./components/pages/ContactPage";
 import AboutPage from "./components/pages/AboutPage";
@@ -8,8 +12,6 @@ import SignUpPage from "./components/pages/SignUp";
 import LoginPage from "./components/pages/Login";
 import AddJob from "./components/pages/host/AddJob";
 import HostJobList from "./components/pages/host/HostJobList";
-import { useDispatch } from "react-redux";
-import { userActions } from "../store";
 import StoreJobList from "./components/pages/store/storeJobList";
 import StoreFavourites from "./components/pages/store/storeFavourites";
 import StoreAddProfile from "./components/pages/store/storeAddProfile";
@@ -20,13 +22,15 @@ import AppliedJobs from "./components/pages/store/applied";
 import Applications from "./components/pages/host/Applications";
 import ChoosenProfiles from "./components/pages/host/Choosens";
 import Offers from "./components/pages/store/Offers";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ApplicantProfiles from "./components/pages/host/ApplicantProfiles";
 import HostJobDetails from "./components/pages/host/hostJobDetails";
 import HostProfileDetails from "./components/pages/host/hostProfileDetails";
 import StoreJobDetails from "./components/pages/store/storeJobDetails";
 import StoreProfileDetails from "./components/pages/store/storeProfileDetails";
+import AboutRecruiter from "./components/pages/store/aboutRecruiter";
+import AddAboutEmployee from "./components/pages/store/addAboutEmployee";
+import AddAboutRecruiter from "./components/pages/host/addAboutRecruiter";
+import AboutEmployee from "./components/pages/host/aboutEmployee";
 
 function App() {
   const dispatch = useDispatch();
@@ -88,7 +92,11 @@ function App() {
     ,
     { path: "store/storeJobDetails/:jobId", element: <StoreJobDetails /> }
     ,
-    { path: "store/storeProfileDetails/:profileId", element: <StoreProfileDetails /> }
+    { path: "store/storeProfileDetails/:profileId", element: <StoreProfileDetails /> },
+    { path: "/store/aboutRecruiter/:userId ", element: <AboutRecruiter /> },
+    { path: "/store/addAboutEmployee/:userId", element: <AddAboutEmployee /> },
+    { path: "/host/addAboutRecruiter/:userId", element: <AddAboutRecruiter /> },
+    {path:"/host/aboutEmployee/:userId", element:<AboutEmployee/>}
     
     
   ]);

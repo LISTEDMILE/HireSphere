@@ -29,4 +29,7 @@ storeRouter.post("/rejectOffer/:profileId", storeController.rejectOffer);
 storeRouter.get("/storeJobDetails/:jobId", storeController.getStoreJobDetails);
 storeRouter.get("/storeProfileDetails/:profileId", storeController.getStoreProfileDetails);
 
+storeRouter.get("/addAboutEmployee/:userId", storeController.getAddAboutEmployee);
+storeRouter.post("/addAboutEmployee", storeController.postAddAboutEmployee);
+
 module.exports = storeRouter;

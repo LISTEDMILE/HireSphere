@@ -542,6 +542,115 @@ exports.addProfilePost = [
   },
 ];
 
+exports.postAddAboutEmployee = [
+  // check("profileName")
+  //   .notEmpty()
+  //   .withMessage("Profile Name is required")
+  //   .trim(),
+  // check("profileGender")
+  //   .notEmpty()
+  //   .withMessage("Profile Gender is required")
+  //   .trim(),
+  // check("profilePost")
+  //   .notEmpty()
+  //   .withMessage("Profile Post is required")
+  //   .trim(),
+  // check("profileCourse")
+  //   .notEmpty()
+  //   .withMessage("Profile Course is required")
+  //   .trim(),
+  // check("profileSkills")
+  //   .notEmpty()
+  //   .withMessage("Profile Skills is required")
+  //   .trim(),
+  // check("profileEmail")
+  //   .isEmail()
+  //   .withMessage("Profile Email is required")
+  //   .normalizeEmail(),
+  // check("profileMobile")
+  //   .notEmpty()
+  //   .withMessage("Profile Mobile is required")
+  //   .trim(),
+  // check("profileTenth")
+  //   .notEmpty()
+  //   .withMessage("Profile Tenth is required")
+  //   .trim(),
+  // check("profileTwelth")
+  //   .notEmpty()
+  //   .withMessage("Profile Twelth is required")
+  //   .trim(),
+  // check("profileGraduation")
+  //   .notEmpty()
+  //   .withMessage("Profile Graduation is required")
+  //   .trim(),
+  // check("profileDescription")
+  //   .notEmpty()
+  //   .withMessage("Profile Description is required")
+  //   .trim(),
+  // check("profilePostDescription")
+  //   .notEmpty()
+  //   .withMessage("Profile Post Description is required")
+  //   .trim(),
+
+  async (req, res) => {
+    const errors = validationResult(req);
+    const { fullName
+      
+    } = req.body;
+
+    if ((!errors.isEmpty())) {
+      return res.status(400).json({
+        errors: errors.array().map((err) => err.msg),
+        oldInput: {
+          fullName,
+        },
+      });
+    }
+
+    try {
+      const user = await UserEmployee.findById(req.session.user._id);
+
+      if (!user) {
+        return res.status(404).json({errors:["User not found"]})
+      }
+
+      if (user.userType !== "employee") {
+        return res.status(403).json({ errors: ["Access denied. Only Employees can update"] });
+      }
+
+      user.aboutEmployee = {
+        fullName
+      }
+
+      await user.save();
+      return res.status(201).json({
+        message: "Profile Updated Successfully"
+      });
+
+    }
+    catch (er) {
+      console.error(err);
+      return res.status(500).json({
+        errors: ["Something went wrong"]
+      });
+    }
+  }
+]
+
+exports.getAddAboutEmployee = async (req, res, next) => {
+  const userId = req.params.userId;
+  
+  const user = await UserEmployee.findById(userId);
+  if (!user) {
+    return res.status(400).json({error:"Unauthorized access"})
+  }
+  else {
+    
+        return res.status(200).json(user.aboutEmployee);
+       
+  }
+};
+
 exports.getEditProfile = async (req, res, next) => {
   const profileId = req.params.profileId;
   if (!profileId) {

@@ -29,4 +29,7 @@ hostRouter.get("/hostApplicantProfiles/:applicantId", hostController.getApplican
 hostRouter.get("/hostJobDetails/:jobId", hostController.getHostJobDetails);
 hostRouter.get("/hostProfileDetails/:profileId", hostController.getHostProfileDetails);
 
+hostRouter.get("/addAboutRecruiter/:userId", hostController.getAddAboutRecruiter);
+hostRouter.post("/addAboutRecruiter", hostController.postAddAboutRecruiter);
+
 module.exports = hostRouter;

@@ -5,14 +5,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "First name is required"],
    
-    },
-    lastname: {
-        type: String,
-        required: [true, "Last name is required"],
-    },
+  },
+  lastname: {
+    type: String,
+    required: [true, "Last name is required"],
+  },
   username: {
     type: String,
-    required: [true,"Username is required"],
+    required: [true, "Username is required"],
     unique: true,
   },
   password: {
@@ -20,9 +20,22 @@ const userSchema = new mongoose.Schema({
     required: [true, "Password is required"],
   },
   userType: {
-      type: String,
-      required: [true, "User type is required"],
-    enum: [ 'recruiter'],
+    type: String,
+    required: [true, "User type is required"],
+    enum: ['recruiter'],
+  },
+  aboutRecruiter: {
+    fullName: { type: String },
+    profilePicture: { type: String },
+    designation: { type: String },
+    company: { type: String },
+    companyLogo: { type: String },
+    companyWebsite: { type: String },
+    email: { type: String },
+    linkedIn: { type: String },
+    bio: { type: String },
+    rolesHiring: [{ type: String }],
+    
   },
   jobsPosted: [
     {
@@ -57,7 +70,7 @@ const userSchema = new mongoose.Schema({
     },
     applierProfile: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "UserEnployee",
+      ref: "UserEmployee",
     },
     status: {
       type: String,

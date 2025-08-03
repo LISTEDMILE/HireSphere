@@ -102,6 +102,71 @@ exports.addJobPost = [
   },
 ];
 
+exports.postAddAboutRecruiter = [
+  // check("jobCompany").notEmpty().withMessage("Job Company is required").trim(),
+  // check("jobPost").notEmpty().withMessage("Job Post is required").trim(),
+  // check("jobLocation")
+  //   .notEmpty()
+  //   .withMessage("Job Location is required")
+  //   .trim(),
+  // check("jobOwnerMobile")
+  //   .notEmpty()
+  //   .withMessage("Job Owner Mobile is required")
+  //   .trim(),
+  // check("jobOwnerEmail")
+  //   .notEmpty()
+  //   .withMessage("Job Owner Email is required")
+  //   .isEmail()
+  //   .withMessage("Invalid email format")
+  //   .normalizeEmail(),
+  // check("description")
+  //   .notEmpty()
+  //   .withMessage("Job Description is required")
+  //   .trim(),
+
+  async (req, res) => {
+    const errors = validationResult(req);
+    const {
+      fullName,
+    } = req.body;
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array().map((err) => err.msg),
+        oldInput: {
+          fullName,
+        },
+      });
+    }
+
+    try {
+      const user = await UserRecruiter.findById(req.session.user._id);
+
+      if (!user) {
+        return res.status(404).json({ errors: ["User not found"] });
+      }
+
+      if (user.userType !== "recruiter") {
+        return res
+          .status(403)
+          .json({ errors: ["Access denied. Only Recruiters can update."] });
+      }
+
+      
+      user.aboutRecruiter = {
+        fullName
+      }
+
+      await user.save();
+
+      return res.status(201).json({ message: "Profile Updated Successfully" });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ errors: ["Something went wrong"] });
+    }
+  },
+];
+
 exports.getEditJob = async (req, res, next) => {
   const user = await UserRecruiter.findById(req.session.user._id);
 
@@ -138,6 +203,20 @@ exports.getEditJob = async (req, res, next) => {
         console.error("Error fetching job details:", err);
         res.status(500).json({ error: "Failed to fetch job details" });
       });
+  }
+};
+
+exports.getAddAboutRecruiter = async (req, res, next) => {
+  const userId = req.params.userId;
+  
+  const user = await UserRecruiter.findById(userId);
+  if (!user) {
+    return res.status(400).json({error:"Unauthorized access"})
+  }
+  else {
+    
+        return res.status(200).json(user.aboutRecruiter);
+       
   }
 };
 
