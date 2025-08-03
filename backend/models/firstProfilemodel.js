@@ -43,6 +43,24 @@ const profileSchema = new mongoose.Schema({
     type: String,
     required: [true, "Profile Graduation is required"],
   },
+  profileExperience:{
+    type:String,
+  },
+  profileJobType:[{
+    type:String,
+    enum:["Full-Time", "Part-Time", "Internship", "Freelance", "Remote", "Hybrid"],
+  }],
+  profileExpectedSalary:{
+    type:String,
+  
+  },
+  profilePreferredLocations:[{type:String}],
+
+  profileProjects:[{title:String,
+    description:String,
+    link:String,
+    technologies:[String]
+  }],
   profileDescription: {
     type: String,
     required: [true, "Profile Description is required"],

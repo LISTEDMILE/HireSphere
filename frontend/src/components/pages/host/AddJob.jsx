@@ -5,6 +5,8 @@ import { AddJobToServer } from "../../../../services/Services";
 export default function AddJob() {
 
   const [errors, setErrors] = useState(null);
+  const [tag,setTag] = useState("");
+  const [skill, setSkill] = useState("");
   const { jobId } = useParams(); 
   const location = useLocation(); 
   const editing = new URLSearchParams(location.search).get("editing") === "true"; // Check if editing is true
@@ -15,8 +17,26 @@ export default function AddJob() {
     jobLocation: "",
     jobOwnerEmail: "",
     jobOwnerMobile: "",
+    jobSalaryOffered: "",
+    jobEmploymentType: [],
+    jobExperienceRequired: "",
+    jobSkills: [],
+    jobCompanyLogo: "",
+    jobType: "",
+    jobIndustry: "",
+    jobTags: [],
     description: "",
+
   });
+  const employmentTypes = [
+    "Full-Time", 
+    "Part-Time", 
+    "Internship", 
+    "Contract", 
+    "Freelance", 
+    "Temporary"
+  ];
+  
 
 
   useEffect(() => {
@@ -35,15 +55,7 @@ export default function AddJob() {
         credentials: "include",
       });
       const data = await response.json();
-      setFormData({
-        _id: data._id,
-        jobCompany: data.jobCompany,
-        jobPost: data.jobPost,
-        jobLocation: data.jobLocation,
-        jobOwnerEmail: data.jobOwnerEmail,
-        jobOwnerMobile: data.jobOwnerMobile,
-        description: data.description,
-      });
+      setFormData({...data});
     } catch (error) {
       console.error("Error fetching job details:", error);
     }
@@ -56,6 +68,29 @@ export default function AddJob() {
       [name]: value,
     });
   };
+
+  const handleArrayAdd = (e,field,value) => {
+    e.preventDefault();
+    if(value !== null && value.trim()!== "" && !formData[field].includes(value)){
+    setFormData({...formData,[field]:[...formData[field],value]});
+
+    }
+  
+    
+  }
+
+  const handleArrayRemove = (e,field,value) => {
+    e.preventDefault();
+    let elementsArray = [...formData[field]];
+    elementsArray = elementsArray.filter(ele => ele!==value);
+    setFormData({...formData,[field]:elementsArray});
+  }
+
+  const handleEmploymentType = (value) => {
+    let emTypes = [...formData["jobEmploymentType"]];
+    emTypes = emTypes.includes(value)?emTypes.filter(entry => entry !== value):[...emTypes,value];
+    setFormData({...formData,"jobEmploymentType":[...emTypes]});
+  }
 
   
 
@@ -104,6 +139,61 @@ export default function AddJob() {
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
         </div>
+
+        <input 
+        type="text"
+        name="tag"
+        onChange={(e)=>setTag(e.target.value)}
+        value={tag}
+        />
+        <button
+
+        onClick ={(e)=>{handleArrayAdd(e,"jobTags",tag);
+          setTag("");
+        }}
+        >add</button>
+        {formData.jobTags.map(tag => {
+          return(
+            <>
+            <p>{tag}</p>
+            <button onClick={(e) => handleArrayRemove(e,"jobTags",tag)}>
+              remove</button>
+            </>
+          )
+        })}
+
+
+<input 
+        type="text"
+        name="skill"
+        onChange={(e)=>setSkill(e.target.value)}
+        value={skill}
+        />
+        <button
+
+        onClick ={(e)=>{handleArrayAdd(e,"jobSkills",skill);
+          setSkill("");
+        }}
+        >add</button>
+        {formData.jobSkills.map(skill => {
+          return(
+            <>
+            <p>{skill}</p>
+            <button onClick={(e) => handleArrayRemove(e,"jobSkills",skill)}>
+              remove</button>
+            </>
+          )
+        })}
+
+
+{employmentTypes.map(emType => {
+  return(
+  <label>{emType}
+  <input type="checkbox" value={emType} checked={formData.jobEmploymentType.includes(emType)} onChange={()=>handleEmploymentType(emType)}/>
+  </label>
+  );
+})}
+
 
         {/* Post to Seek */}
         <div>

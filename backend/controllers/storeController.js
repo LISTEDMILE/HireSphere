@@ -442,42 +442,14 @@ exports.addProfilePost = [
   async (req, res, next) => {
     const errors = validationResult(req);
 
-    const {
-      _id,
-      profileName,
-      profileGender,
-      profilePost,
-      profileCourse,
-      profileSkills,
-      profileEmail,
-      profileMobile,
-      profileTenth,
-      profileTwelth,
-      profileGraduation,
-      profileDescription,
-      profilePostDescription,
-    } = req.body;
+    const profileToAdd = req.body;
 
     if (!errors.isEmpty()) {
       console.log("Validation errors:", errors.array());
       return res.status(400).json({
         message: "Validation failed",
         errors: errors.array().map((err) => err.msg),
-        oldInput: {
-          _id,
-          profileName,
-          profileGender,
-          profilePost,
-          profileCourse,
-          profileSkills,
-          profileEmail,
-          profileMobile,
-          profileTenth,
-          profileTwelth,
-          profileGraduation,
-          profileDescription,
-          profilePostDescription,
-        },
+        oldInput: {profileToAdd},
       });
     }
 
@@ -495,37 +467,29 @@ exports.addProfilePost = [
 
       let savedProfile;
 
-      let existingProfile = await Profile.findById(_id);
+      let existingProfile = await Profile.findById(profileToAdd._id);
       if (existingProfile) {
-        existingProfile.profileName = profileName;
-        existingProfile.profileGender = profileGender;
-        existingProfile.profilePost = profilePost;
-        existingProfile.profileCourse = profileCourse;
-        existingProfile.profileSkills = profileSkills;
-        existingProfile.profileEmail = profileEmail;
-        existingProfile.profileMobile = profileMobile;
-        existingProfile.profileTenth = profileTenth;
-        existingProfile.profileTwelth = profileTwelth;
-        existingProfile.profileGraduation = profileGraduation;
-        existingProfile.profileDescription = profileDescription;
-        existingProfile.profilePostDescription = profilePostDescription;
+        existingProfile.profileName = profileToAdd.profileName;
+        existingProfile.profileGender = profileToAdd.profileGender;
+        existingProfile.profilePost = profileToAdd.profilePost;
+        existingProfile.profileCourse = profileToAdd.profileCourse;
+        existingProfile.profileSkills = profileToAdd.profileSkills;
+        existingProfile.profileEmail = profileToAdd.profileEmail;
+        existingProfile.profileMobile = profileToAdd.profileMobile;
+        existingProfile.profileTenth = profileToAdd.profileTenth;
+        existingProfile.profileTwelth = profileToAdd.profileTwelth;
+        existingProfile.profileGraduation = profileToAdd.profileGraduation;
+        existingProfile.profileExperience = profileToAdd.profileExperience;
+        existingProfile.profileJobType = profileToAdd.profileJobType;
+        existingProfile.profileExpectedSalary = profileToAdd.profileExpectedSalary;
+        existingProfile.profilePreferredLocations = profileToAdd.profilePreferredLocations;
+        existingProfile.profileProjects = profileToAdd.profileProjects;
+        existingProfile.profileDescription = profileToAdd.profileDescription;
+        existingProfile.profilePostDescription = profileToAdd.profilePostDescription;
 
         savedProfile = await existingProfile.save();
       } else {
-        const newProfile = new Profile({
-          profileName,
-          profileGender,
-          profilePost,
-          profileCourse,
-          profileSkills,
-          profileEmail,
-          profileMobile,
-          profileTenth,
-          profileTwelth,
-          profileGraduation,
-          profileDescription,
-          profilePostDescription,
-        });
+        const newProfile = new Profile(profileToAdd);
         savedProfile = await newProfile.save();
       }
 
@@ -651,6 +615,20 @@ exports.getAddAboutEmployee = async (req, res, next) => {
   }
 };
 
+exports.getAboutRecruiter = async (req, res, next) => {
+  const userId = req.params.userId;
+  
+  const user = await UserRecruiter.findById(userId);
+  if (!user) {
+    return res.status(400).json({error:"Unauthorized access"})
+  }
+  else {
+    
+        return res.status(200).json(user.aboutRecruiter);
+       
+  }
+};
+
 exports.getEditProfile = async (req, res, next) => {
   const profileId = req.params.profileId;
   if (!profileId) {
@@ -669,17 +647,22 @@ exports.getEditProfile = async (req, res, next) => {
           res.status(200).json({
             _id: profile._id,
             profileName: profile.profileName,
-            profileGender: profile.profileGender,
-            profilePost: profile.profilePost,
-            profileCourse: profile.profileCourse,
-            profileSkills: profile.profileSkills,
-            profileEmail: profile.profileEmail,
-            profileMobile: profile.profileMobile,
-            profileTenth: profile.profileTenth,
-            profileTwelth: profile.profileTwelth,
-            profileGraduation: profile.profileGraduation,
-            profileDescription: profile.profileDescription,
-            profilePostDescription: profile.profilePostDescription,
+  profileGender: profile.profileGender,
+  profilePost: profile.profilePost,
+  profileCourse: profile.profileCourse,
+  profileSkills: profile.profileSkills,
+  profileEmail: profile.profileEmail,
+  profileMobile: profile.profileMobile,
+  profileTenth: profile.profileTenth,
+  profileTwelth: profile.profileTwelth,
+  profileGraduation: profile.profileGraduation,
+  profileExperience: profile.profileExperience,
+  profileJobType: profile.profileJobType,
+  profileExpectedSalary: profile.profileExpectedSalary,
+  profilePreferredLocations: profile.profilePreferredLocations,
+  profileProjects: profile.profileProjects,
+  profileDescription: profile.profileDescription,
+  profilePostDescription: profile.profilePostDescription,
           });
         }
       })

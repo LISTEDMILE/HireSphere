@@ -29,28 +29,12 @@ exports.addJobPost = [
 
   async (req, res) => {
     const errors = validationResult(req);
-    const {
-      _id,
-      jobCompany,
-      jobPost,
-      jobLocation,
-      jobOwnerMobile,
-      jobOwnerEmail,
-      description,
-    } = req.body;
+    const jobToAdd = req.body;
 
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array().map((err) => err.msg),
-        oldInput: {
-          _id,
-          jobCompany,
-          jobPost,
-          jobLocation,
-          jobOwnerMobile,
-          jobOwnerEmail,
-          description,
-        },
+        oldInput: {...jobToAdd}
       });
     }
 
@@ -69,24 +53,26 @@ exports.addJobPost = [
 
       let savedJob;
 
-      let existingJob = await Job.findById(_id);
+      let existingJob = await Job.findById(jobToAdd._id);
       if (existingJob) {
-        existingJob.jobCompany = jobCompany;
-        existingJob.jobPost = jobPost;
-        existingJob.jobLocation = jobLocation;
-        existingJob.jobOwnerMobile = jobOwnerMobile;
-        existingJob.jobOwnerEmail = jobOwnerEmail;
-        existingJob.description = description;
+        existingJob.jobCompany = jobToAdd.jobCompany;
+  existingJob.jobPost = jobToAdd.jobPost;
+  existingJob.jobLocation = jobToAdd.jobLocation;
+  existingJob.jobOwnerMobile = jobToAdd.jobOwnerMobile;
+  existingJob.jobOwnerEmail = jobToAdd.jobOwnerEmail;
+  existingJob.jobSalaryOffered = jobToAdd.jobSalaryOffered;
+  existingJob.jobEmploymentType = jobToAdd.jobEmploymentType;
+  existingJob.jobExperienceRequired = jobToAdd.jobExperienceRequired;
+  existingJob.jobSkills = jobToAdd.jobSkills;
+  existingJob.jobCompanyLogo = jobToAdd.jobCompanyLogo;
+  existingJob.jobType = jobToAdd.jobType;
+  existingJob.jobIndustry = jobToAdd.jobIndustry;
+  existingJob.jobTags = jobToAdd.jobTags;
+  existingJob.description = jobToAdd.description;
         savedJob = await existingJob.save();
       } else {
-        const job = new Job({
-          jobCompany,
-          jobPost,
-          jobLocation,
-          jobOwnerMobile,
-          jobOwnerEmail,
-          description,
-        });
+        const job = new Job({...jobToAdd});
+        console.log(job);
 
         savedJob = await job.save();
       }
@@ -191,11 +177,19 @@ exports.getEditJob = async (req, res, next) => {
           res.status(200).json({
             _id: job._id,
             jobCompany: job.jobCompany,
-            jobPost: job.jobPost,
-            jobLocation: job.jobLocation,
-            jobOwnerMobile: job.jobOwnerMobile,
-            jobOwnerEmail: job.jobOwnerEmail,
-            description: job.description,
+  jobPost: job.jobPost,
+  jobLocation: job.jobLocation,
+  jobOwnerMobile: job.jobOwnerMobile,
+  jobOwnerEmail: job.jobOwnerEmail,
+  jobSalaryOffered: job.jobSalaryOffered,
+  jobEmploymentType: job.jobEmploymentType,
+  jobExperienceRequired: job.jobExperienceRequired,
+  jobSkills: job.jobSkills,
+  jobCompanyLogo: job.jobCompanyLogo,
+  jobType: job.jobType,
+  jobIndustry: job.jobIndustry,
+  jobTags: job.jobTags,
+  description: job.description,
           });
         }
       })
@@ -216,6 +210,20 @@ exports.getAddAboutRecruiter = async (req, res, next) => {
   else {
     
         return res.status(200).json(user.aboutRecruiter);
+       
+  }
+};
+
+exports.getAboutEmployee = async (req, res, next) => {
+  const userId = req.params.userId;
+  
+  const user = await UserEmployee.findById(userId);
+  if (!user) {
+    return res.status(400).json({error:"Unauthorized access"})
+  }
+  else {
+    
+        return res.status(200).json(user.aboutEmployee);
        
   }
 };

@@ -31,5 +31,6 @@ hostRouter.get("/hostProfileDetails/:profileId", hostController.getHostProfileDe
 
 hostRouter.get("/addAboutRecruiter/:userId", hostController.getAddAboutRecruiter);
 hostRouter.post("/addAboutRecruiter", hostController.postAddAboutRecruiter);
+hostRouter.get("/aboutEmployee/:userId", hostController.getAboutEmployee);
 
 module.exports = hostRouter;

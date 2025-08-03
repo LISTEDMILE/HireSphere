@@ -93,7 +93,7 @@ function App() {
     { path: "store/storeJobDetails/:jobId", element: <StoreJobDetails /> }
     ,
     { path: "store/storeProfileDetails/:profileId", element: <StoreProfileDetails /> },
-    { path: "/store/aboutRecruiter/:userId ", element: <AboutRecruiter /> },
+    { path: "/store/aboutRecruiter/:userId", element: <AboutRecruiter /> },
     { path: "/store/addAboutEmployee/:userId", element: <AddAboutEmployee /> },
     { path: "/host/addAboutRecruiter/:userId", element: <AddAboutRecruiter /> },
     {path:"/host/aboutEmployee/:userId", element:<AboutEmployee/>}

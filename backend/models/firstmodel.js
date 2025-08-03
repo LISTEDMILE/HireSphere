@@ -24,6 +24,33 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: [true, "Job Owner Email is required"],
   },
+  jobSalaryOffered:{
+    type:String,
+
+  },
+  jobEmploymentType: [{type:String,
+      enum:["Full-Time", "Part-Time", "Internship", "Contract", "Freelance", "Temporary"],
+    }],
+  jobExperienceRequired:{
+    type:String,
+
+  },
+  jobSkills:[
+    {type:String}
+  ],
+  jobCompanyLogo:{
+    type:String,
+  },
+  jobType:{
+    type:String,
+    enum:["Onsite", "Remote", "Hybrid"]
+  },
+  jobIndustry:{
+    type:String,
+
+  },
+  jobTags:[{type:String}],
+  
   description: {
     type: String,
     required: [true, "Job Description is required"],

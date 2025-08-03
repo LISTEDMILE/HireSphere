@@ -31,5 +31,6 @@ storeRouter.get("/storeProfileDetails/:profileId", storeController.getStoreProfi
 
 storeRouter.get("/addAboutEmployee/:userId", storeController.getAddAboutEmployee);
 storeRouter.post("/addAboutEmployee", storeController.postAddAboutEmployee);
+storeRouter.get("/aboutRecruiter/:userId", storeController.getAboutRecruiter);
 
 module.exports = storeRouter;
