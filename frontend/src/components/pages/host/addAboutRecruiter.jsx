@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 export default function AddAboutRecruiter() {
-    
+    const [role, setRole] = useState("");
   const [errors, setErrors] = useState(null);
   const [message, setMessage] = useState(null);
     
@@ -49,6 +49,25 @@ export default function AddAboutRecruiter() {
         setFormData({ ...formData, [name]: value, });
     };
 
+    const handleArrayAdd = (e,field,value) => {
+      e.preventDefault();
+      if(value !== null && value.trim()!== "" && !formData[field].includes(value)){
+      setFormData({...formData,[field]:[...formData[field],value]});
+  
+      }
+    
+      
+    }
+  
+    const handleArrayRemove = (e,field,value) => {
+      e.preventDefault();
+      let elementsArray = [...formData[field]];
+      elementsArray = elementsArray.filter(ele => ele!==value);
+      setFormData({...formData,[field]:elementsArray});
+  }
+  
+
+  
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
@@ -114,6 +133,28 @@ export default function AddAboutRecruiter() {
           onChange={handleChange}
         />
 
+<input 
+        type="text"
+        name="role"
+        onChange={(e)=>setRole(e.target.value)}
+        value={role}
+        />
+        <button
+
+        onClick ={(e)=>{handleArrayAdd(e,"rolesHiring",role);
+          setRole("");
+        }}
+        >add</button>
+        {formData.rolesHiring.map(role => {
+          return(
+            <>
+            <p>{role}</p>
+            <button onClick={(e) => handleArrayRemove(e,"rolesHiring",role)}>
+              remove</button>
+            </>
+          )
+        })}
+
         {/* Designation */}
         <InputField
           label="Designation"
@@ -175,13 +216,7 @@ export default function AddAboutRecruiter() {
           ></textarea>
         </div>
 
-        {/* Roles Hiring */}
-        <InputField
-          label="Roles Hiring For (comma-separated)"
-          name="rolesHiring"
-          value={formData.rolesHiring}
-          onChange={handleChange}
-        />
+       
 
         <button
           type="submit"

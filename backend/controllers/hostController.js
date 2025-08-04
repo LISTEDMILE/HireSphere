@@ -112,15 +112,13 @@ exports.postAddAboutRecruiter = [
 
   async (req, res) => {
     const errors = validationResult(req);
-    const {
-      fullName,
-    } = req.body;
+    const data = req.body;
 
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array().map((err) => err.msg),
         oldInput: {
-          fullName,
+          ...data
         },
       });
     }
@@ -140,7 +138,7 @@ exports.postAddAboutRecruiter = [
 
       
       user.aboutRecruiter = {
-        fullName
+        ...data
       }
 
       await user.save();

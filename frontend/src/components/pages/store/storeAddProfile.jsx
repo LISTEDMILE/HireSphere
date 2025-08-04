@@ -47,7 +47,7 @@ export default function ProfileForm() {
     profileJobType: [],
     profileExpectedSalary: "",
     profilePreferredLocations: [],
-    profileProjects: [], // can be filled with { title, description, link, technologies }
+    profileProjects: [], 
     profileDescription: "",
     profilePostDescription: "",
   });

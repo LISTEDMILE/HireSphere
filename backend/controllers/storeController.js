@@ -558,16 +558,12 @@ exports.postAddAboutEmployee = [
 
   async (req, res) => {
     const errors = validationResult(req);
-    const { fullName
-      
-    } = req.body;
+    const data = req.body;
 
     if ((!errors.isEmpty())) {
       return res.status(400).json({
         errors: errors.array().map((err) => err.msg),
-        oldInput: {
-          fullName,
-        },
+        oldInput: {...data}
       });
     }
 
@@ -582,9 +578,7 @@ exports.postAddAboutEmployee = [
         return res.status(403).json({ errors: ["Access denied. Only Employees can update"] });
       }
 
-      user.aboutEmployee = {
-        fullName
-      }
+      user.aboutEmployee = {...data}
 
       await user.save();
       return res.status(201).json({

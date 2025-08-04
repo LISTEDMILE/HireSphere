@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export default function AboutRecruiter() {
+  
   const { userId } = useParams();
   const [formData, setFormData] = useState({
     fullName: "",
@@ -15,6 +16,7 @@ export default function AboutRecruiter() {
     bio: "",
     rolesHiring: [],
   });
+
 
   useEffect(() => {
     const fetchAboutRecruiter = async () => {
