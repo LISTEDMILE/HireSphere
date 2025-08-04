@@ -22,20 +22,24 @@ export default function AddJob() {
     jobExperienceRequired: "",
     jobSkills: [],
     jobCompanyLogo: "",
-    jobType: "",
+    jobType: [],
     jobIndustry: "",
     jobTags: [],
     description: "",
 
   });
   const employmentTypes = [
-    "Full-Time", 
-    "Part-Time", 
-    "Internship", 
-    "Contract", 
-    "Freelance", 
-    "Temporary"
+    "Full-Time",
+    "Part-Time",
+    "Internship",
+    "Contract",
+    "Freelance",
+    "Temporary",
+    "Remote",
+    "Hybrid"
   ];
+
+  const jobTypes = ["Onsite", "Remote", "Hybrid"];
   
 
 
@@ -92,6 +96,11 @@ export default function AddJob() {
     setFormData({...formData,"jobEmploymentType":[...emTypes]});
   }
 
+  const handleJobType = (value) => {
+    let emTypes = [...formData["jobType"]];
+    emTypes = emTypes.includes(value)?emTypes.filter(entry => entry !== value):[...emTypes,value];
+    setFormData({...formData,"jobType":[...emTypes]});
+  }
   
 
     const navigate = useNavigate();
@@ -190,6 +199,15 @@ export default function AddJob() {
   return(
   <label>{emType}
   <input type="checkbox" value={emType} checked={formData.jobEmploymentType.includes(emType)} onChange={()=>handleEmploymentType(emType)}/>
+  </label>
+  );
+})}
+        
+
+        {jobTypes.map(emType => {
+  return(
+  <label>{emType}
+  <input type="checkbox" value={emType} checked={formData.jobType.includes(emType)} onChange={()=>handleJobType(emType)}/>
   </label>
   );
 })}

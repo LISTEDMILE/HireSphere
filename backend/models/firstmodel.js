@@ -29,7 +29,14 @@ const jobSchema = new mongoose.Schema({
 
   },
   jobEmploymentType: [{type:String,
-      enum:["Full-Time", "Part-Time", "Internship", "Contract", "Freelance", "Temporary"],
+      enum:["Full-Time",
+    "Part-Time",
+    "Internship",
+    "Contract",
+    "Freelance",
+    "Temporary",
+    "Remote",
+    "Hybrid"],
     }],
   jobExperienceRequired:{
     type:String,
@@ -41,10 +48,10 @@ const jobSchema = new mongoose.Schema({
   jobCompanyLogo:{
     type:String,
   },
-  jobType:{
+  jobType:[{
     type:String,
     enum:["Onsite", "Remote", "Hybrid"]
-  },
+  }],
   jobIndustry:{
     type:String,
 

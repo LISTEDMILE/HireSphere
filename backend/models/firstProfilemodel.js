@@ -19,10 +19,10 @@ const profileSchema = new mongoose.Schema({
     type: String,
     required: [true, "Profile Course is required"],
   },
-  profileSkills: {
+  profileSkills: [{
     type: String,
     required: [true, "Profile Skills are required"],
-  },
+  }],
   profileEmail: {
     type: String,
     required: [true, "Profile Email is required"],
@@ -43,24 +43,37 @@ const profileSchema = new mongoose.Schema({
     type: String,
     required: [true, "Profile Graduation is required"],
   },
-  profileExperience:{
-    type:String,
+  profileExperience: {
+    type: String,
   },
-  profileJobType:[{
-    type:String,
-    enum:["Full-Time", "Part-Time", "Internship", "Freelance", "Remote", "Hybrid"],
-  }],
-  profileExpectedSalary:{
-    type:String,
-  
+  profileJobType: [
+    {
+      type: String,
+      enum: [
+        "Full-Time",
+        "Part-Time",
+        "Internship",
+        "Contract",
+        "Freelance",
+        "Temporary",
+        "Remote",
+        "Hybrid",
+      ],
+    },
+  ],
+  profileExpectedSalary: {
+    type: String,
   },
-  profilePreferredLocations:[{type:String}],
+  profilePreferredLocations: [{ type: String }],
 
-  profileProjects:[{title:String,
-    description:String,
-    link:String,
-    technologies:[String]
-  }],
+  profileProjects: [
+    {
+      title: String,
+      description: String,
+      link: String,
+      technologies: [String],
+    },
+  ],
   profileDescription: {
     type: String,
     required: [true, "Profile Description is required"],
@@ -73,7 +86,10 @@ const profileSchema = new mongoose.Schema({
 
 profileSchema.pre("findOneAndDelete", async function (next) {
   const queryId = this.getQuery()["_id"];
-  const profileId = typeof queryId === "string" ? new mongoose.Types.ObjectId(queryId) : queryId;
+  const profileId =
+    typeof queryId === "string"
+      ? new mongoose.Types.ObjectId(queryId)
+      : queryId;
   await UserEmployee.findOneAndUpdate(
     { profilesPosted: profileId },
     { $pull: { profilesPosted: profileId } }
@@ -83,11 +99,11 @@ profileSchema.pre("findOneAndDelete", async function (next) {
     { $pull: { profileFavourites: profileId } }
   );
   await UserRecruiter.findOneAndUpdate(
-    { 'choosenProfiles.Ids': profileId },
-    { $pull: { choosenProfiles: {Ids:profileId} } }
+    { "choosenProfiles.Ids": profileId },
+    { $pull: { choosenProfiles: { Ids: profileId } } }
   );
   await UserEmployee.findOneAndUpdate(
-    { 'offers.profile': profileId  },
+    { "offers.profile": profileId },
     { $pull: { offers: { profile: profileId } } }
   );
   await UserEmployee.findOneAndUpdate(

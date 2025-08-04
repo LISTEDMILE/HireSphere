@@ -21,7 +21,7 @@ export default function AddAboutEmployee() {
     skills: [],
     experience: [],
     projects: [],
-    achievements: "",
+    achievements: [],
     languageKnown: [],
     jobPreferences: [],
   });
