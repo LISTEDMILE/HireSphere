@@ -58,7 +58,7 @@ export default function HostJobList() {
     <div className="w-full bg-black flex flex-col items-center">
       <NavHome />
       <h1 className="text-5xl font-bold my-6 text-white text-center">
-        Here are the added Posts..
+        Uploaded Vacancies
       </h1>
       <div className="w-full ">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
@@ -70,7 +70,7 @@ export default function HostJobList() {
               <div className="flex justify-end items-center text-2xl gap-12 pr-8">
                   <Link
                     to={`/host/addJob/${job._id}?editing=true`}
-                    className="text-gray-400 hover:underline"
+                    className="text-gray-400 hover:text-gray-600"
                   >
                     <FaUserEdit />
                   </Link>
@@ -125,10 +125,6 @@ export default function HostJobList() {
 
                 
               </div>
-
-
-              
-              
 
               <div className="mt-4 flex justify-end">
                   <Link

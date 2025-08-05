@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import NavHome from "../../compo/NavHome";
+import { FaUserEdit } from "react-icons/fa";
+
 export default function Applications() {
   const [applications, setApplications] = useState([]);
 
@@ -7,13 +10,16 @@ export default function Applications() {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const response = await fetch("http://localhost:3000/host/hostApplications", {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "http://localhost:3000/host/hostApplications",
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const data = await response.json();
         if (data.error) {
@@ -21,7 +27,6 @@ export default function Applications() {
           return;
         }
         setApplications(data.applications);
-        
       } catch (error) {
         console.error("Error fetching applications:", error);
       }
@@ -30,11 +35,10 @@ export default function Applications() {
     fetchApplications();
   }, []);
 
-
   // Handle Reject Application
   const handleIgnore = async (jobId) => {
     try {
-       await fetch(`http://localhost:3000/host/ignoreApplication/${jobId}`, {
+      await fetch(`http://localhost:3000/host/ignoreApplication/${jobId}`, {
         method: "DELETE",
         credentials: "include",
         headers: {
@@ -43,7 +47,7 @@ export default function Applications() {
       });
 
       setApplications((prevApplications) =>
-        prevApplications.filter((application) => application._id !== jobId)
+        prevApplications.filter((application) => application.job._id !== jobId)
       ); // Remove the rejected application from the list
     } catch (error) {
       console.error("Error rejecting application:", error);
@@ -54,14 +58,19 @@ export default function Applications() {
     try {
       await fetch(`http://localhost:3000/host/acceptApplication/${jobId}`, {
         method: "POST",
-        
+
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
       });
-      setApplications((prevApplications) =>
-        prevApplications.map((application) => application._id == jobId ? { ...application, status: "accepted" } : application) // Mark the application as accepted
+      setApplications(
+        (prevApplications) =>
+          prevApplications.map((application) =>
+            application.job._id == jobId
+              ? { ...application, status: "accepted" }
+              : application
+          ) // Mark the application as accepted
       ); // Remove the accepted application from the list
     } catch (error) {
       console.error("Error accepting application:", error);
@@ -77,96 +86,173 @@ export default function Applications() {
           "Content-Type": "application/json",
         },
       });
-      setApplications((prevApplications) =>
-        prevApplications.map((application) => application._id == jobId ? { ...application, status: "rejected" } : application) // Mark the application as rejected
+      setApplications(
+        (prevApplications) =>
+          prevApplications.map((application) =>
+            application.job._id == jobId
+              ? { ...application, status: "rejected" }
+              : application
+          ) // Mark the application as rejected
       ); // Remove the rejected application from the list
-      
     } catch (error) {
       console.error("Error rejecting application:", error);
     }
   };
 
-
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-6 text-center">Here are the added Posts</h1>
-      <ul className="space-y-4">
-        {applications.map((application) => (
-          <li key={application._id} className="bg-white shadow-md rounded-lg p-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">{application.jobPost}</h2>
-              <div className="flex space-x-2">
+    <div className="w-full bg-black flex flex-col items-center">
+      <NavHome />
+      <h1 className="text-5xl font-bold my-6 text-white text-center">
+        Applications
+      </h1>
+      <div className="w-full ">
+        <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
+          {applications.map((application) => (
+            <li
+              key={application.job._id}
+              className="bg-[#0d212e80] flex gap-12 flex-col  border-white shadow-md  wrap-break-word rounded-lg p-6 w-[70%]"
+            >
+              <div className="flex justify-end items-center text-2xl gap-12 pr-8">
                 <Link
                   to={`/host/addJob/${application.job._id}?editing=true`}
-                  className="text-blue-500 hover:underline"
+                  className="text-gray-400 hover:text-gray-600"
                 >
-                  ✏️
+                  <FaUserEdit />
                 </Link>
+              </div>
+              <div className="flex gap-24 ">
+                <div className="h-[100px] w-[100px] bg-amber-200"></div>
+                <div className="w-full flex flex-col gap-4">
+                  <h2 className="text-3xl text-cyan-400 font-semibold">
+                    {application.job.jobPost}
+                  </h2>
+
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 text-xl">
+                      Organization:
+                    </label>
+                    <p className="text-white text-xl">
+                      {application.job.jobCompany}
+                    </p>
+                  </div>
+
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 font-medium">
+                      Location:
+                    </label>
+                    <p className="text-white">{application.job.jobLocation}</p>
+                  </div>
+
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 font-medium">
+                      Salary Offered:
+                    </label>
+                    <p className="text-cyan-300">
+                      {application.job.jobSalaryOffered}
+                    </p>
+                  </div>
+
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 font-medium">
+                      Required Experience:
+                    </label>
+                    <p className="text-white">
+                      {application.job.jobExperienceRequired}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 flex justify-between">
+                <div className="flex gap-3 items-center ml-6">
+                  <span className="text-gray-400 text-xl"> Status:</span>
+                  <p className="text-cyan-300 text-xl">{application.status}</p>
+                </div>
+
+                <Link
+                  to={`/host/hostJobDetails/${application.job._id}`}
+                  className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg mr-4 "
+                >
+                  Details..
+                </Link>
+              </div>
+
+              {/* Applier Profile Section */}
+              <div className="mt-6 bg-[#0e201c8f] flex flex-col gap-3 p-8 rounded-lg shadow-inner">
+                <h3 className="text-xl text-cyan-400 font-bold mb-2">
+                  Applier Profile
+                </h3>
+                <div className="flex gap-3 items-center">
+                  <strong className="text-gray-400 text-lg">Name:</strong>{" "}
+                  <p className="text-white">
+                    {application.applierProfile?.firstname || "N/A"}
+                  </p>
+                </div>
+                <div className="flex gap-3 items-center">
+                  <strong className="text-gray-400 text-lg">Email:</strong>{" "}
+                  <p className="text-white">
+                    {application.applierProfile?.aboutEmployee.email || "N/A"}
+                  </p>
+                </div>
+                <div className="flex gap-3 items-center">
+                  <strong className="text-gray-400 text-lg">Mobile:</strong>{" "}
+                  <p className="text-white">
+                    {application.applierProfile?.aboutEmployee.mobile || "N/A"}
+                  </p>
+                </div>
+                <div className="flex gap-3 items-center">
+                  <strong className="text-gray-400 text-lg">Bio:</strong>{" "}
+                  <p className="text-white">
+                    {application.applierProfile?.aboutEmployee.bio || "N/A"}
+                  </p>
+                </div>
+
+                <div className="flex justify-end gap-3 pr-6">
+                <Link
+                    to={`/host/aboutEmployee/${application.applierProfile._id}`}
+                    className="bg-cyan-600 text-white hover:bg-cyan-800 px-4 py-2  rounded-lg  "
+                  >
+                    Profile
+                  </Link>
+
+                  <Link
+                    to={`/host/applicantProfiles/${application.applierProfile._id}`}
+                    className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg  "
+                  >
+                    Get Resumes
+                  </Link>
+                </div>
+              </div>
+
+              <div className="flex justify-end pr-8 gap-5 items-center">
+                {application.status !== "rejected" && (
+                  <button
+                    className="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded mt-4"
+                    onClick={() => handleReject(application.job._id)}
+                  >
+                    Reject
+                  </button>
+                )}
+                {application.status !== "accepted" && (
+                  <button
+                    onClick={() => handleAccept(application.job._id)} // Replace with your accept function
+                    className="bg-green-700 hover:bg-green-900 text-white px-4 py-2 rounded mt-4 ml-2"
+                  >
+                    Accept
+                  </button>
+                )}
+
                 <button
                   onClick={() => handleIgnore(application.job._id)}
-                  className="text-red-500 hover:underline"
+                  className="bg-cyan-700 hover:bg-cyan-900 text-white px-4 py-2 rounded mt-4 ml-2"
                 >
-                  ✘
+                  Ignore
                 </button>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-            onClick={() => handleReject(application.job._id)}>
-              Reject
-            </button>
-            <button
-              onClick={() => handleAccept(application.job._id)} // Replace with your accept function
-              className="bg-green-500 text-white px-4 py-2 rounded mt-4 ml-2">
-              Accept
-            </button>
-                
               </div>
-            </div>
-            <h3 className="text-gray-700">Company: {application.jobCompany}</h3>
-            <h3 className="text-gray-700">Expected Salary: {application.jobSalaryOffered}</h3>
-            <div className="mt-2">
-              <label className="block text-gray-600 font-medium">Location:</label>
-              <p className="text-gray-800">{application.jobLocation}</p>
-            </div>
-            <div className="mt-2">
-              <label className="block text-gray-600 font-medium">Skills Required:</label>
-              <p className="text-gray-800">{application.jobSkills}</p>
-            </div>
-            <Link
-              to={`/host/hostJobDetails/${application._id}`}
-              className="text-teal-600 hover:underline mt-4 block"
-            >
-              More..
-            </Link>
-
-            {/* Applier Profile Section */}
-            <div className="mt-6 bg-gray-50 p-4 rounded-lg shadow-inner">
-              <h3 className="text-lg font-bold mb-2">Applier Profile</h3>
-              <p className="text-gray-700">
-                <strong>Name:</strong> {application.applierProfile?.firstname || "N/A"}
-              </p>
-              <p className="text-gray-700">
-                <strong>Email:</strong> {application.applierProfile?.email || "N/A"}
-              </p>
-              <p className="text-gray-700">
-                <strong>Mobile:</strong> {application.applierProfile?.mobile || "N/A"}
-              </p>
-              <p className="text-gray-700">
-                <strong>Skills:</strong> {application.applierProfile?.skills || "N/A"}
-              </p>
-              <p className="text-gray-700">
-                <strong>Education:</strong> {application.applierProfile?.education || "N/A"}
-              </p>
-              <p className="text-gray-700">
-                <strong>Description:</strong> {application.applierProfile?.description || "N/A"}
-              </p>
-
-              <Link
-              to={`/host/applicantProfiles/${application.applierProfile._id}`}>Get Resumes</Link>
-            </div>
-            
-          </li>
-          
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

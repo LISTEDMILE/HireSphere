@@ -45,6 +45,7 @@ export default function AddAboutEmployee() {
     linkedIn: "",
     gitHub: "",
     bio: "",
+    mobile:"",
     education: [],
     skills: [],
     experience: [],
@@ -298,6 +299,7 @@ export default function AddAboutEmployee() {
       <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" />
       <input name="linkedIn" value={formData.linkedIn} onChange={handleChange} placeholder="LinkedIn" />
       <input name="gitHub" value={formData.gitHub} onChange={handleChange} placeholder="GitHub" />
+      <input name="mobile" value={formData.mobile} onChange={handleChange} placeholder="Mobile" />
       <textarea name="bio" value={formData.bio} onChange={handleChange} placeholder="Bio" />
 
       <input

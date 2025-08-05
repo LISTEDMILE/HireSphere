@@ -49,6 +49,9 @@ const userSchema = new mongoose.Schema(
       bio: {
         type: String,
       },
+      mobile: {
+        type:String,
+      },
       education: [
         {
           degree: { type: String },
