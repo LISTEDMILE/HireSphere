@@ -143,7 +143,7 @@ export default function AddJob() {
           onSubmit={handleSubmit}
           className="space-y-8 p-6 flex flex-col items-center w-full"
         >
-          <input type="hidden" name="_id" value={formData._id} />
+          {editing && <input type="hidden" name="_id" value={formData._id} />}
 
           {/* Organization Name */}
           <div className="w-full">

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { AddProfileToServer } from "../../../../services/Services";
+import { MdOutlineCancel } from "react-icons/md";
+import { GrRadialSelected } from "react-icons/gr";
+import NavHome from "../../compo/NavHome";
 
 export default function ProfileForm() {
   const [errors, setErrors] = useState(null);
@@ -13,8 +16,8 @@ export default function ProfileForm() {
     link: "",
     technologies: [],
   });
-  
-    const [skill, setSkill] = useState("");
+
+  const [skill, setSkill] = useState("");
 
   const { profileId } = useParams();
   const location = useLocation();
@@ -47,7 +50,7 @@ export default function ProfileForm() {
     profileJobType: [],
     profileExpectedSalary: "",
     profilePreferredLocations: [],
-    profileProjects: [], 
+    profileProjects: [],
     profileDescription: "",
     profilePostDescription: "",
   });
@@ -189,260 +192,372 @@ export default function ProfileForm() {
     if (data.errors) {
       setErrors(data.errors);
     } else {
-      navigate("/");
+      navigate("/store/storeProfileList");
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      action={`/store/${editing ? "editProfile" : "addProfile"}`}
-      method="POST"
-      className="max-w-3xl mx-auto bg-white shadow-xl rounded-xl p-8 space-y-6"
-    >
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        {editing ? "Edit" : "Add"} Profile
-      </h1>
-
-      {editing && <input type="hidden" name="_id" value={formData._id} />}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Input fields */}
-        {[
-          ["Name", "profileName", "text"],
-          ["Gender", "profileGender", "text"],
-          ["Post", "profilePost", "text"],
-          ["Courses Done", "profileCourse", "text"],
-         
-          ["Email", "profileEmail", "email"],
-          ["Mobile", "profileMobile", "number"],
-        ].map(([label, name, type]) => (
-          <div key={name} className="flex flex-col">
-            <label className="font-semibold mb-1">{label}</label>
-            <input
-              required
-              type={type}
-              name={name}
-              placeholder={label}
-              value={formData[name]}
-              onChange={handleChange}
-              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+    <div className="w-full flex flex-col items-center bg-black">
+      <NavHome active="addJob" />
+      <div className="w-[80%] p-6 flex flex-col items-center shadow-md rounded-lg bg-[#0a1f1d] text-white">
+        <h1 className="text-4xl font-bold mb-6 text-center">
+          {editing ? "Edit" : "Add"} Resume
+        </h1>
+        {errors && (
+          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+            <ul className="list-disc list-inside">
+              {errors.map((err, i) => (
+                <li key={i}>{err}</li>
+              ))}
+            </ul>
           </div>
-        ))}
-
-        <input
-          type="text"
-          name="preferredLocation"
-          onChange={(e) => setPreferredLocation(e.target.value)}
-          value={preferredLocation}
-        />
-        <button
-          onClick={(e) => {
-            handleArrayAdd(e, "profilePreferredLocations", preferredLocation);
-            setPreferredLocation("");
-          }}
+        )}
+        <form
+          onSubmit={handleSubmit}
+          action={`/store/${editing ? "editProfile" : "addProfile"}`}
+          method="POST"
+          className="space-y-8 p-6 flex flex-col items-center w-full"
         >
-          add
-        </button>
-        {formData.profilePreferredLocations.map((loc) => {
-          return (
-            <>
-              <p>{loc}</p>
-              <button
-                onClick={(e) =>
-                  handleArrayRemove(e, "profilePreferredLocations", loc)
-                }
-              >
-                remove
-              </button>
-            </>
-          );
-        })}
+          {editing && <input type="hidden" name="_id" value={formData._id} />}
 
+          {/* Input fields */}
+          {[
+            ["Name", "profileName", "text"],
+            ["Gender", "profileGender", "text"],
+            ["Post", "profilePost", "text"],
+            ["Courses Done", "profileCourse", "text"],
 
-<input 
-        type="text"
-        name="skill"
-        onChange={(e)=>setSkill(e.target.value)}
-        value={skill}
-        />
-        <button
-
-        onClick ={(e)=>{handleArrayAdd(e,"profileSkills",skill);
-          setSkill("");
-        }}
-        >add</button>
-        {formData.profileSkills.map(skill => {
-          return(
-            <>
-            <p>{skill}</p>
-            <button onClick={(e) => handleArrayRemove(e,"profileSkills",skill)}>
-              remove</button>
-            </>
-          )
-        })}
-
-        <input
-          type="text"
-          name="projectTitle"
-          className="bg-pink-300"
-          onChange={(e) => setProject({ ...project, title: e.target.value })}
-          value={project.title}
-        />
-        <input
-          type="text"
-          className="bg-pink-300"
-          name="projectDescription"
-          onChange={(e) =>
-            setProject({ ...project, description: e.target.value })
-          }
-          value={project.description}
-        />
-        <input
-          type="text"
-          className="bg-pink-300"
-          name="projectLink"
-          onChange={(e) => setProject({ ...project, link: e.target.value })}
-          value={project.link}
-        />
-        <input
-          type="text"
-          name="insideProjectTechnologies"
-          onChange={(e) => setInsideProjectTechnologies(e.target.value)}
-          value={insideProjectTechnologies}
-        />
-        <button
-          onClick={(e) => {
-            handleAddProjectTechnologies(e, insideProjectTechnologies);
-            setInsideProjectTechnologies("");
-          }}
-        >
-          add Technologies
-        </button>
-        {project.technologies.map((tech) => {
-          return (
-            <>
-              <p>{tech}</p>
-              <button onClick={(e) => handleRemoveProjectTechnologies(e, tech)}>
-                remove
-              </button>
-            </>
-          );
-        })}
-
-        <button
-          onClick={(e) => {
-            handleAddProject(e, project);
-          }}
-        >
-          add Project
-        </button>
-        {formData.profileProjects.map((pro) => {
-          return (
-            <>
-              <p>
-                {pro.title}
-                {pro.description}
-                {pro.link}
-                {pro.technologies.map((tech) => {
-                  return <span>{tech}</span>;
-                })}
-              </p>
-              <button onClick={(e) => handleRemoveProject(e, pro)}>
-                remove
-              </button>
-            </>
-          );
-        })}
-
-        {JobTypes.map((emType) => {
-          return (
-            <label>
-              {emType}
+            ["Email", "profileEmail", "email"],
+            ["Mobile", "profileMobile", "number"],
+            ["Expected Salary", "profileExpectedSalary", "text"],
+            ["Experience", "profileExperience", "text"],
+          ].map(([label, name, type]) => (
+            <div key={name} className="w-full">
+              <label className="block text-gray-400 font-medium mb-2">
+                {label}
+              </label>
               <input
-                type="checkbox"
-                value={emType}
-                checked={formData.profileJobType.includes(emType)}
-                onChange={() => handleJobType(emType)}
+                required
+                type={type}
+                name={name}
+                placeholder={label}
+                value={formData[name]}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
-            </label>
-          );
-        })}
+            </div>
+          ))}
 
-        {/* Percentage fields with slider */}
-        {[
-          ["10th (%)", "profileTenth"],
-          ["12th (%)", "profileTwelth"],
-          ["Graduation (%)", "profileGraduation"],
-        ].map(([label, name]) => (
-          <div key={name} className="flex flex-col">
-            <label className="font-semibold mb-1">{label}</label>
-            <input
-              type="number"
-              min="0"
-              max="100"
-              step="0.1"
-              name={name}
-              value={formData[name]}
+          
+
+<div className="w-[80%] bg-[#3C2A21] p-4 rounded-lg">
+              <div className="w-full flex space-y-2 flex-col">
+                <div>
+                  <label className="block text-gray-400 font-medium mb-2">Preferred Locations:</label>
+                  <div className="flex space-x-4 w-full">
+          <input
+            type="text"
+            name="preferredLocation"
+            onChange={(e) => setPreferredLocation(e.target.value)}
+                  value={preferredLocation}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <button
+            onClick={(e) => {
+              handleArrayAdd(e, "profilePreferredLocations", preferredLocation);
+              setPreferredLocation("");
+                  }}
+                  className="bg-amber-800 px-6 py-2 rounded-lg"
+          >
+            add
+                </button>
+                </div>
+              </div>
+              </div>
+                <div className="flex justify-start flex-col mt-8 items-center gap-3 w-full flex-wrap">
+          {formData.profilePreferredLocations.map((loc) => {
+            return (
+              <div className="bg-cyan-950 px-4 py-3 rounded-lg flex  w-full text-wrap items-center justify-between border-white border-1">
+                      <span>{loc}</span>
+                <button
+                  onClick={(e) =>
+                    handleArrayRemove(e, "profilePreferredLocations", loc)
+                  }
+                >
+                  <MdOutlineCancel className=" h-full ml-2" />
+                                        </button>
+                                      </div>
+                                    );
+                                  })}
+              </div>
+           
+
+              </div>
+
+
+          {/* Skills */}
+          <div className="w-full flex justify-between">
+            <div className="w-[55%] bg-[#3C2A21] p-4 rounded-lg">
+              <div className="w-full flex space-y-2 flex-col">
+                <div>
+                  <label className="block text-gray-400 font-medium mb-2">Skills:</label>
+                  <div className="flex space-x-4 w-full">
+
+          <input
+            type="text"
+            name="skill"
+            onChange={(e) => setSkill(e.target.value)}
+                    value={skill}
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+          />
+          <button
+            onClick={(e) => {
+              handleArrayAdd(e, "profileSkills", skill);
+                      setSkill("");
+                      
+            }}
+            className="bg-amber-800 px-6 py-2 rounded-lg"
+          >
+            add
+                  </button>
+                  </div>
+                </div>
+                <div className="flex justify-start items-center gap-3 w-full flex-wrap"></div>
+          {formData.profileSkills.map((skill) => {
+            return (
+              <div className="bg-cyan-950 px-4 py-3 rounded-lg flex items-center justify-between border-white border-1">
+                      <span>{skill}</span>
+                      <button
+                  onClick={(e) => handleArrayRemove(e, "profileSkills", skill)}
+                >
+                  <MdOutlineCancel className=" h-full ml-2" />
+                                        </button>
+                                      </div>
+                                    );
+                                  })}
+              </div>
+              </div>
+                              
+          <div className="w-[40%] bg-[#3C2A21] p-4 rounded-lg flex flex-col text-lg gap-4">
+            
+          <h2  className="block text-gray-400 font-medium mb-2"> Job Type</h2>
+
+{JobTypes.map((emType) => {
+            return (
+              <label className={`bg-cyan-950 px-4 py-3 rounded-lg flex justify-between items-center ${formData.profileJobType.includes(emType) ? "border-green-700  border-2 " : "border-1 border-white"}`}>
+                {emType}
+                <input
+                  type="checkbox"
+                  value={emType}
+                  className="hidden"
+                  onChange={() => handleJobType(emType)}
+                />
+            {formData.profileJobType.includes(emType) && <GrRadialSelected className="text-green-300"/> }
+              </label>
+            );
+          })}
+        </div>
+          </div>
+          
+
+
+    
+
+          <div className="bg-[#3C2A21] p-4 rounded-lg w-full flex flex-col">
+
+            <h1 className="text-2xl mb-4">Projects</h1>
+            <div className="flex justify-around">
+            <div className="flex flex-col gap-3 w-[45%]">
+              <label className="block text-gray-400 font-medium mb-2">Title:</label>
+          <input
+            type="text"
+            name="projectTitle"
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+            onChange={(e) => setProject({ ...project, title: e.target.value })}
+            value={project.title}
+              />
+              <label className="block text-gray-400 font-medium mb-2">Description:</label>
+          <input
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+            name="projectDescription"
+            onChange={(e) =>
+              setProject({ ...project, description: e.target.value })
+            }
+            value={project.description}
+                />
+                <label className="block text-gray-400 font-medium mb-2">Link:</label>
+          <input
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+            name="projectLink"
+            onChange={(e) => setProject({ ...project, link: e.target.value })}
+            value={project.link}
+              />
+              </div>
+              <div className="flex flex-col gap-8 w-[45%] border-2 border-white rounded-lg h-fit">
+              <div className="flex flex-col  p-8 w-full">
+          <input
+            type="text"
+            name="insideProjectTechnologies"
+                  onChange={(e) => setInsideProjectTechnologies(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+            value={insideProjectTechnologies}
+          />
+          <button
+            onClick={(e) => {
+              handleAddProjectTechnologies(e, insideProjectTechnologies);
+              setInsideProjectTechnologies("");
+                    }}
+                    className="w-[fit] mt-6  px-4 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+          >
+            add 
+                </button>
+                <div className="flex justify-start items-center gap-3 w-full mt-4 flex-wrap">
+          {project.technologies.map((tech) => {
+            return (
+              <div className="bg-cyan-950 px-3 py-1 rounded-lg flex items-center">
+                    <span>{tech}</span>
+                <button
+                  onClick={(e) => handleRemoveProjectTechnologies(e, tech)}
+                >
+                  <MdOutlineCancel className=" h-full ml-2" />
+                </button>
+                </div>
+            );
+          })}
+                 </div>
+
+          
+
+                </div>
+            
+            
+                <button
+            onClick={(e) => {
+              handleAddProject(e, project);
+                  }}
+                  className="w-[fit]  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+          >
+            add Project
+                </button>
+                </div>
+            </div>
+            <div className="w-full flex justify-around gap-8 mt-12 flex-wrap">
+            
+          {formData.profileProjects.map((pro) => {
+            return (
+              <div className="bg-cyan-950 flex flex-col rounded-lg w-[30%] p-4">
+                <div className="flex flex-col gap-3">
+                <label className="block text-gray-400 font-medium ">Title:</label>
+                  {pro.title}
+                  <label className="block text-gray-400 font-medium ">Description:</label>
+                  {pro.description}
+                  <label className="block text-gray-400 font-medium ">Link:</label>
+                  {pro.link}
+                  <label className="block text-gray-400 font-medium ">Technologies Used:</label>
+                  <div className="flex justify-start items-center gap-3 w-full flex-wrap">
+                  {pro.technologies.map((tech) => {
+                    return (
+                      <div className="bg-cyan-600 px-3 py-1 rounded-lg flex items-center">
+                        <span>{tech}</span></div>
+                );
+                  })}
+                  </div>
+                  </div>
+                <button onClick={(e) => handleRemoveProject(e, pro)}>
+                  remove
+                </button>
+              </div>
+            );
+          })}
+              </div>
+              
+
+</div>
+         
+
+          {/* Percentage fields with slider */}
+          <div className="w-full justify-around flex">
+          {[
+            ["10th (%)", "profileTenth"],
+            ["12th (%)", "profileTwelth"],
+            ["Graduation (%)", "profileGraduation"],
+          ].map(([label, name]) => (
+            <div key={name} className="w-[30%] flex flex-col gap-6">
+            <label className="block text-gray-400 font-medium mb-2">{label}</label>
+              <input
+                type="number"
+                min="0"
+                max="100"
+                step="0.1"
+                name={name}
+                value={formData[name]}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="0.1"
+                value={formData[name]}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    [name]: parseFloat(e.target.value),
+                  })
+                }
+                className="accent-blue-500 w-full"
+              />
+            </div>
+          ))}
+          </div>
+
+          {/* Textarea: Describe Yourself */}
+          <div className="w-full">
+            <label className="block text-gray-400 font-medium mb-2">
+             Describe Yourself</label>
+            <textarea
+              required
+              name="profileDescription"
+              placeholder="Describe yourself here"
+              value={formData.profileDescription}
               onChange={handleChange}
-              className="mb-2 border border-gray-300 rounded px-3 py-2 focus:outline-none"
-            />
-            <input
-              type="range"
-              min="0"
-              max="100"
-              step="0.1"
-              value={formData[name]}
-              onChange={(e) =>
-                setFormData({ ...formData, [name]: parseFloat(e.target.value) })
-              }
-              className="accent-blue-500"
+              
+              className="w-full h-44 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
-        ))}
 
-        {/* Textarea: Describe Yourself */}
-        <div className="col-span-1 md:col-span-2 flex flex-col">
-          <label className="font-semibold mb-1">Describe Yourself</label>
-          <textarea
-            required
-            name="profileDescription"
-            placeholder="Describe yourself here"
-            value={formData.profileDescription}
-            onChange={handleChange}
-            className="border border-gray-300 rounded px-3 py-2 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
+          {/* Textarea: Describe Post */}
+          <div className="w-full">
+          <label className="block text-gray-400 font-medium mb-2">
+              Describe About Post You are Looking For
+            </label>
+            <textarea
+              required
+              name="profilePostDescription"
+              placeholder="Describe your desired post here"
+              value={formData.profilePostDescription}
+              onChange={handleChange}
+              className="w-full h-44 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+            />
+          </div>
 
-        {/* Textarea: Describe Post */}
-        <div className="col-span-1 md:col-span-2 flex flex-col">
-          <label className="font-semibold mb-1">
-            Describe About Post You are Looking For
-          </label>
-          <textarea
-            required
-            name="profilePostDescription"
-            placeholder="Describe your desired post here"
-            value={formData.profilePostDescription}
-            onChange={handleChange}
-            className="border border-gray-300 rounded px-3 py-2 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
+          {/* Submit Button */}
+          <div className="text-center">
+            <input
+              id="submit"
+              type="submit"
+              value={editing ? "Update" : "Add"}
+              className="w-[fit]  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+            />
+            <p className="text-sm text-gray-500 mt-2">
+              *For multiple responses come back from the next page.
+            </p>
+          </div>
+        </form>
       </div>
-
-      {/* Submit Button */}
-      <div className="text-center">
-        <input
-          id="submit"
-          type="submit"
-          value={editing ? "Update" : "Add"}
-          className="bg-blue-600 text-white font-semibold py-2 px-6 rounded hover:bg-blue-700 transition duration-200"
-        />
-        <p className="text-sm text-gray-500 mt-2">
-          *For multiple responses come back from the next page.
-        </p>
-      </div>
-    </form>
+    </div>
   );
 }
