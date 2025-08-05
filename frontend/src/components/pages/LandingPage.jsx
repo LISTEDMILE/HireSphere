@@ -230,8 +230,26 @@ const LandingPage = () => {
         x: -400,
       });
     });
-  });
 
+    gsap.to(".rocket", 
+      {
+      scrollTrigger: {
+        trigger: ".endingH",
+        toggleActions: "play none none reverse",
+          start: "top 60%",
+          end: "top 10%",
+        scrub:3
+      },
+        x: "-100%", y: "20%",
+        rotate:90,
+        opacity: 1,
+    });
+
+
+
+
+  });
+  
   useEffect(() => {
     const styleSheet = document.styleSheets[0];
 
@@ -381,7 +399,7 @@ const LandingPage = () => {
           </div>
         </div>
 
-        <h1 className="text-white text-5xl bg-amber-900 flex justify-center align-center w-full p-12">
+        <h1 className=" endingH text-cyan-400 text-5xl  flex justify-center align-center w-full p-12 py-72">
           {" "}
           Registor Now..
         </h1>

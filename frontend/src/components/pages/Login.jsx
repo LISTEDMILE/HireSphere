@@ -51,7 +51,7 @@ export default function LoginPage() {
       <h1 className="text-4xl font-bold mb-6 text-white">Login</h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-[#121614] relative shadow-lg rounded-lg p-8 w-[400px] "
+        className="bg-[#0d212ec9] relative shadow-lg rounded-lg p-8 w-[400px] "
           >
               {errors && (
             <div className=" border-2  bg-red-100 text-red-900  p-3 rounded-md mb-4">

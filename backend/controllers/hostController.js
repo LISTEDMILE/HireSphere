@@ -15,6 +15,10 @@ exports.addJobPost = [
   check("jobOwnerMobile")
     .notEmpty()
     .withMessage("Job Owner Mobile is required")
+    .isLength({ min: 10, max: 10 })
+    .withMessage("Mobile number must be 10 digits")
+    .isNumeric()
+    .withMessage("Mobile number must contain only digits")
     .trim(),
   check("jobOwnerEmail")
     .notEmpty()
@@ -26,6 +30,10 @@ exports.addJobPost = [
     .notEmpty()
     .withMessage("Job Description is required")
     .trim(),
+  check("jobSkills")
+    .isArray({min:1})
+    .withMessage("Add Skills"),
+  
 
   async (req, res) => {
     const errors = validationResult(req);
@@ -34,7 +42,7 @@ exports.addJobPost = [
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array().map((err) => err.msg),
-        oldInput: {...jobToAdd}
+        oldInput: { ...jobToAdd },
       });
     }
 
@@ -56,23 +64,22 @@ exports.addJobPost = [
       let existingJob = await Job.findById(jobToAdd._id);
       if (existingJob) {
         existingJob.jobCompany = jobToAdd.jobCompany;
-  existingJob.jobPost = jobToAdd.jobPost;
-  existingJob.jobLocation = jobToAdd.jobLocation;
-  existingJob.jobOwnerMobile = jobToAdd.jobOwnerMobile;
-  existingJob.jobOwnerEmail = jobToAdd.jobOwnerEmail;
-  existingJob.jobSalaryOffered = jobToAdd.jobSalaryOffered;
-  existingJob.jobEmploymentType = jobToAdd.jobEmploymentType;
-  existingJob.jobExperienceRequired = jobToAdd.jobExperienceRequired;
-  existingJob.jobSkills = jobToAdd.jobSkills;
-  existingJob.jobCompanyLogo = jobToAdd.jobCompanyLogo;
-  existingJob.jobType = jobToAdd.jobType;
-  existingJob.jobIndustry = jobToAdd.jobIndustry;
-  existingJob.jobTags = jobToAdd.jobTags;
-  existingJob.description = jobToAdd.description;
+        existingJob.jobPost = jobToAdd.jobPost;
+        existingJob.jobLocation = jobToAdd.jobLocation;
+        existingJob.jobOwnerMobile = jobToAdd.jobOwnerMobile;
+        existingJob.jobOwnerEmail = jobToAdd.jobOwnerEmail;
+        existingJob.jobSalaryOffered = jobToAdd.jobSalaryOffered;
+        existingJob.jobEmploymentType = jobToAdd.jobEmploymentType;
+        existingJob.jobExperienceRequired = jobToAdd.jobExperienceRequired;
+        existingJob.jobSkills = jobToAdd.jobSkills;
+        existingJob.jobCompanyLogo = jobToAdd.jobCompanyLogo;
+        existingJob.jobType = jobToAdd.jobType;
+        existingJob.jobIndustry = jobToAdd.jobIndustry;
+        existingJob.jobTags = jobToAdd.jobTags;
+        existingJob.description = jobToAdd.description;
         savedJob = await existingJob.save();
       } else {
-        const job = new Job({...jobToAdd});
-        console.log(job);
+        const job = new Job({ ...jobToAdd });
 
         savedJob = await job.save();
       }
@@ -118,7 +125,7 @@ exports.postAddAboutRecruiter = [
       return res.status(400).json({
         errors: errors.array().map((err) => err.msg),
         oldInput: {
-          ...data
+          ...data,
         },
       });
     }
@@ -136,10 +143,9 @@ exports.postAddAboutRecruiter = [
           .json({ errors: ["Access denied. Only Recruiters can update."] });
       }
 
-      
       user.aboutRecruiter = {
-        ...data
-      }
+        ...data,
+      };
 
       await user.save();
 
@@ -154,9 +160,9 @@ exports.postAddAboutRecruiter = [
 exports.getEditJob = async (req, res, next) => {
   const user = await UserRecruiter.findById(req.session.user._id);
 
-      if (!user) {
-        return res.status(404).json({ errors: ["User not found"] });
-      }
+  if (!user) {
+    return res.status(404).json({ errors: ["User not found"] });
+  }
   const jobId = req.params.jobId;
   if (!jobId) {
     return res.status(400).send({ error: "Job ID is required" });
@@ -164,9 +170,7 @@ exports.getEditJob = async (req, res, next) => {
 
   if (!user.jobsPosted.includes(jobId)) {
     return res.status(400).json({ error: "Unautorized Access" });
-  }
-  
-  else {
+  } else {
     Job.findById(jobId)
       .then((job) => {
         if (!job) {
@@ -175,19 +179,19 @@ exports.getEditJob = async (req, res, next) => {
           res.status(200).json({
             _id: job._id,
             jobCompany: job.jobCompany,
-  jobPost: job.jobPost,
-  jobLocation: job.jobLocation,
-  jobOwnerMobile: job.jobOwnerMobile,
-  jobOwnerEmail: job.jobOwnerEmail,
-  jobSalaryOffered: job.jobSalaryOffered,
-  jobEmploymentType: job.jobEmploymentType,
-  jobExperienceRequired: job.jobExperienceRequired,
-  jobSkills: job.jobSkills,
-  jobCompanyLogo: job.jobCompanyLogo,
-  jobType: job.jobType,
-  jobIndustry: job.jobIndustry,
-  jobTags: job.jobTags,
-  description: job.description,
+            jobPost: job.jobPost,
+            jobLocation: job.jobLocation,
+            jobOwnerMobile: job.jobOwnerMobile,
+            jobOwnerEmail: job.jobOwnerEmail,
+            jobSalaryOffered: job.jobSalaryOffered,
+            jobEmploymentType: job.jobEmploymentType,
+            jobExperienceRequired: job.jobExperienceRequired,
+            jobSkills: job.jobSkills,
+            jobCompanyLogo: job.jobCompanyLogo,
+            jobType: job.jobType,
+            jobIndustry: job.jobIndustry,
+            jobTags: job.jobTags,
+            description: job.description,
           });
         }
       })
@@ -200,29 +204,23 @@ exports.getEditJob = async (req, res, next) => {
 
 exports.getAddAboutRecruiter = async (req, res, next) => {
   const userId = req.params.userId;
-  
+
   const user = await UserRecruiter.findById(userId);
   if (!user) {
-    return res.status(400).json({error:"Unauthorized access"})
-  }
-  else {
-    
-        return res.status(200).json(user.aboutRecruiter);
-       
+    return res.status(400).json({ error: "Unauthorized access" });
+  } else {
+    return res.status(200).json(user.aboutRecruiter);
   }
 };
 
 exports.getAboutEmployee = async (req, res, next) => {
   const userId = req.params.userId;
-  
+
   const user = await UserEmployee.findById(userId);
   if (!user) {
-    return res.status(400).json({error:"Unauthorized access"})
-  }
-  else {
-    
-        return res.status(200).json(user.aboutEmployee);
-       
+    return res.status(400).json({ error: "Unauthorized access" });
+  } else {
+    return res.status(200).json(user.aboutEmployee);
   }
 };
 
@@ -231,7 +229,10 @@ exports.getApplications = async (req, res, next) => {
     return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   try {
-    const user = await UserRecruiter.findById(req.session.user._id, "applications");
+    const user = await UserRecruiter.findById(
+      req.session.user._id,
+      "applications"
+    );
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -277,7 +278,7 @@ exports.ignoreApplication = async (req, res, next) => {
   }
   try {
     const user = await UserRecruiter.findById(req.session.user._id);
-    
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -287,12 +288,13 @@ exports.ignoreApplication = async (req, res, next) => {
     user.applications = user.applications.filter(
       (app) => app.job.toString() !== jobId
     );
-    const userEmployee = await UserEmployee.findById(application.applierProfile);
+    const userEmployee = await UserEmployee.findById(
+      application.applierProfile
+    );
     userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
       if (appl.Ids == jobId) {
-        return { ...appl, status: "ignored" }
-      }
-      else {
+        return { ...appl, status: "ignored" };
+      } else {
         return appl;
       }
     });
@@ -330,7 +332,9 @@ exports.acceptApplication = async (req, res, next) => {
       return res.status(404).json({ error: "Application not found" });
     }
     application.status = "accepted"; // Mark the application as accepted
-    const userEmployee = await UserEmployee.findById(application.applierProfile);
+    const userEmployee = await UserEmployee.findById(
+      application.applierProfile
+    );
     if (!userEmployee) {
       return res.status(404).json({ error: "Applier not found" });
     }
@@ -344,9 +348,8 @@ exports.acceptApplication = async (req, res, next) => {
     }
     userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
       if (appl.Ids == jobId) {
-        return { ...appl, status: "accepted" }
-      }
-      else {
+        return { ...appl, status: "accepted" };
+      } else {
         return appl;
       }
     });
@@ -378,7 +381,9 @@ exports.rejectApplication = async (req, res, next) => {
       return res.status(404).json({ error: "Application not found" });
     }
     application.status = "rejected"; // Mark the application as rejected
-    const userEmployee = await UserEmployee.findById(application.applierProfile);
+    const userEmployee = await UserEmployee.findById(
+      application.applierProfile
+    );
     if (!userEmployee) {
       return res.status(404).json({ error: "Applier not found" });
     }
@@ -386,7 +391,6 @@ exports.rejectApplication = async (req, res, next) => {
       user.acceptedJobs = user.acceptedJobs.filter(
         (job) => job.toString() !== jobId
       ); // Remove the job from accepted jobs if it was accepted
-     
     }
 
     if (!user.rejectedJobs.includes(jobId)) {
@@ -394,13 +398,11 @@ exports.rejectApplication = async (req, res, next) => {
     }
     userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
       if (appl.Ids == jobId) {
-        return { ...appl, status: "rejected" }
-      }
-      else {
+        return { ...appl, status: "rejected" };
+      } else {
         return appl;
       }
     });
-    
 
     await userEmployee.save();
     await user.save();
@@ -438,7 +440,10 @@ exports.hostJobList = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const jobProvider = await UserRecruiter.findById(req.session.user._id, "jobsPosted");
+    const jobProvider = await UserRecruiter.findById(
+      req.session.user._id,
+      "jobsPosted"
+    );
     jobList = jobProvider.jobsPosted;
 
     const jobs = await Job.find({
@@ -450,7 +455,6 @@ exports.hostJobList = async (req, res, next) => {
   }
 };
 
-
 exports.getHostJobDetails = async (req, res, next) => {
   try {
     if (!req.session || !req.session.user || !req.session.user._id) {
@@ -458,7 +462,10 @@ exports.getHostJobDetails = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const jobProvider = await UserRecruiter.findById(req.session.user._id, "jobsPosted");
+    const jobProvider = await UserRecruiter.findById(
+      req.session.user._id,
+      "jobsPosted"
+    );
     jobList = jobProvider.jobsPosted;
     const jobId = req.params.jobId;
 
@@ -486,7 +493,6 @@ exports.postDeleteJob = async (req, res, next) => {
     res.status(500).json({ error: "Failed to delete job" });
   }
 };
-
 
 exports.profileList = (req, res, next) => {
   Profile.find()
@@ -540,7 +546,10 @@ exports.getOnlyProfileFavourites = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const favs = await UserRecruiter.findById(req.session.user._id, "profileFavourites");
+    const favs = await UserRecruiter.findById(
+      req.session.user._id,
+      "profileFavourites"
+    );
     let favIds = favs.profileFavourites;
     const profiles = await Profile.find({
       _id: { $in: favIds },
@@ -587,20 +596,23 @@ exports.getOnlyChoosenProfiles = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const user = await UserRecruiter.findById(req.session.user._id, "choosenProfiles");
-    let choosenProfileIds = user.choosenProfiles.map(ids => ids.Ids);
+    const user = await UserRecruiter.findById(
+      req.session.user._id,
+      "choosenProfiles"
+    );
+    let choosenProfileIds = user.choosenProfiles.map((ids) => ids.Ids);
     let profiles = await Profile.find({
       _id: { $in: choosenProfileIds },
     });
     let status;
-    profiles = profiles.map(ele => {
-      user.choosenProfiles.forEach(e => {
+    profiles = profiles.map((ele) => {
+      user.choosenProfiles.forEach((e) => {
         if (e.Ids.toString() === ele._id.toString()) {
           status = e.status;
         }
       });
-      return ({ ...ele, status: status });
-    })
+      return { ...ele, status: status };
+    });
     return res.status(200).json(profiles);
   } catch (error) {
     console.error("Error fetching choosen profiles:", error);
@@ -611,7 +623,9 @@ exports.postHireProfile = async (req, res, next) => {
   const profileId = req.params.profileId;
   try {
     const user = await UserRecruiter.findById(req.session.user._id);
-    const userEmployee = await UserEmployee.findOne({ profilesPosted: profileId });
+    const userEmployee = await UserEmployee.findOne({
+      profilesPosted: profileId,
+    });
     if (!user) {
       return res.status(404).json({ error: "User or Employee not found" });
     } else if (user.userType !== "recruiter") {
@@ -627,9 +641,11 @@ exports.postHireProfile = async (req, res, next) => {
         .json({ error: "Access denied. Only employees can be hired." });
     }
 
-    let choosenIds = user.choosenProfiles.map(pro => pro.Ids.toString());
+    let choosenIds = user.choosenProfiles.map((pro) => pro.Ids.toString());
     if (choosenIds.includes(profileId.toString())) {
-      user.choosenProfiles = user.choosenProfiles.filter(pro => pro.Ids.toString() !== profileId.toString());
+      user.choosenProfiles = user.choosenProfiles.filter(
+        (pro) => pro.Ids.toString() !== profileId.toString()
+      );
       userEmployee.offers.pull({ profile: profileId, offeredBy: user._id });
       userEmployee.acceptedOffers.pull(profileId);
       userEmployee.rejectedOffers.pull(profileId);
@@ -639,8 +655,12 @@ exports.postHireProfile = async (req, res, next) => {
         .status(200)
         .json({ message: "Profile removed from choosen profiles" });
     } else {
-      user.choosenProfiles.push({Ids:profileId,status:"pending"});
-      userEmployee.offers.push({ profile: profileId, offeredBy: user._id , status:"pending" });
+      user.choosenProfiles.push({ Ids: profileId, status: "pending" });
+      userEmployee.offers.push({
+        profile: profileId,
+        offeredBy: user._id,
+        status: "pending",
+      });
       await userEmployee.save();
       await user.save();
       return res
@@ -671,7 +691,6 @@ exports.getChoosenProfiles = async (req, res, next) => {
         .json({ error: "Failed to fetch choosen profiles" });
     });
 };
-
 
 exports.getApplicantProfiles = async (req, res, next) => {
   try {

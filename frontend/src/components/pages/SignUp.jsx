@@ -52,7 +52,7 @@ const SignUpPage = () => {
      
         <form
           onSubmit={handleSubmit}
-          className="bg-[#121614] relative shadow-lg text-white rounded-lg p-8 w-[400px]"
+          className="bg-[#0d212ec9] relative shadow-lg text-white rounded-lg p-8 w-[400px]"
         >
           
           {errors && (
