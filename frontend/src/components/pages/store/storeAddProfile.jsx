@@ -257,6 +257,7 @@ export default function ProfileForm() {
                 <div className="flex space-x-4 w-full">
                   <input
                     type="text"
+                    placeholder="Preferred Locations"
                     name="preferredLocation"
                     onChange={(e) => setPreferredLocation(e.target.value)}
                     value={preferredLocation}
@@ -307,6 +308,7 @@ export default function ProfileForm() {
                   <div className="flex space-x-4 w-full">
                     <input
                       type="text"
+                      placeholder="Skills"
                       name="skill"
                       onChange={(e) => setSkill(e.target.value)}
                       value={skill}
@@ -319,7 +321,7 @@ export default function ProfileForm() {
                       }}
                       className="bg-amber-800 px-6 py-2 rounded-lg"
                     >
-                      add
+                      Add
                     </button>
                   </div>
                 </div>
@@ -381,6 +383,7 @@ export default function ProfileForm() {
                 </label>
                 <input
                   type="text"
+                  placeholder="Title"
                   name="projectTitle"
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
                   onChange={(e) =>
@@ -393,6 +396,7 @@ export default function ProfileForm() {
                 </label>
                 <input
                   type="text"
+                  placeholder="Description"
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
                   name="projectDescription"
                   onChange={(e) =>
@@ -405,6 +409,7 @@ export default function ProfileForm() {
                 </label>
                 <input
                   type="text"
+                  placeholder="Link"
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
                   name="projectLink"
                   onChange={(e) =>
@@ -417,6 +422,7 @@ export default function ProfileForm() {
                 <div className="flex flex-col  p-8 w-full">
                   <input
                     type="text"
+                    placeholder="Technologies Used"
                     name="insideProjectTechnologies"
                     onChange={(e) =>
                       setInsideProjectTechnologies(e.target.value)
@@ -461,33 +467,33 @@ export default function ProfileForm() {
                     }}
                     className="  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
                   >
-                    add Project
+                    Add Project
                   </button>
                 </div>
               </div>
             </div>
-            <div className="w-full flex justify-around gap-8 mt-12 flex-wrap">
+            <div className="w-full flex flex-col items-center gap-8 mt-12 flex-wrap">
               {formData.profileProjects.map((pro) => {
                 return (
-                  <div className="bg-cyan-950 flex flex-col rounded-lg w-[30%] p-4">
+                  <div className="bg-cyan-950 flex flex-col rounded-lg w-[80%] p-4">
                     <div className="flex flex-col gap-3">
-                      <div className="flex gap-3 items-center">
+                      <div className="flex gap-3">
                         <label className="block text-gray-400 text-md ">
                           Title:
                         </label>
-                        <p className="text-lg">{pro.title}</p>
+                        <p className="text-md">{pro.title}</p>
                       </div>
-                      <div className="flex gap-3 items-center">
+                      <div className="flex gap-3">
                         <label className="block text-gray-400 text-md ">
                           Description:
                         </label>
-                        <p className="text-lg">{pro.description}</p>
+                        <p className="text-md">{pro.description}</p>
                       </div>
-                      <div className="flex gap-3 items-center">
+                      <div className="flex gap-3">
                         <label className="block text-gray-400 text-md ">
                           Link:
                         </label>
-                        <p className="text-lg">{pro.link}</p>
+                        <p className="text-md">{pro.link}</p>
                       </div>
 
                       <label className="block text-gray-400 text-md ">

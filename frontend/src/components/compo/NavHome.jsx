@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { IoMdMenu , IoMdClose } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 const NavHome = () => {
-  const { isLoggedIn, userType } = useSelector((store) => store.userInfo);
+  const { isLoggedIn, userType, userId } = useSelector((store) => store.userInfo);
+  const [navOpen, setNavOpen] = useState(false);
 
   return (
     <header className="  flex items-center justify-between py-4 w-full mb-5 text-white z-30 ">
@@ -158,16 +161,31 @@ const NavHome = () => {
         </div>
       )}
 
-      {isLoggedIn && (
-        <div className="flex items-center space-x-8 mr-8">
-          <a
-            href="/signUp"
-            className=" bg-orange-600 text-white rounded-lg px-4 py-1.5 text-xl hover:bg-orange-800 hover:underline transition-all duration-300 ease-in-out"
-          >
-            LogOut
-          </a>
-        </div>
-      )}
+      {isLoggedIn && <>
+        <button className="text-3xl mr-12 hover:cursor-pointer"
+          onClick={() => {
+            setNavOpen(true);
+          }}><IoMdMenu /></button>
+        {navOpen &&
+        
+          <div className="flex absolute  right-12 min-h-[50vh] items-start bg-rose-950 p-6 pr-24 top-6 flex-col gap-12 ">
+            <button className="text-3xl mr-12 hover:cursor-pointer"
+          onClick={() => {
+            setNavOpen(false);
+        }}><IoMdClose /></button>
+          <Link
+            className="flex gap-3 items-center"
+                to={`/store/addAboutEmployee/${userId}`}
+              >
+            
+              <div className="h-[50px] w-[50px] bg-yellow-700"></div>
+             <p className="text-lg hover:underline">Profile</p> </Link>
+       
+        <div>Logout</div>
+        
+      </div>}
+        </>
+      }
     </header>
   );
 };

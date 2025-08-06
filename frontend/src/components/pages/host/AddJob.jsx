@@ -203,6 +203,7 @@ export default function AddJob() {
                   <div className="flex space-x-4 w-full">
                     <input
                       type="text"
+                      placeholder="Skills"
                       name="skill"
                       onChange={(e) => setSkill(e.target.value)}
                       value={skill}
@@ -402,6 +403,7 @@ export default function AddJob() {
               <div className=" space-x-8">
                 <input
                   type="text"
+                  placeholder="Tags"
                   name="tag"
                   onChange={(e) => setTag(e.target.value)}
                   value={tag}

@@ -54,6 +54,7 @@ function App() {
               firstname: data.user.firstname,
               userType: data.user.userType,
               lastname: data.user.lastname,
+              userId: data.user._id
             })
           );
         }

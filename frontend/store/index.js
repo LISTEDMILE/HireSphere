@@ -12,6 +12,7 @@ const userInfo = createSlice({
       state.firstname = action.payload.firstname;
       state.lastname = action.payload.lastname;
       state.userType = action.payload.userType;
+      state.userId = action.payload.userId;
     },
     Logout: (state) => {
       state.isLoggedIn = false;
