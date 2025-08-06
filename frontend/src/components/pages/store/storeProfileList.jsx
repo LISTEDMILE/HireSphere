@@ -1,137 +1,158 @@
-import React , {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import NavHome from "../../compo/NavHome";
+import { FaUserEdit } from "react-icons/fa";
+import { MdDeleteSweep } from "react-icons/md";
 
 export default function StoreProfilesList() {
-    
-    const [profiles, setProfiles] = useState([]);
+  const [profiles, setProfiles] = useState([]);
 
-    useEffect(() => {
-        const fetchProfiles = async () => {
-            try {
-                const response = await fetch("http://localhost:3000/store/storeProfileList", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                });
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/store/storeProfileList",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
 
-                let data = await response.json();
-                await setProfiles(data);
-            } catch (error) {
-                console.error("Error fetching profiles:", error);
-            }
-        };
-        fetchProfiles();
-    }, []);
-
-    const handleDelete = async (profileId) => {
-        try {
-            const response = await fetch(`http://localhost:3000/store/deleteProfile/${profileId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-
-            let data = await response.json();
-            if (!data.error) {
-                alert("Profile deleted successfully");
-                setProfiles(profiles.filter((profile) => profile._id !== profileId));
-            } else {
-                alert("Error deleting profile: " + data.error);
-            }
-
-        }
-        catch (error) {
-            console.error("Error deleting profile:", error);
-        }
+        let data = await response.json();
+        await setProfiles(data);
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
+      }
     };
+    fetchProfiles();
+  }, []);
+
+  const handleDelete = async (profileId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/store/deleteProfile/${profileId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      let data = await response.json();
+      if (!data.error) {
+        alert("Profile deleted successfully");
+        setProfiles(profiles.filter((profile) => profile._id !== profileId));
+      } else {
+        alert("Error deleting profile: " + data.error);
+      }
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+    }
+  };
 
   return (
-    <div className="bg-gray-50 text-gray-800 min-h-screen">
-      {/* Navigation bar - insert your nav component */}
-      {/* <NavStore /> */}
+    <div className="w-full text-white bg-black flex flex-col items-center">
+      <NavHome />
 
-      <div className="container mx-auto px-4 py-10">
-        <h1 className="text-3xl font-bold text-center mb-8">
-          Here are the added Profiles
-        </h1>
+      <h1 className="text-5xl font-bold text-center my-12">
+        Here are the added Profiles
+      </h1>
 
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="w-[70%] pb-12">
+        <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
           {profiles.map((detail) => (
-            <div
+            <li
               key={detail._id}
-              className="bg-white rounded-2xl shadow-md p-6 flex flex-col justify-between h-full"
+              className="bg-[#0d212e80] rounded-2xl shadow-md p-6 flex flex-col w-full justify-between "
             >
-              <div>
-                <h2 className="text-xl font-semibold text-blue-600 mb-1">
-                  {detail.profilePost}
-                </h2>
-                <h3 className="text-lg font-medium text-gray-700 mb-2">
-                  {detail.profileName}
-                </h3>
-
-                <p className="text-sm mb-1">
-                  <span className="font-semibold">10th (%):</span>{" "}
-                  {detail.profileTenth}
-                </p>
-                <p className="text-sm mb-1">
-                  <span className="font-semibold">12th (%):</span>{" "}
-                  {detail.profileTwelth}
-                </p>
-
-                <label className="block text-sm mt-3 font-semibold text-gray-600">
-                  Skills
-                </label>
-                <p className="text-sm mb-3">{detail.profileSkills}</p>
-              </div>
-
-              <div className="flex justify-between items-center mt-4">
+              <div className="flex justify-end items-center text-2xl gap-12 pr-8">
                 <Link
-                  to={`/store/storeProfileDetails/${detail._id}`}
-                  className="text-sm text-blue-500 hover:underline"
+                  to={`/store/addProfile/${detail._id}?editing=true`}
+                  className="text-gray-400 hover:text-gray-600"
                 >
-                  More..
+                  <FaUserEdit />
                 </Link>
 
-                <div className="flex items-center gap-3">
-                  <Link
-                    to={`/store/addProfile/${detail._id}?editing=true`}
-                    className="text-lg"
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleDelete(detail._id);
+                  }}
+                >
+                  <button
+                    type="submit"
+                    className="text-red-700 hover:underline text-4xl hover:text-red-900"
+                    title="Delete"
                   >
-                    ✏️
-                  </Link>
+                    <MdDeleteSweep />
+                  </button>
+                </form>
+              </div>
+              <div className="flex gap-24 ">
+                <div className="h-[100px] w-[100px] bg-amber-200"></div>
+                <div className="w-full flex flex-col gap-4">
+                  <h2 className="text-3xl text-cyan-400 font-semibold">
+                    {detail.profilePost}
+                  </h2>
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 text-xl">Name:</label>
+                    <p className="text-white text-xl">{detail.profileName}</p>
+                  </div>
 
-                  <form
-                              onSubmit={(e) => {
-                                  e.preventDefault();
-                                  handleDelete(detail._id);
-                              }}
-                  >
-                    <button
-                      type="submit"
-                      className="text-red-500 hover:text-red-700 text-lg"
-                      title="Delete"
-                    >
-                      ✘
-                    </button>
-                  </form>
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 font-medium">Tenth</label>
+                    <p className="text-white">
+                      {" "}
+                      <span className="font-semibold">10th (%):</span>{" "}
+                      {detail.profileTenth}
+                    </p>
+                  </div>
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 font-medium">
+                      Twelth:
+                    </label>
+                    <p className="text-white">
+                      {" "}
+                      <span className="font-semibold">12th (%):</span>{" "}
+                      {detail.profileTwelth}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+              <div className="w-full mt-8 flex justify-center">
+                <div className=" flex gap-6 w-[80%] flex-col ">
+                  <label className=" text-gray-400 font-medium">Skills:</label>
+                  <div className="flex flex-wrap gap-3 items-center">
+                    {detail.profileSkills.map((skill) => {
+                      return (
+                        <span className="px-8 py-2 bg-cyan-950 rounded-lg">
+                          {skill}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full mt-6 flex justify-center ">
+                <div className="flex  w-[90%] justify-end items-center mt-4">
+                  <Link
+                    to={`/store/storeProfileDetails/${detail._id}`}
+                    className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg mr-4 "
+                  >
+                    Details
+                  </Link>
+                </div>
+              </div>
+            </li>
           ))}
-        </div>
-
-        <p className="text-center mt-10 font-bold underline">
-          test reached last
-        </p>
+        </ul>
       </div>
-
-      {/* Footer - insert your footer component */}
-      {/* <Footer /> */}
     </div>
   );
-};
-
+}

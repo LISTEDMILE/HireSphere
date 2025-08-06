@@ -1,135 +1,280 @@
-import React , {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
+import NavHome from "../../compo/NavHome";
+import { FaUserEdit } from "react-icons/fa";
+import { MdDeleteSweep } from "react-icons/md";
+
 export default function StoreProfilesDetails() {
-    
-    const [profile, setProfile] = useState();
-    const { profileId } = useParams();
-    const [fetching, setFetching] = useState(true);
+  const [profile, setProfile] = useState();
+  const { profileId } = useParams();
+  const [fetching, setFetching] = useState(true);
 
-    useEffect(() => {
-        const fetchProfiles = async () => {
-            try {
-                const response = await fetch(`http://localhost:3000/store/storeProfileDetails/${profileId}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                });
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/store/storeProfileDetails/${profileId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
 
-                let data = await response.json();
-                await setProfile(data);
-            } catch (error) {
-                console.error("Error fetching profiles:", error);
-            }
-            setFetching(false);
-        };
-        fetchProfiles();
-    }, []);
-
-    const handleDelete = async (profileId) => {
-        try {
-            const response = await fetch(`http://localhost:3000/store/deleteProfile/${profileId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-
-            let data = await response.json();
-            if (!data.error) {
-                alert("Profile deleted successfully");
-                const navigate = useNavigate();
-                          navigate("/host/hostJobList");
-            } else {
-                alert("Error deleting profile: " + data.error);
-            }
-
-        }
-        catch (error) {
-            console.error("Error deleting profile:", error);
-        }
+        let data = await response.json();
+        await setProfile(data);
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
+      }
+      setFetching(false);
     };
+    fetchProfiles();
+  }, []);
+
+  const handleDelete = async (profileId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/store/deleteProfile/${profileId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      let data = await response.json();
+      if (!data.error) {
+        alert("Profile deleted successfully");
+        const navigate = useNavigate();
+        navigate("/host/hostJobList");
+      } else {
+        alert("Error deleting profile: " + data.error);
+      }
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+    }
+  };
 
   return (
-    <div className="bg-gray-50 text-gray-800 min-h-screen">
-     
+    <div className="w-full text-white bg-black flex flex-col items-center">
+      <NavHome />
 
-      <div className="container mx-auto px-4 py-10">
-        <h1 className="text-3xl font-bold text-center mb-8">
-          Here are the added Profiles
-        </h1>
+      <h1 className="text-5xl font-bold text-center my-12">
+        Here are the added Profiles
+      </h1>
+      {!fetching && (
+        <div className="w-[70%] p-12  bg-[#0d212e80] rounden-lg">
+          <div className="flex justify-end items-center text-2xl gap-12 pr-8">
+            <Link
+              to={`/store/addProfile/${profile._id}?editing=true`}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <FaUserEdit />
+            </Link>
 
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        
-                  {!fetching && 
-                    <div
-                    className="bg-white rounded-2xl shadow-md p-6 flex flex-col justify-between h-full"
-                  >
-                    <div>
-                      <h2 className="text-xl font-semibold text-blue-600 mb-1">
-                        {profile.profilePost}
-                      </h2>
-                      <h3 className="text-lg font-medium text-gray-700 mb-2">
-                        {profile.profileName}
-                      </h3>
-      
-                      <p className="text-sm mb-1">
-                        <span className="font-semibold">10th (%):</span>{" "}
-                        {profile.profileTenth}
-                      </p>
-                      <p className="text-sm mb-1">
-                        <span className="font-semibold">12th (%):</span>{" "}
-                        {profile.profileTwelth}
-                      </p>
-      
-                      <label className="block text-sm mt-3 font-semibold text-gray-600">
-                        Skills
-                      </label>
-                      <p className="text-sm mb-3">{profile.profileSkills}</p>
-                    </div>
-      
-                    <div className="flex justify-between items-center mt-4">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleDelete(profile._id);
+              }}
+            >
+              <button
+                type="submit"
+                className="text-red-700 hover:underline text-4xl hover:text-red-900"
+                title="Delete"
+              >
+                <MdDeleteSweep />
+              </button>
+            </form>
+          </div>
+          <div className="flex gap-24 ">
+            <div className="h-[100px] w-[100px] bg-amber-200"></div>
+            <div className="w-full flex flex-col gap-4">
+              <h2 className="text-3xl text-cyan-400 font-semibold">
+                {profile.profilePost}
+              </h2>
+              <div className="mt-2 flex gap-3">
+                <label className=" text-gray-400 text-xl">Name:</label>
+                <p className="text-white text-xl">{profile.profileName}</p>
+              </div>
+              <div className="mt-2 flex gap-3">
+                <label className=" text-gray-400 font-medium">Gender:</label>
+                <p className="text-white text-md">{profile.profileGender}</p>
+              </div>
+
+              <div className="mt-2 flex gap-3">
+                <label className=" text-gray-400 font-medium">Tenth:</label>
+                <p className="text-white">
+                  {" "}
+                  <span className="font-semibold">10th (%):</span>{" "}
+                  {profile.profileTenth}
+                </p>
+              </div>
+              <div className="mt-2 flex gap-3">
+                <label className=" text-gray-400 font-medium">Twelth:</label>
+                <p className="text-white">
+                  {" "}
+                  <span className="font-semibold">12th (%):</span>{" "}
+                  {profile.profileTwelth}
+                </p>
+              </div>
+              <div className="mt-2 flex gap-3">
+                <label className=" text-gray-400 font-medium">
+                  Graduation:
+                </label>
+                <p className="text-white">
+                  {" "}
+                  <span className="font-semibold">Graduation (%):</span>{" "}
+                  {profile.profileGraduation}
+                </p>
+              </div>
+
+              <div className="mt-2 flex gap-3">
+                <label className=" text-gray-400 font-medium">
+                  Expected Salary:
+                </label>
+                <p className="text-white text-md text-wrap">
+                  {profile.profileExpectedSalary}
+                </p>
+              </div>
+              <div className="mt-2 flex gap-3">
+                <label className=" text-gray-400 font-medium">
+                  Experience:
+                </label>
+                <p className="text-white text-md text-wrap">
+                  {profile.profileExperience}
+                </p>
+              </div>
+
+              <div className="mt-2 flex gap-3">
+                <label className=" text-gray-400 font-medium">Courses:</label>
+                <p className="text-white text-md text-wrap">
+                  {profile.profileCourse}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="w-full mt-12 flex flex-col items-center">
+            <div className=" flex gap-6 w-[80%] flex-col ">
+              <label className=" text-gray-400 font-medium">Skills:</label>
+              <div className="flex flex-wrap gap-3 items-center">
+                {profile.profileSkills.map((skill) => {
+                  return (
+                    <span className="px-8 py-2 bg-cyan-950 rounded-lg">
+                      {skill}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className=" flex gap-6 mt-12 w-[80%] flex-col ">
+              <label className=" text-gray-400 font-medium">Job Type:</label>
+              <div className="flex flex-wrap gap-3 items-center">
+                {profile.profileJobType.map((jType) => {
+                  return (
+                    <span className="px-8 py-2 bg-cyan-950 rounded-lg">
+                      {jType}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className=" flex gap-6 mt-12 w-[80%] flex-col ">
+              <label className=" text-gray-400 font-medium">
+                Preferred Locations:
+              </label>
+              <div className="flex flex-wrap gap-3 items-center">
+                {profile.profilePreferredLocations.map((loc) => {
+                  return (
+                    <span className="px-8 py-2 bg-cyan-950 rounded-lg">
+                      {loc}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className=" flex gap-6 mt-12 border-2 border-white p-8 rounded-lg w-[80%] flex-col ">
+              <label className=" text-gray-400 font-medium">
+                Projects:
+              </label>
+              <div className="flex flex-col gap-8  w-full">
+                {profile.profileProjects.map((proj) => {
+                  return (
+                    <div className="w-full bg-amber-950 flex flex-col gap-4 p-8 rounded-lg">
+
+<div className=" flex gap-3">
+                <label className=" text-gray-400 font-medium">Title:</label>
+                <p className="text-white text-md">{proj.title}</p>
+                      </div>
+
+                      <div className=" flex gap-3">
+                <label className=" text-gray-400 font-medium">Description:</label>
+                <p className="text-white text-md">{proj.description}</p>
+                      </div>
+
+                      <div className=" flex gap-3">
+                <label className=" text-gray-400 font-medium">Link:</label>
+                <p className="text-white text-md">{proj.link}</p>
+                      </div>
                       
-      
-                      <div className="flex items-center gap-3">
-                        <Link
-                          to={`/store/addProfile/${profile._id}?editing=true`}
-                          className="text-lg"
-                        >
-                          ✏️
-                        </Link>
-      
-                        <form
-                                    onSubmit={(e) => {
-                                        e.preventDefault();
-                                        handleDelete(profile._id);
-                                    }}
-                        >
-                          <button
-                            type="submit"
-                            className="text-red-500 hover:text-red-700 text-lg"
-                            title="Delete"
-                          >
-                            ✘
-                          </button>
-                        </form>
-                      </div>
+                      <div className="flex flex-col gap-3 w-full">
+                      <label className=" text-gray-400 font-medium">
+                Technologies Used:
+              </label>
+              <div className="flex flex-wrap w-full gap-3 items-center">
+                {proj.technologies.map((tech) => {
+                  return (
+                    <span className="px-8 py-2 bg-cyan-950 rounded-lg">
+                      {tech}
+                    </span>
+                  );
+                })}
+                          </div>
+              </div>
                     </div>
-                      </div>
-                  }
-          
-       
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className=" flex gap-6 mt-12 w-[80%] flex-col ">
+              <label className=" text-gray-400 text-xl">About You:</label>
+
+              <p className=" bg-cyan-950 rounded-lg px-12 py-4 text-white text-wrap">
+                {profile.profileDescription}
+              </p>
+
+              <label className=" text-gray-400 mt-8 text-xl">
+                Describe Post:
+              </label>
+
+              <p className=" bg-cyan-950 rounded-lg px-12 py-4 text-white text-wrap">
+                {profile.profilePostDescription}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex justify-around items-center mt-12 mb-12">
+            <div className="flex gap-3 items-center">
+              <label className=" text-gray-400 text-xl">Mobile NO:</label>
+              <p className="text-white">{profile.profileMobile}</p>
+            </div>
+
+            <div className="flex gap-3 items-center">
+              <label className=" text-gray-400 text-xl">Email:</label>
+              <p className="text-white">{profile.profileEmail}</p>
+            </div>
+          </div>
         </div>
-
-        <p className="text-center mt-10 font-bold underline">
-          test reached last
-        </p>
-      </div>
-
+      )}
     </div>
   );
-};
-
+}

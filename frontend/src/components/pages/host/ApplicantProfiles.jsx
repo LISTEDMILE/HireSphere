@@ -71,7 +71,7 @@ export default function ApplicantProfiles() {
 
               <div className="flex justify-between items-center mt-4">
                 <Link
-                  to={`/store/storeProfileDetails/${detail._id}`}
+                  to={`/host/hostProfileDetails/${detail._id}`}
                   className="text-sm text-blue-500 hover:underline"
                 >
                   More..

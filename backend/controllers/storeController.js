@@ -38,6 +38,26 @@ exports.getStoreJobDetails = (req, res, next) => {
     });
 };
 
+exports.getStoreOffererJobs = async (req, res, next) => {
+  const offererId = req.params.offererId;
+  
+  try {
+    
+    const jobProvider = await UserRecruiter.findById(
+      offererId,
+      "jobsPosted"
+    );
+    jobList = jobProvider.jobsPosted;
+
+    const jobs = await Job.find({
+      _id: { $in: jobList },
+    });
+    return res.status(200).json(jobs);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+};
+
 exports.getFavourites = (req, res, next) => {
   const favs = UserEmployee.findById(req.session.user._id)
     .then((user) => {

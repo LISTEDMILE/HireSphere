@@ -248,290 +248,334 @@ export default function ProfileForm() {
             </div>
           ))}
 
-          
-
-<div className="w-[80%] bg-[#3C2A21] p-4 rounded-lg">
-              <div className="w-full flex space-y-2 flex-col">
-                <div>
-                  <label className="block text-gray-400 font-medium mb-2">Preferred Locations:</label>
-                  <div className="flex space-x-4 w-full">
-          <input
-            type="text"
-            name="preferredLocation"
-            onChange={(e) => setPreferredLocation(e.target.value)}
-                  value={preferredLocation}
-                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-          />
-          <button
-            onClick={(e) => {
-              handleArrayAdd(e, "profilePreferredLocations", preferredLocation);
-              setPreferredLocation("");
-                  }}
-                  className="bg-amber-800 px-6 py-2 rounded-lg"
-          >
-            add
-                </button>
+          <div className="w-[80%] bg-[#3C2A21] p-4 rounded-lg">
+            <div className="w-full flex space-y-2 flex-col">
+              <div>
+                <label className="block text-gray-400 font-medium mb-2">
+                  Preferred Locations:
+                </label>
+                <div className="flex space-x-4 w-full">
+                  <input
+                    type="text"
+                    name="preferredLocation"
+                    onChange={(e) => setPreferredLocation(e.target.value)}
+                    value={preferredLocation}
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+                  <button
+                    onClick={(e) => {
+                      handleArrayAdd(
+                        e,
+                        "profilePreferredLocations",
+                        preferredLocation
+                      );
+                      setPreferredLocation("");
+                    }}
+                    className="bg-amber-800 px-6 py-2 rounded-lg"
+                  >
+                    add
+                  </button>
                 </div>
               </div>
-              </div>
-                <div className="flex justify-start flex-col mt-8 items-center gap-3 w-full flex-wrap">
-          {formData.profilePreferredLocations.map((loc) => {
-            return (
-              <div className="bg-cyan-950 px-4 py-3 rounded-lg flex  w-full text-wrap items-center justify-between border-white border-1">
-                      <span>{loc}</span>
-                <button
-                  onClick={(e) =>
-                    handleArrayRemove(e, "profilePreferredLocations", loc)
-                  }
-                >
-                  <MdOutlineCancel className=" h-full ml-2" />
-                                        </button>
-                                      </div>
-                                    );
-                                  })}
-              </div>
-           
-
-              </div>
-
+            </div>
+            <div className="flex justify-start flex-col mt-8 items-center gap-3 w-full flex-wrap">
+              {formData.profilePreferredLocations.map((loc) => {
+                return (
+                  <div className="bg-cyan-950 px-4 py-3 rounded-lg flex  w-full text-wrap items-center justify-between border-white border-1">
+                    <span>{loc}</span>
+                    <button
+                      onClick={(e) =>
+                        handleArrayRemove(e, "profilePreferredLocations", loc)
+                      }
+                    >
+                      <MdOutlineCancel className=" h-full ml-2" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
           {/* Skills */}
           <div className="w-full flex justify-between">
             <div className="w-[55%] bg-[#3C2A21] p-4 rounded-lg">
               <div className="w-full flex space-y-2 flex-col">
                 <div>
-                  <label className="block text-gray-400 font-medium mb-2">Skills:</label>
+                  <label className="block text-gray-400 font-medium mb-2">
+                    Skills:
+                  </label>
                   <div className="flex space-x-4 w-full">
-
-          <input
-            type="text"
-            name="skill"
-            onChange={(e) => setSkill(e.target.value)}
-                    value={skill}
-                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-          />
-          <button
-            onClick={(e) => {
-              handleArrayAdd(e, "profileSkills", skill);
-                      setSkill("");
-                      
-            }}
-            className="bg-amber-800 px-6 py-2 rounded-lg"
-          >
-            add
-                  </button>
+                    <input
+                      type="text"
+                      name="skill"
+                      onChange={(e) => setSkill(e.target.value)}
+                      value={skill}
+                      className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    />
+                    <button
+                      onClick={(e) => {
+                        handleArrayAdd(e, "profileSkills", skill);
+                        setSkill("");
+                      }}
+                      className="bg-amber-800 px-6 py-2 rounded-lg"
+                    >
+                      add
+                    </button>
                   </div>
                 </div>
                 <div className="flex justify-start items-center gap-3 w-full flex-wrap"></div>
-          {formData.profileSkills.map((skill) => {
-            return (
-              <div className="bg-cyan-950 px-4 py-3 rounded-lg flex items-center justify-between border-white border-1">
+                {formData.profileSkills.map((skill) => {
+                  return (
+                    <div className="bg-cyan-950 px-4 py-3 rounded-lg flex items-center justify-between border-white border-1">
                       <span>{skill}</span>
                       <button
-                  onClick={(e) => handleArrayRemove(e, "profileSkills", skill)}
-                >
-                  <MdOutlineCancel className=" h-full ml-2" />
-                                        </button>
-                                      </div>
-                                    );
-                                  })}
+                        onClick={(e) =>
+                          handleArrayRemove(e, "profileSkills", skill)
+                        }
+                      >
+                        <MdOutlineCancel className=" h-full ml-2" />
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
-              </div>
-                              
-          <div className="w-[40%] bg-[#3C2A21] p-4 rounded-lg flex flex-col text-lg gap-4">
-            
-          <h2  className="block text-gray-400 font-medium mb-2"> Job Type</h2>
+            </div>
 
-{JobTypes.map((emType) => {
-            return (
-              <label className={`bg-cyan-950 px-4 py-3 rounded-lg flex justify-between items-center ${formData.profileJobType.includes(emType) ? "border-green-700  border-2 " : "border-1 border-white"}`}>
-                {emType}
-                <input
-                  type="checkbox"
-                  value={emType}
-                  className="hidden"
-                  onChange={() => handleJobType(emType)}
-                />
-            {formData.profileJobType.includes(emType) && <GrRadialSelected className="text-green-300"/> }
-              </label>
-            );
-          })}
-        </div>
+            <div className="w-[40%] bg-[#3C2A21] p-4 rounded-lg flex flex-col text-lg gap-4">
+              <h2 className="block text-gray-400 font-medium mb-2">
+                {" "}
+                Job Type
+              </h2>
+
+              {JobTypes.map((emType) => {
+                return (
+                  <label
+                    className={`bg-cyan-950 px-4 py-3 rounded-lg flex justify-between items-center ${
+                      formData.profileJobType.includes(emType)
+                        ? "border-green-700  border-2 "
+                        : "border-1 border-white"
+                    }`}
+                  >
+                    {emType}
+                    <input
+                      type="checkbox"
+                      value={emType}
+                      className="hidden"
+                      onChange={() => handleJobType(emType)}
+                    />
+                    {formData.profileJobType.includes(emType) && (
+                      <GrRadialSelected className="text-green-300" />
+                    )}
+                  </label>
+                );
+              })}
+            </div>
           </div>
-          
-
-
-    
 
           <div className="bg-[#3C2A21] p-4 rounded-lg w-full flex flex-col">
-
             <h1 className="text-2xl mb-4">Projects</h1>
             <div className="flex justify-around">
-            <div className="flex flex-col gap-3 w-[45%]">
-              <label className="block text-gray-400 font-medium mb-2">Title:</label>
-          <input
-            type="text"
-            name="projectTitle"
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            onChange={(e) => setProject({ ...project, title: e.target.value })}
-            value={project.title}
-              />
-              <label className="block text-gray-400 font-medium mb-2">Description:</label>
-          <input
-            type="text"
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            name="projectDescription"
-            onChange={(e) =>
-              setProject({ ...project, description: e.target.value })
-            }
-            value={project.description}
+              <div className="flex flex-col gap-3 w-[45%]">
+                <label className="block text-gray-400 font-medium mb-2">
+                  Title:
+                </label>
+                <input
+                  type="text"
+                  name="projectTitle"
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  onChange={(e) =>
+                    setProject({ ...project, title: e.target.value })
+                  }
+                  value={project.title}
                 />
-                <label className="block text-gray-400 font-medium mb-2">Link:</label>
-          <input
-            type="text"
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            name="projectLink"
-            onChange={(e) => setProject({ ...project, link: e.target.value })}
-            value={project.link}
-              />
+                <label className="block text-gray-400 font-medium mb-2">
+                  Description:
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  name="projectDescription"
+                  onChange={(e) =>
+                    setProject({ ...project, description: e.target.value })
+                  }
+                  value={project.description}
+                />
+                <label className="block text-gray-400 font-medium mb-2">
+                  Link:
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  name="projectLink"
+                  onChange={(e) =>
+                    setProject({ ...project, link: e.target.value })
+                  }
+                  value={project.link}
+                />
               </div>
               <div className="flex flex-col gap-8 w-[45%] border-2 border-white rounded-lg h-fit">
-              <div className="flex flex-col  p-8 w-full">
-          <input
-            type="text"
-            name="insideProjectTechnologies"
-                  onChange={(e) => setInsideProjectTechnologies(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            value={insideProjectTechnologies}
-          />
-          <button
-            onClick={(e) => {
-              handleAddProjectTechnologies(e, insideProjectTechnologies);
-              setInsideProjectTechnologies("");
+                <div className="flex flex-col  p-8 w-full">
+                  <input
+                    type="text"
+                    name="insideProjectTechnologies"
+                    onChange={(e) =>
+                      setInsideProjectTechnologies(e.target.value)
+                    }
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    value={insideProjectTechnologies}
+                  />
+                  <button
+                    onClick={(e) => {
+                      handleAddProjectTechnologies(
+                        e,
+                        insideProjectTechnologies
+                      );
+                      setInsideProjectTechnologies("");
                     }}
                     className="w-[fit] mt-6  px-4 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
-          >
-            add 
-                </button>
-                <div className="flex justify-start items-center gap-3 w-full mt-4 flex-wrap">
-          {project.technologies.map((tech) => {
-            return (
-              <div className="bg-cyan-950 px-3 py-1 rounded-lg flex items-center">
-                    <span>{tech}</span>
-                <button
-                  onClick={(e) => handleRemoveProjectTechnologies(e, tech)}
-                >
-                  <MdOutlineCancel className=" h-full ml-2" />
-                </button>
+                  >
+                    add
+                  </button>
+                  <div className="flex justify-start items-center gap-3 w-full mt-4 flex-wrap">
+                    {project.technologies.map((tech) => {
+                      return (
+                        <div className="bg-cyan-950 px-3 py-1 rounded-lg flex items-center">
+                          <span>{tech}</span>
+                          <button
+                            onClick={(e) =>
+                              handleRemoveProjectTechnologies(e, tech)
+                            }
+                          >
+                            <MdOutlineCancel className=" h-full ml-2" />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-            );
-          })}
-                 </div>
 
-          
-
-                </div>
-            
-            
+                <div className="flex mb-3 w-full justify-center">
                 <button
-            onClick={(e) => {
-              handleAddProject(e, project);
+                  onClick={(e) => {
+                    handleAddProject(e, project);
                   }}
-                  className="w-[fit]  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
-          >
-            add Project
-                </button>
-                </div>
+                  className="  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+                >
+                  add Project
+                  </button>
+                  </div>
+              </div>
             </div>
             <div className="w-full flex justify-around gap-8 mt-12 flex-wrap">
-            
-          {formData.profileProjects.map((pro) => {
-            return (
-              <div className="bg-cyan-950 flex flex-col rounded-lg w-[30%] p-4">
-                <div className="flex flex-col gap-3">
-                <label className="block text-gray-400 font-medium ">Title:</label>
-                  {pro.title}
-                  <label className="block text-gray-400 font-medium ">Description:</label>
-                  {pro.description}
-                  <label className="block text-gray-400 font-medium ">Link:</label>
-                  {pro.link}
-                  <label className="block text-gray-400 font-medium ">Technologies Used:</label>
-                  <div className="flex justify-start items-center gap-3 w-full flex-wrap">
-                  {pro.technologies.map((tech) => {
-                    return (
-                      <div className="bg-cyan-600 px-3 py-1 rounded-lg flex items-center">
-                        <span>{tech}</span></div>
+              {formData.profileProjects.map((pro) => {
+                return (
+                  <div className="bg-cyan-950 flex flex-col rounded-lg w-[30%] p-4">
+                    <div className="flex flex-col gap-3">
+                      <div className="flex gap-3 items-center">
+                      <label className="block text-gray-400 text-md ">
+                        Title:
+                        </label>
+                        <p className="text-lg">
+                        {pro.title}
+                        </p>
+                        </div>
+                        <div className="flex gap-3 items-center">
+                        <label className="block text-gray-400 text-md ">
+                        Description:</label>
+                        <p className="text-lg">
+                      {pro.description}
+                      </p>
+                        </div>
+                        <div className="flex gap-3 items-center">
+                        <label className="block text-gray-400 text-md ">
+                        Link:</label>
+                        <p className="text-lg">
+                      {pro.link}
+                      </p>
+                        </div>
+                       
+                        <label className="block text-gray-400 text-md ">
+                        Technologies Used:
+                      </label>
+                      <div className="flex justify-start items-center gap-3 w-full flex-wrap">
+                        {pro.technologies.map((tech) => {
+                          return (
+                            <div className="bg-cyan-600 px-3 py-1 rounded-lg flex items-center">
+                              <span>{tech}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="flex mt-6 mb-2 justify-center ">
+                    <button onClick={(e) => handleRemoveProject(e, pro)}
+                   className=" w-min  px-12 bg-red-700 text-white py-2 rounded hover:bg-red-950 transition">
+                      remove
+                      </button>
+                      </div>
+                  </div>
                 );
-                  })}
-                  </div>
-                  </div>
-                <button onClick={(e) => handleRemoveProject(e, pro)}>
-                  remove
-                </button>
-              </div>
-            );
-          })}
-              </div>
-              
-
-</div>
-         
+              })}
+            </div>
+          </div>
 
           {/* Percentage fields with slider */}
           <div className="w-full justify-around flex">
-          {[
-            ["10th (%)", "profileTenth"],
-            ["12th (%)", "profileTwelth"],
-            ["Graduation (%)", "profileGraduation"],
-          ].map(([label, name]) => (
-            <div key={name} className="w-[30%] flex flex-col gap-6">
-            <label className="block text-gray-400 font-medium mb-2">{label}</label>
-              <input
-                type="number"
-                min="0"
-                max="100"
-                step="0.1"
-                name={name}
-                value={formData[name]}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-              />
-              <input
-                type="range"
-                min="0"
-                max="100"
-                step="0.1"
-                value={formData[name]}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    [name]: parseFloat(e.target.value),
-                  })
-                }
-                className="accent-blue-500 w-full"
-              />
-            </div>
-          ))}
+            {[
+              ["10th (%)", "profileTenth"],
+              ["12th (%)", "profileTwelth"],
+              ["Graduation (%)", "profileGraduation"],
+            ].map(([label, name]) => (
+              <div key={name} className="w-[30%] flex flex-col gap-6">
+                <label className="block text-gray-400 font-medium mb-2">
+                  {label}
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.1"
+                  name={name}
+                  value={formData[name]}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                />
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="0.1"
+                  value={formData[name]}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      [name]: parseFloat(e.target.value),
+                    })
+                  }
+                  className="accent-blue-500 w-full"
+                />
+              </div>
+            ))}
           </div>
 
           {/* Textarea: Describe Yourself */}
           <div className="w-full">
             <label className="block text-gray-400 font-medium mb-2">
-             Describe Yourself</label>
+              Describe Yourself
+            </label>
             <textarea
               required
               name="profileDescription"
               placeholder="Describe yourself here"
               value={formData.profileDescription}
               onChange={handleChange}
-              
               className="w-full h-44 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
 
           {/* Textarea: Describe Post */}
           <div className="w-full">
-          <label className="block text-gray-400 font-medium mb-2">
+            <label className="block text-gray-400 font-medium mb-2">
               Describe About Post You are Looking For
             </label>
             <textarea

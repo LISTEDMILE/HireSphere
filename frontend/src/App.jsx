@@ -31,6 +31,7 @@ import AboutRecruiter from "./components/pages/store/aboutRecruiter";
 import AddAboutEmployee from "./components/pages/store/addAboutEmployee";
 import AddAboutRecruiter from "./components/pages/host/addAboutRecruiter";
 import AboutEmployee from "./components/pages/host/aboutEmployee";
+import StoreOffererJobs from "./components/pages/store/storeOffererJobs";
 
 function App() {
   const dispatch = useDispatch();
@@ -86,6 +87,7 @@ function App() {
     { path: "host/choosenProfiles", element: <ChoosenProfiles /> },
     { path: "store/offers", element: <Offers /> },
     { path: "host/applicantProfiles/:applicantId", element: <ApplicantProfiles /> },
+    {path:"store/storeOffererJobs/:offererId", element:<StoreOffererJobs/>},
     { path: "host/hostJobDetails/:jobId", element: <HostJobDetails /> }
     ,
     { path: "host/hostProfileDetails/:profileId", element: <HostProfileDetails /> }
