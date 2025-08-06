@@ -40,13 +40,9 @@ exports.getStoreJobDetails = (req, res, next) => {
 
 exports.getStoreOffererJobs = async (req, res, next) => {
   const offererId = req.params.offererId;
-  
+
   try {
-    
-    const jobProvider = await UserRecruiter.findById(
-      offererId,
-      "jobsPosted"
-    );
+    const jobProvider = await UserRecruiter.findById(offererId, "jobsPosted");
     jobList = jobProvider.jobsPosted;
 
     const jobs = await Job.find({
@@ -129,21 +125,21 @@ exports.ignoreOffer = async (req, res, next) => {
       .json({ error: "Profile ID is required or user not logged in" });
   }
   try {
-   
     const user = await UserEmployee.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    const offer = user.offers.find((off) => off.profile.toString() === profileId);
+    const offer = user.offers.find(
+      (off) => off.profile.toString() === profileId
+    );
     user.offers = user.offers.filter(
       (offer) => offer.profile._id.toString() !== profileId
     );
     const userRecruiter = await UserRecruiter.findById(offer.offeredBy);
     userRecruiter.choosenProfiles = userRecruiter.choosenProfiles.map((off) => {
       if (off.Ids == profileId) {
-        return { ...off, status: "ignored" }
-      }
-      else {
+        return { ...off, status: "ignored" };
+      } else {
         return off;
       }
     });
@@ -201,9 +197,8 @@ exports.acceptOffer = async (req, res, next) => {
     }
     userRecruiter.choosenProfiles = userRecruiter.choosenProfiles.map((off) => {
       if (off.Ids == profileId) {
-        return { ...off, status: "accepted" }
-      }
-      else {
+        return { ...off, status: "accepted" };
+      } else {
         return off;
       }
     });
@@ -254,9 +249,8 @@ exports.rejectOffer = async (req, res, next) => {
     }
     userRecruiter.choosenProfiles = userRecruiter.choosenProfiles.map((off) => {
       if (off.Ids == profileId) {
-        return { ...off, status: "rejected" }
-      }
-      else {
+        return { ...off, status: "rejected" };
+      } else {
         return off;
       }
     });
@@ -293,7 +287,10 @@ exports.getOnlyFavourites = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const favs = await UserEmployee.findById(req.session.user._id, "favourites");
+    const favs = await UserEmployee.findById(
+      req.session.user._id,
+      "favourites"
+    );
     let favIds = favs.favourites;
 
     const jobs = await Job.find({
@@ -312,20 +309,23 @@ exports.getOnlyAppliedJobs = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
-    const user = await UserEmployee.findById(req.session.user._id, "appliedJobs");
-    let appliedIds = user.appliedJobs.map(ids => ids.Ids);
+    const user = await UserEmployee.findById(
+      req.session.user._id,
+      "appliedJobs"
+    );
+    let appliedIds = user.appliedJobs.map((ids) => ids.Ids);
     let jobs = await Job.find({
       _id: { $in: appliedIds },
     });
     let status;
-     jobs = jobs.map(ele => {
-       user.appliedJobs.forEach(e => {
-         if (e.Ids.toString() === ele._id.toString()) {
-           status = e.status;
-         }
-       });
-       return ({ ...ele, status: status });
-     })
+    jobs = jobs.map((ele) => {
+      user.appliedJobs.forEach((e) => {
+        if (e.Ids.toString() === ele._id.toString()) {
+          status = e.status;
+        }
+      });
+      return { ...ele, status: status };
+    });
     return res.status(200).json(jobs);
   } catch (error) {
     console.error("Error fetching applied jobs:", error);
@@ -381,11 +381,12 @@ exports.postApply = async (req, res, next) => {
         .json({ error: "Forbidden: Only recruiters can post jobs" });
     }
 
-    let appliedIds = user.appliedJobs.map(app => app.Ids.toString());
-    
-    if (appliedIds.includes(jobId.toString())) {
+    let appliedIds = user.appliedJobs.map((app) => app.Ids.toString());
 
-      user.appliedJobs = user.appliedJobs.filter(app => app.Ids.toString() !== jobId.toString());
+    if (appliedIds.includes(jobId.toString())) {
+      user.appliedJobs = user.appliedJobs.filter(
+        (app) => app.Ids.toString() !== jobId.toString()
+      );
       userhost.applications.pull({ job: jobId, applierProfile: user._id });
       userhost.acceptedJobs.pull(jobId);
       userhost.rejectedJobs.pull(jobId);
@@ -393,7 +394,7 @@ exports.postApply = async (req, res, next) => {
       await user.save();
       return res.status(200).json({ message: "Job application cancelled" });
     } else {
-      user.appliedJobs.push({Ids:jobId,status:"pending"});
+      user.appliedJobs.push({ Ids: jobId, status: "pending" });
       userhost.applications.push({
         job: jobId,
         applierProfile: user._id,
@@ -469,7 +470,7 @@ exports.addProfilePost = [
       return res.status(400).json({
         message: "Validation failed",
         errors: errors.array().map((err) => err.msg),
-        oldInput: {profileToAdd},
+        oldInput: { profileToAdd },
       });
     }
 
@@ -489,6 +490,7 @@ exports.addProfilePost = [
 
       let existingProfile = await Profile.findById(profileToAdd._id);
       if (existingProfile) {
+        existingProfile.profileUploader = user._id;
         existingProfile.profileName = profileToAdd.profileName;
         existingProfile.profileGender = profileToAdd.profileGender;
         existingProfile.profilePost = profileToAdd.profilePost;
@@ -501,15 +503,21 @@ exports.addProfilePost = [
         existingProfile.profileGraduation = profileToAdd.profileGraduation;
         existingProfile.profileExperience = profileToAdd.profileExperience;
         existingProfile.profileJobType = profileToAdd.profileJobType;
-        existingProfile.profileExpectedSalary = profileToAdd.profileExpectedSalary;
-        existingProfile.profilePreferredLocations = profileToAdd.profilePreferredLocations;
+        existingProfile.profileExpectedSalary =
+          profileToAdd.profileExpectedSalary;
+        existingProfile.profilePreferredLocations =
+          profileToAdd.profilePreferredLocations;
         existingProfile.profileProjects = profileToAdd.profileProjects;
         existingProfile.profileDescription = profileToAdd.profileDescription;
-        existingProfile.profilePostDescription = profileToAdd.profilePostDescription;
+        existingProfile.profilePostDescription =
+          profileToAdd.profilePostDescription;
 
         savedProfile = await existingProfile.save();
       } else {
-        const newProfile = new Profile(profileToAdd);
+        const newProfile = new Profile({
+          ...profileToAdd,
+          profileUploader: user._id,
+        });
         savedProfile = await newProfile.save();
       }
 
@@ -580,10 +588,10 @@ exports.postAddAboutEmployee = [
     const errors = validationResult(req);
     const data = req.body;
 
-    if ((!errors.isEmpty())) {
+    if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array().map((err) => err.msg),
-        oldInput: {...data}
+        oldInput: { ...data },
       });
     }
 
@@ -591,55 +599,49 @@ exports.postAddAboutEmployee = [
       const user = await UserEmployee.findById(req.session.user._id);
 
       if (!user) {
-        return res.status(404).json({errors:["User not found"]})
+        return res.status(404).json({ errors: ["User not found"] });
       }
 
       if (user.userType !== "employee") {
-        return res.status(403).json({ errors: ["Access denied. Only Employees can update"] });
+        return res
+          .status(403)
+          .json({ errors: ["Access denied. Only Employees can update"] });
       }
 
-      user.aboutEmployee = {...data}
+      user.aboutEmployee = { ...data };
 
       await user.save();
       return res.status(201).json({
-        message: "Profile Updated Successfully"
+        message: "Profile Updated Successfully",
       });
-
-    }
-    catch (er) {
+    } catch (er) {
       console.error(err);
       return res.status(500).json({
-        errors: ["Something went wrong"]
+        errors: ["Something went wrong"],
       });
     }
-  }
-]
+  },
+];
 
 exports.getAddAboutEmployee = async (req, res, next) => {
   const userId = req.params.userId;
-  
+
   const user = await UserEmployee.findById(userId);
   if (!user) {
-    return res.status(400).json({error:"Unauthorized access"})
-  }
-  else {
-    
-        return res.status(200).json(user.aboutEmployee);
-       
+    return res.status(400).json({ error: "Unauthorized access" });
+  } else {
+    return res.status(200).json(user.aboutEmployee);
   }
 };
 
 exports.getAboutRecruiter = async (req, res, next) => {
   const userId = req.params.userId;
-  
+
   const user = await UserRecruiter.findById(userId);
   if (!user) {
-    return res.status(400).json({error:"Unauthorized access"})
-  }
-  else {
-    
-        return res.status(200).json(user.aboutRecruiter);
-       
+    return res.status(400).json({ error: "Unauthorized access" });
+  } else {
+    return res.status(200).json(user.aboutRecruiter);
   }
 };
 
@@ -650,9 +652,8 @@ exports.getEditProfile = async (req, res, next) => {
   }
   const user = await UserEmployee.findById(req.session.user);
   if (!user || !user.profilesPosted.includes(profileId)) {
-    return res.status(400).json({error:"Unauthorized access"})
-  }
-  else {
+    return res.status(400).json({ error: "Unauthorized access" });
+  } else {
     Profile.findById(profileId)
       .then((profile) => {
         if (!profile) {
@@ -661,22 +662,22 @@ exports.getEditProfile = async (req, res, next) => {
           res.status(200).json({
             _id: profile._id,
             profileName: profile.profileName,
-  profileGender: profile.profileGender,
-  profilePost: profile.profilePost,
-  profileCourse: profile.profileCourse,
-  profileSkills: profile.profileSkills,
-  profileEmail: profile.profileEmail,
-  profileMobile: profile.profileMobile,
-  profileTenth: profile.profileTenth,
-  profileTwelth: profile.profileTwelth,
-  profileGraduation: profile.profileGraduation,
-  profileExperience: profile.profileExperience,
-  profileJobType: profile.profileJobType,
-  profileExpectedSalary: profile.profileExpectedSalary,
-  profilePreferredLocations: profile.profilePreferredLocations,
-  profileProjects: profile.profileProjects,
-  profileDescription: profile.profileDescription,
-  profilePostDescription: profile.profilePostDescription,
+            profileGender: profile.profileGender,
+            profilePost: profile.profilePost,
+            profileCourse: profile.profileCourse,
+            profileSkills: profile.profileSkills,
+            profileEmail: profile.profileEmail,
+            profileMobile: profile.profileMobile,
+            profileTenth: profile.profileTenth,
+            profileTwelth: profile.profileTwelth,
+            profileGraduation: profile.profileGraduation,
+            profileExperience: profile.profileExperience,
+            profileJobType: profile.profileJobType,
+            profileExpectedSalary: profile.profileExpectedSalary,
+            profilePreferredLocations: profile.profilePreferredLocations,
+            profileProjects: profile.profileProjects,
+            profileDescription: profile.profileDescription,
+            profilePostDescription: profile.profilePostDescription,
           });
         }
       })

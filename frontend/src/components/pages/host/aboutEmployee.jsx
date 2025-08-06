@@ -25,13 +25,16 @@ export default function AboutEmployee() {
   useEffect(() => {
     const fetchAboutEmployee = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/host/aboutEmployee/${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          `http://localhost:3000/host/aboutEmployee/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
         const data = await response.json();
         setFormData({ ...data });
       } catch (error) {
@@ -64,20 +67,34 @@ export default function AboutEmployee() {
         label="LinkedIn"
         value={
           formData.linkedIn ? (
-            <a href={formData.linkedIn} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+            <a
+              href={formData.linkedIn}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
               {formData.linkedIn}
             </a>
-          ) : "N/A"
+          ) : (
+            "N/A"
+          )
         }
       />
       <DisplayItem
         label="GitHub"
         value={
           formData.gitHub ? (
-            <a href={formData.gitHub} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+            <a
+              href={formData.gitHub}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
               {formData.gitHub}
             </a>
-          ) : "N/A"
+          ) : (
+            "N/A"
+          )
         }
       />
       <DisplayItem label="Bio" value={formData.bio} />
@@ -90,10 +107,18 @@ export default function AboutEmployee() {
         <h2 className="text-xl font-semibold mb-2">Education</h2>
         {formData.education.map((edu, idx) => (
           <div key={idx} className="p-2 border rounded mb-2">
-            <p><strong>Degree:</strong> {edu.degree}</p>
-            <p><strong>College:</strong> {edu.college}</p>
-            <p><strong>Passing Year:</strong> {edu.passingYear}</p>
-            <p><strong>CGPA:</strong> {edu.CGPA}</p>
+            <p>
+              <strong>Degree:</strong> {edu.degree}
+            </p>
+            <p>
+              <strong>College:</strong> {edu.college}
+            </p>
+            <p>
+              <strong>Passing Year:</strong> {edu.passingYear}
+            </p>
+            <p>
+              <strong>CGPA:</strong> {edu.CGPA}
+            </p>
           </div>
         ))}
       </section>
@@ -102,10 +127,18 @@ export default function AboutEmployee() {
         <h2 className="text-xl font-semibold mb-2">Experience</h2>
         {formData.experience.map((exp, idx) => (
           <div key={idx} className="p-2 border rounded mb-2">
-            <p><strong>Company:</strong> {exp.company}</p>
-            <p><strong>Role:</strong> {exp.role}</p>
-            <p><strong>Duration:</strong> {exp.duration}</p>
-            <p><strong>Description:</strong> {exp.descriptionWork}</p>
+            <p>
+              <strong>Company:</strong> {exp.company}
+            </p>
+            <p>
+              <strong>Role:</strong> {exp.role}
+            </p>
+            <p>
+              <strong>Duration:</strong> {exp.duration}
+            </p>
+            <p>
+              <strong>Description:</strong> {exp.descriptionWork}
+            </p>
           </div>
         ))}
       </section>
@@ -114,17 +147,29 @@ export default function AboutEmployee() {
         <h2 className="text-xl font-semibold mb-2">Projects</h2>
         {formData.projects.map((proj, idx) => (
           <div key={idx} className="p-2 border rounded mb-2">
-            <p><strong>Title:</strong> {proj.title}</p>
-            <p><strong>Description:</strong> {proj.descriptionProject}</p>
+            <p>
+              <strong>Title:</strong> {proj.title}
+            </p>
+            <p>
+              <strong>Description:</strong> {proj.descriptionProject}
+            </p>
             {proj.linkProject && (
               <p>
                 <strong>Link:</strong>{" "}
-                <a href={proj.linkProject} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                <a
+                  href={proj.linkProject}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline"
+                >
                   {proj.linkProject}
                 </a>
               </p>
             )}
-            <p><strong>Technologies Used:</strong> {proj.technologiesUsed?.join(", ")}</p>
+            <p>
+              <strong>Technologies Used:</strong>{" "}
+              {proj.technologiesUsed?.join(", ")}
+            </p>
           </div>
         ))}
       </section>

@@ -3,6 +3,10 @@ const UserRecruiter = require("../models/userRecruiter");
 const mongoose = require("mongoose");
 
 const profileSchema = new mongoose.Schema({
+  profileUploader: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "userEmployee",
+  },
   profileName: {
     type: String,
     required: [true, "Profile Name is required"],
@@ -19,10 +23,12 @@ const profileSchema = new mongoose.Schema({
     type: String,
     required: [true, "Profile Course is required"],
   },
-  profileSkills: [{
-    type: String,
-    required: [true, "Profile Skills are required"],
-  }],
+  profileSkills: [
+    {
+      type: String,
+      required: [true, "Profile Skills are required"],
+    },
+  ],
   profileEmail: {
     type: String,
     required: [true, "Profile Email is required"],

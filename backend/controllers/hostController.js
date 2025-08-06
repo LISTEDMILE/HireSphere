@@ -30,10 +30,7 @@ exports.addJobPost = [
     .notEmpty()
     .withMessage("Job Description is required")
     .trim(),
-  check("jobSkills")
-    .isArray({min:1})
-    .withMessage("Add Skills"),
-  
+  check("jobSkills").isArray({ min: 1 }).withMessage("Add Skills"),
 
   async (req, res) => {
     const errors = validationResult(req);
@@ -63,6 +60,7 @@ exports.addJobPost = [
 
       let existingJob = await Job.findById(jobToAdd._id);
       if (existingJob) {
+        existingJob.jobUploader = user._id;
         existingJob.jobCompany = jobToAdd.jobCompany;
         existingJob.jobPost = jobToAdd.jobPost;
         existingJob.jobLocation = jobToAdd.jobLocation;
@@ -79,7 +77,7 @@ exports.addJobPost = [
         existingJob.description = jobToAdd.description;
         savedJob = await existingJob.save();
       } else {
-        const job = new Job({ ...jobToAdd });
+        const job = new Job({ ...jobToAdd, jobUploader: user._id });
 
         savedJob = await job.save();
       }

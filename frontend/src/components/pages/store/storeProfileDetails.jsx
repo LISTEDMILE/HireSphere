@@ -202,43 +202,46 @@ export default function StoreProfilesDetails() {
             </div>
 
             <div className=" flex gap-6 mt-12 border-2 border-white p-8 rounded-lg w-[80%] flex-col ">
-              <label className=" text-gray-400 font-medium">
-                Projects:
-              </label>
+              <label className=" text-gray-400 font-medium">Projects:</label>
               <div className="flex flex-col gap-8  w-full">
                 {profile.profileProjects.map((proj) => {
                   return (
                     <div className="w-full bg-amber-950 flex flex-col gap-4 p-8 rounded-lg">
-
-<div className=" flex gap-3">
-                <label className=" text-gray-400 font-medium">Title:</label>
-                <p className="text-white text-md">{proj.title}</p>
+                      <div className=" flex gap-3">
+                        <label className=" text-gray-400 font-medium">
+                          Title:
+                        </label>
+                        <p className="text-white text-md">{proj.title}</p>
                       </div>
 
                       <div className=" flex gap-3">
-                <label className=" text-gray-400 font-medium">Description:</label>
-                <p className="text-white text-md">{proj.description}</p>
+                        <label className=" text-gray-400 font-medium">
+                          Description:
+                        </label>
+                        <p className="text-white text-md">{proj.description}</p>
                       </div>
 
                       <div className=" flex gap-3">
-                <label className=" text-gray-400 font-medium">Link:</label>
-                <p className="text-white text-md">{proj.link}</p>
+                        <label className=" text-gray-400 font-medium">
+                          Link:
+                        </label>
+                        <p className="text-white text-md">{proj.link}</p>
                       </div>
-                      
+
                       <div className="flex flex-col gap-3 w-full">
-                      <label className=" text-gray-400 font-medium">
-                Technologies Used:
-              </label>
-              <div className="flex flex-wrap w-full gap-3 items-center">
-                {proj.technologies.map((tech) => {
-                  return (
-                    <span className="px-8 py-2 bg-cyan-950 rounded-lg">
-                      {tech}
-                    </span>
-                  );
-                })}
-                          </div>
-              </div>
+                        <label className=" text-gray-400 font-medium">
+                          Technologies Used:
+                        </label>
+                        <div className="flex flex-wrap w-full gap-3 items-center">
+                          {proj.technologies.map((tech) => {
+                            return (
+                              <span className="px-8 py-2 bg-cyan-950 rounded-lg">
+                                {tech}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
                   );
                 })}

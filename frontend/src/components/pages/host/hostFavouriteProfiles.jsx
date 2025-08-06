@@ -1,182 +1,260 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import NavHome from "../../compo/NavHome";
 
 export default function FavouriteProfileList() {
-    
-    const [favouriteProfiles, setFavouriteProfiles] = useState([]);
+  const [favouriteProfiles, setFavouriteProfiles] = useState([]);
 
-    useEffect(() => {
-        const fetchFavouriteProfiles = async () => {
-            try {
-                const response = await fetch("http://localhost:3000/host/onlyFavourites", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                });
-              const data = await response.json();
-                if (data.error || data.length === 0) {
-                    console.error("Error fetching favourites:", data.error);
-                    return;
-                }
-                
-                  const favouriteProfilesWithoutChoosen = data.map(profile => ({ ...profile, fav: true })); // Add fav property
-              
-              
-              const choosenResponse = await fetch("http://localhost:3000/host/getChoosenProfiles", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-          });
-          const choosenData = await choosenResponse.json();
-          if (choosenData.error) {
-              console.error("Error fetching choosen profiles:", choosenData.error);
-            return;
-              }
-          else {
-            let choosenWhole = choosenData.choosenProfiles;
+  useEffect(() => {
+    const fetchFavouriteProfiles = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/host/onlyFavourites",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        if (data.error || data.length === 0) {
+          console.error("Error fetching favourites:", data.error);
+          return;
+        }
 
-            const choosenIds = choosenWhole.map(pro => pro.Ids);
+        const favouriteProfilesWithoutChoosen = data.map((profile) => ({
+          ...profile,
+          fav: true,
+        })); // Add fav property
 
-           
-            let favouriteProfilesComplete = favouriteProfilesWithoutChoosen.map(profile => choosenIds.includes(profile._id) ? { ...profile, choosen: true } : { ...profile, choosen: false });
+        const choosenResponse = await fetch(
+          "http://localhost:3000/host/getChoosenProfiles",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+        const choosenData = await choosenResponse.json();
+        if (choosenData.error) {
+          console.error("Error fetching choosen profiles:", choosenData.error);
+          return;
+        } else {
+          let choosenWhole = choosenData.choosenProfiles;
 
-            let status;
+          const choosenIds = choosenWhole.map((pro) => pro.Ids);
 
-            const favouriteProfilesCompleteWithStatus = favouriteProfilesComplete.map(e => {
+          let favouriteProfilesComplete = favouriteProfilesWithoutChoosen.map(
+            (profile) =>
+              choosenIds.includes(profile._id)
+                ? { ...profile, choosen: true }
+                : { ...profile, choosen: false }
+          );
+
+          let status;
+
+          const favouriteProfilesCompleteWithStatus =
+            favouriteProfilesComplete.map((e) => {
               if (e.choosen == false) {
                 return e;
-              }
-              else if(e.choosen == true){
-                choosenWhole.forEach(ele => {
+              } else if (e.choosen == true) {
+                choosenWhole.forEach((ele) => {
                   if (ele.Ids == e._id) {
                     status = ele.status;
                   }
-                })
-                return ({ ...e, status: status });
+                });
+                return { ...e, status: status };
               }
-            })
+            });
 
-
-            setFavouriteProfiles(favouriteProfilesCompleteWithStatus)
-              }
-                }catch (error) {
-                    console.error("Error fetching favourite profiles:", error);
-                }
-            };
-
-            fetchFavouriteProfiles();
-    }, []);
-  
-    const handleHireProfile = async (profileId) => {
-      try {
-          const response = await fetch(`http://localhost:3000/host/hireProfile/${profileId}`, {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json",
-              },
-              credentials: "include",
-          });
-  
-          const data = await response.json();
-          if (data.error) {
-              alert("Error hiring profile: " + data.error);
-              return;
-          }
-  
-          setFavouriteProfiles(favouriteProfiles.map(profile =>
-              profile._id === profileId ? { ...profile, choosen: !profile.choosen ,status:profile.choosen==true?null:"pending" } : profile
-          ));
+          setFavouriteProfiles(favouriteProfilesCompleteWithStatus);
+        }
       } catch (error) {
-          console.error("Error hiring profile:", error);
+        console.error("Error fetching favourite profiles:", error);
       }
     };
 
-    const handleFavourite = async (profileId) => {
-        try {
-            await fetch(`http://localhost:3000/host/favouriteProfile/${profileId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-            setFavouriteProfiles((prevProfiles) =>
-                prevProfiles.map((profile) =>
-                    profile._id === profileId ? { ...profile, fav: !profile.fav } : profile
-                )
-            );
-        } catch (error) {
-            console.error("Error toggling favourite:", error);
+    fetchFavouriteProfiles();
+  }, []);
+
+  const handleHireProfile = async (profileId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/host/hireProfile/${profileId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
         }
-    };
+      );
+
+      const data = await response.json();
+      if (data.error) {
+        alert("Error hiring profile: " + data.error);
+        return;
+      }
+
+      setFavouriteProfiles(
+        favouriteProfiles.map((profile) =>
+          profile._id === profileId
+            ? {
+                ...profile,
+                choosen: !profile.choosen,
+                status: profile.choosen == true ? null : "pending",
+              }
+            : profile
+        )
+      );
+    } catch (error) {
+      console.error("Error hiring profile:", error);
+    }
+  };
+
+  const handleFavourite = async (profileId) => {
+    try {
+      await fetch(`http://localhost:3000/host/favouriteProfile/${profileId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      setFavouriteProfiles((prevProfiles) =>
+        prevProfiles.map((profile) =>
+          profile._id === profileId
+            ? { ...profile, fav: !profile.fav }
+            : profile
+        )
+      );
+    } catch (error) {
+      console.error("Error toggling favourite:", error);
+    }
+  };
 
   return (
-    <>
-      <div className="p-4 bg-gray-100 min-h-screen">
-        <div className="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-          <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">Favourite Profiles</h1>
-      
-          <ul className="space-y-6">
-            {favouriteProfiles.map((detail) => (
-              <li key={detail._id} className="border border-gray-300 rounded-lg p-4 shadow-md bg-white">
-                <div className="flex justify-between items-center mb-2">
-                  <h1 className="text-xl font-semibold text-gray-800">{detail.profilePost}</h1>
-                  <h2>status{detail.status}</h2>
-                  <button
-                onClick={() => handleFavourite(detail._id)}
-                className={`${
-                  detail.fav ? "text-yellow-500" : "text-gray-500"
-                } hover:underline`}
-              >
-                {detail.fav ? "★" : "☆"}
-                  </button>
-                  <button
-                onClick={() => handleHireProfile(detail._id)}
-                  className={`px-4 py-2 rounded-lg font-semibold text-white ${
-                    detail.choosen ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+    <div className="w-full text-white bg-black flex flex-col items-center">
+      <NavHome />
+
+      <h1 className="text-5xl font-bold text-center my-12">Favourites</h1>
+
+      <div className="w-[70%] pb-12">
+        <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
+          {favouriteProfiles.map((detail) => (
+            <li
+              key={detail._id}
+              className="bg-[#0d212e80] rounded-2xl shadow-md p-6 flex flex-col w-full justify-between "
+            >
+              <div className="flex justify-between items-center text-2xl mb-12  pr-8">
+                <span></span>
+                {detail.choosen == true && (
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 text-xl">Status:</label>
+                    <p className="text-white text-xl">{detail.status}</p>
+                  </div>
+                )}
+
+                <button
+                  onClick={() => handleFavourite(detail._id)}
+                  className={`hover:underline text-3xl ${
+                    detail.fav ? "text-yellow-500" : "text-gray-500"
                   }`}
                 >
-                  {detail.choosen ? "Deselect" : "Select"}
+                  {detail.fav ? "★" : "☆"}
                 </button>
+              </div>
+              <div className="flex gap-24 ">
+                <div className="h-[100px] w-[100px] bg-amber-200"></div>
+                <div className="w-full flex flex-col gap-4">
+                  <h2 className="text-3xl text-cyan-400 font-semibold">
+                    {detail.profilePost}
+                  </h2>
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 text-xl">Name:</label>
+                    <p className="text-white text-xl">{detail.profileName}</p>
+                  </div>
+
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 font-medium">Tenth</label>
+                    <p className="text-white">
+                      {" "}
+                      <span className="font-semibold">10th (%):</span>{" "}
+                      {detail.profileTenth}
+                    </p>
+                  </div>
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 font-medium">
+                      Twelth:
+                    </label>
+                    <p className="text-white">
+                      {" "}
+                      <span className="font-semibold">12th (%):</span>{" "}
+                      {detail.profileTwelth}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full flex-col  mt-8 px-24 flex">
+                <div className=" flex gap-6 w-full flex-col ">
+                  <label className=" text-gray-400 font-medium">Skills:</label>
+                  <div className="flex flex-wrap gap-3 items-center">
+                    {detail.profileSkills.map((skill) => {
+                      return (
+                        <span className="px-8 py-2 bg-cyan-950 rounded-lg">
+                          {skill}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                <h2 className="text-md text-gray-600"><strong>Name:</strong> {detail.profileName}</h2>
-                <h2 className="text-md text-gray-600">10th(%): {detail.profileTenth}</h2>
-                <h2 className="text-md text-gray-600">12th(%): {detail.profileTwelth}</h2>
-                
-                <label className="block mt-2 font-medium text-gray-700">Skills</label>
-                <h2 className="text-md text-gray-700 mb-2">{detail.profileSkills}</h2>
-
-                <form action="/host/chooseProfile" method="POST" className="flex items-center gap-4">
-                  <input type="hidden" name="_id" value={detail._id} />
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                  >
-                    {detail.choosen ? 'Deselect' : 'Select'}
-                  </button>
-                  <a
-                    href={`/host/hostProfileDetails/${detail._id}`}
-                    className="text-blue-500 underline hover:text-blue-700"
+                <div className="flex  items-center gap-3 mt-24">
+                  <Link
+                    to={`/host/hostProfileDetails/${detail._id}`}
+                    className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg "
                   >
                     Details
-                  </a>
-                </form>
-              </li>
-            ))}
-          </ul>
+                  </Link>
 
-          <p className="mt-10 text-center text-sm text-gray-500">
-            <strong><u>test reached last</u></strong>
-          </p>
-        </div>
+                  <Link
+                    to={`/host/aboutEmployee/${detail.profileUploader}`}
+                    className="bg-cyan-600 text-white hover:bg-cyan-800 px-4 py-2  rounded-lg  "
+                  >
+                    Uploader Profile
+                  </Link>
+
+                  <Link
+                    to={`/host/applicantProfiles/${detail.profileUploader}`}
+                    className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg  "
+                  >
+                    Get Uploaded Resumes
+                  </Link>
+                </div>
+              </div>
+
+              <div className="w-full mt-6 flex justify-center ">
+                <div className="flex pr-8  w-[90%] justify-end items-center mt-4">
+                  <button
+                    onClick={() => handleHireProfile(detail._id)}
+                    className={`px-4 py-2 rounded-lg font-semibold text-white ${
+                      detail.choosen
+                        ? "bg-red-500 hover:bg-red-600"
+                        : "bg-green-500 hover:bg-green-600"
+                    }`}
+                  >
+                    {detail.choosen ? "Deselect" : "Select"}
+                  </button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
-    </>
+    </div>
   );
-};
-
+}

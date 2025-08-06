@@ -160,8 +160,6 @@ export default function AddJob() {
             />
           </div>
 
-          
-
           {/* Post to Seek */}
           <div className="w-full">
             <label className="block text-gray-400 font-medium mb-2">
@@ -239,11 +237,18 @@ export default function AddJob() {
               </div>
             </div>
             <div className="w-[40%] bg-[#3C2A21] p-4 rounded-lg flex flex-col text-lg gap-4">
-
-              <h2  className="block text-gray-400 font-medium mb-2">Enter Employement Type</h2>
+              <h2 className="block text-gray-400 font-medium mb-2">
+                Enter Employement Type
+              </h2>
               {employmentTypes.map((emType) => {
                 return (
-                  <label className={`bg-cyan-950 px-4 py-3 rounded-lg flex justify-between items-center ${formData.jobEmploymentType.includes(emType) ? "border-green-700  border-2 " : "border-1 border-white"}`}>
+                  <label
+                    className={`bg-cyan-950 px-4 py-3 rounded-lg flex justify-between items-center ${
+                      formData.jobEmploymentType.includes(emType)
+                        ? "border-green-700  border-2 "
+                        : "border-1 border-white"
+                    }`}
+                  >
                     {emType}
                     <input
                       type="checkbox"
@@ -251,11 +256,10 @@ export default function AddJob() {
                       onChange={() => handleEmploymentType(emType)}
                       className="hidden"
                     />
-                    
 
-                    {formData.jobEmploymentType.includes(emType) && <GrRadialSelected className="text-green-300"/> }
-                    
-                    
+                    {formData.jobEmploymentType.includes(emType) && (
+                      <GrRadialSelected className="text-green-300" />
+                    )}
                   </label>
                 );
               })}
@@ -305,28 +309,32 @@ export default function AddJob() {
           </div>
 
           <div className="w-full bg-[#3C2A21] p-4 rounded-lg flex flex-col text-lg gap-4">
-
-            <h2 className="block text-gray-400 font-medium mb-2">Enter Job Type</h2>
-
+            <h2 className="block text-gray-400 font-medium mb-2">
+              Enter Job Type
+            </h2>
 
             <div className="flex space-x-4">
-
-          {jobTypes.map((emType) => {
-            return (
-              
-              <label className={`bg-cyan-950 px-4 py-3 rounded-lg flex w-fit gap-4 justify-between items-center ${formData.jobType.includes(emType) ? "border-green-700  border-2 " : "border-1 border-white"}`}>
+              {jobTypes.map((emType) => {
+                return (
+                  <label
+                    className={`bg-cyan-950 px-4 py-3 rounded-lg flex w-fit gap-4 justify-between items-center ${
+                      formData.jobType.includes(emType)
+                        ? "border-green-700  border-2 "
+                        : "border-1 border-white"
+                    }`}
+                  >
                     {emType}
-                <input
-                  type="checkbox"
-                  value={emType}
-                  checked={formData.jobType.includes(emType)}
-                  onChange={() => handleJobType(emType)}
-                />
-              </label>
-            );
-          })}
+                    <input
+                      type="checkbox"
+                      value={emType}
+                      checked={formData.jobType.includes(emType)}
+                      onChange={() => handleJobType(emType)}
+                    />
+                  </label>
+                );
+              })}
             </div>
-            </div>
+          </div>
 
           <div className="w-full">
             <label className="block text-gray-400 font-medium mb-2">

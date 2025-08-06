@@ -119,14 +119,10 @@ export default function HostJobDetails() {
                 <p className="text-cyan-300">{job.jobSalaryOffered}</p>
               </div>
 
-              
               <div className="mt-2 flex gap-3">
-                <label className=" text-gray-400 font-medium">
-                  Industry:
-                </label>
+                <label className=" text-gray-400 font-medium">Industry:</label>
                 <p className="text-white">{job.jobIndustry}</p>
               </div>
-
 
               <div className="mt-2 flex gap-3">
                 <label className=" text-gray-400 font-medium">
@@ -153,7 +149,6 @@ export default function HostJobDetails() {
                 })}
               </div>
 
-
               <label className=" text-gray-400 mt-12 mb-4 text-xl">
                 Employement Type:
               </label>
@@ -167,7 +162,6 @@ export default function HostJobDetails() {
                   );
                 })}
               </div>
-
 
               <label className=" text-gray-400 mt-12 mb-4 text-xl">
                 Job Options:
@@ -187,15 +181,11 @@ export default function HostJobDetails() {
                 Description:
               </label>
 
-              <p className=" bg-cyan-950 rounded-lg px-12 py-4 text-white text-wrap">{job.description}</p>
+              <p className=" bg-cyan-950 rounded-lg px-12 py-4 text-white text-wrap">
+                {job.description}
+              </p>
 
-
-              
-             
-
-              <label className=" text-gray-400 mt-12 mb-4 text-xl">
-                tags:
-              </label>
+              <label className=" text-gray-400 mt-12 mb-4 text-xl">tags:</label>
 
               <div className="flex text-white justify-start items-center gap-3 w-full flex-wrap">
                 {job.jobTags.map((tag) => {
@@ -206,8 +196,6 @@ export default function HostJobDetails() {
                   );
                 })}
               </div>
-
-
 
               <div className="flex justify-around items-center mt-12 mb-12">
                 <div className="flex gap-3 items-center">
@@ -220,11 +208,6 @@ export default function HostJobDetails() {
                   <p className="text-white">{job.jobOwnerEmail}</p>
                 </div>
               </div>
-
-
-              
-
-             
             </div>
           </div>
         </div>

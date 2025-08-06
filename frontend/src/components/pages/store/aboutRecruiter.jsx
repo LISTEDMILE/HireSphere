@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export default function AboutRecruiter() {
-  
   const { userId } = useParams();
   const [formData, setFormData] = useState({
     fullName: "",
@@ -17,17 +16,19 @@ export default function AboutRecruiter() {
     rolesHiring: [],
   });
 
-
   useEffect(() => {
     const fetchAboutRecruiter = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/store/aboutRecruiter/${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          `http://localhost:3000/store/aboutRecruiter/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
         const data = await response.json();
         setFormData({ ...data });
       } catch (error) {
@@ -82,7 +83,12 @@ export default function AboutRecruiter() {
         label="LinkedIn"
         value={
           formData.linkedIn ? (
-            <a href={formData.linkedIn} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+            <a
+              href={formData.linkedIn}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
               {formData.linkedIn}
             </a>
           ) : (
@@ -94,7 +100,11 @@ export default function AboutRecruiter() {
       <InfoItem label="Bio" value={formData.bio} />
       <InfoItem
         label="Roles Hiring For"
-        value={formData.rolesHiring && formData.rolesHiring.length > 0 ? formData.rolesHiring.join(", ") : "N/A"}
+        value={
+          formData.rolesHiring && formData.rolesHiring.length > 0
+            ? formData.rolesHiring.join(", ")
+            : "N/A"
+        }
       />
     </div>
   );

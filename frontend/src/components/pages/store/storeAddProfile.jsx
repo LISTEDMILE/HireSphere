@@ -455,15 +455,15 @@ export default function ProfileForm() {
                 </div>
 
                 <div className="flex mb-3 w-full justify-center">
-                <button
-                  onClick={(e) => {
-                    handleAddProject(e, project);
-                  }}
-                  className="  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
-                >
-                  add Project
+                  <button
+                    onClick={(e) => {
+                      handleAddProject(e, project);
+                    }}
+                    className="  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+                  >
+                    add Project
                   </button>
-                  </div>
+                </div>
               </div>
             </div>
             <div className="w-full flex justify-around gap-8 mt-12 flex-wrap">
@@ -472,29 +472,25 @@ export default function ProfileForm() {
                   <div className="bg-cyan-950 flex flex-col rounded-lg w-[30%] p-4">
                     <div className="flex flex-col gap-3">
                       <div className="flex gap-3 items-center">
-                      <label className="block text-gray-400 text-md ">
-                        Title:
+                        <label className="block text-gray-400 text-md ">
+                          Title:
                         </label>
-                        <p className="text-lg">
-                        {pro.title}
-                        </p>
-                        </div>
-                        <div className="flex gap-3 items-center">
+                        <p className="text-lg">{pro.title}</p>
+                      </div>
+                      <div className="flex gap-3 items-center">
                         <label className="block text-gray-400 text-md ">
-                        Description:</label>
-                        <p className="text-lg">
-                      {pro.description}
-                      </p>
-                        </div>
-                        <div className="flex gap-3 items-center">
+                          Description:
+                        </label>
+                        <p className="text-lg">{pro.description}</p>
+                      </div>
+                      <div className="flex gap-3 items-center">
                         <label className="block text-gray-400 text-md ">
-                        Link:</label>
-                        <p className="text-lg">
-                      {pro.link}
-                      </p>
-                        </div>
-                       
-                        <label className="block text-gray-400 text-md ">
+                          Link:
+                        </label>
+                        <p className="text-lg">{pro.link}</p>
+                      </div>
+
+                      <label className="block text-gray-400 text-md ">
                         Technologies Used:
                       </label>
                       <div className="flex justify-start items-center gap-3 w-full flex-wrap">
@@ -508,11 +504,13 @@ export default function ProfileForm() {
                       </div>
                     </div>
                     <div className="flex mt-6 mb-2 justify-center ">
-                    <button onClick={(e) => handleRemoveProject(e, pro)}
-                   className=" w-min  px-12 bg-red-700 text-white py-2 rounded hover:bg-red-950 transition">
-                      remove
+                      <button
+                        onClick={(e) => handleRemoveProject(e, pro)}
+                        className=" w-min  px-12 bg-red-700 text-white py-2 rounded hover:bg-red-950 transition"
+                      >
+                        remove
                       </button>
-                      </div>
+                    </div>
                   </div>
                 );
               })}

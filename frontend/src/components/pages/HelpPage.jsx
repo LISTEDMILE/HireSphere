@@ -17,11 +17,11 @@ const HelpPage = () => {
         </p>
         <h2 className="mb-4 text-2xl">1. How do I create an account?</h2>
         <p className="mb-16">
-          To get started on Hire Sphere, click on the “Sign Up” button at the top
-          right corner of the page. Enter your personal details, such as your
-          name, username, and password. Once you’ve completed the registration
-          process, you’ll be able to create your profile (if you're a job
-          seeker), or post job openings (if you're an employer).
+          To get started on Hire Sphere, click on the “Sign Up” button at the
+          top right corner of the page. Enter your personal details, such as
+          your name, username, and password. Once you’ve completed the
+          registration process, you’ll be able to create your profile (if you're
+          a job seeker), or post job openings (if you're an employer).
         </p>
         <h2 className="mb-4 text-2xl">2. How do I search for jobs?</h2>
         <p className="mb-16">
@@ -32,8 +32,8 @@ const HelpPage = () => {
         </p>
         <h2 className="mb-4 text-2xl">3. How do I apply for a job?</h2>
         <p className="mb-16">
-          Once you’ve found a job that interests you, click on the job listing to
-          view the full details. If you meet the qualifications, click on the
+          Once you’ve found a job that interests you, click on the job listing
+          to view the full details. If you meet the qualifications, click on the
           “Apply Now” button. You can also track the status of your applications
           directly through your profile.
         </p>
@@ -48,8 +48,8 @@ const HelpPage = () => {
         <p className="mb-16">
           If you need assistance or have specific questions, please reach out to
           us by clicking on the “Contact Us” page at the bottom of the site. Our
-          customer support team is available 24/7 to provide help and resolve any
-          issues you might encounter.
+          customer support team is available 24/7 to provide help and resolve
+          any issues you might encounter.
         </p>
       </div>
       <Footer />

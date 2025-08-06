@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { useRef } from "react";
 import { BackgroundAnimation, RocketFlames } from "../compo/anima";
 import { FaRegPaperPlane } from "react-icons/fa";
 import { HiOutlineChartBar } from "react-icons/hi";
@@ -231,25 +230,21 @@ const LandingPage = () => {
       });
     });
 
-    gsap.to(".rocket", 
-      {
+    gsap.to(".rocket", {
       scrollTrigger: {
         trigger: ".endingH",
         toggleActions: "play none none reverse",
-          start: "top 60%",
-          end: "top 10%",
-        scrub:3
+        start: "top 60%",
+        end: "top 10%",
+        scrub: 3,
       },
-        x: "-100%", y: "20%",
-        rotate:90,
-        opacity: 1,
+      x: "-100%",
+      y: "20%",
+      rotate: 90,
+      opacity: 1,
     });
-
-
-
-
   });
-  
+
   useEffect(() => {
     const styleSheet = document.styleSheets[0];
 

@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 export default function AddAboutRecruiter() {
-    const [role, setRole] = useState("");
+  const [role, setRole] = useState("");
   const [errors, setErrors] = useState(null);
   const [message, setMessage] = useState(null);
-    
+
   const { userId } = useParams();
-    
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -22,88 +21,85 @@ export default function AddAboutRecruiter() {
     rolesHiring: [],
   });
 
-    useEffect(() => {
-        const fetchAboutRecruiter = async () => {
-          try {
-                const response = await fetch(`http://localhost:3000/host/addAboutRecruiter/${userId}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                    
-                });
-            
-                const data = await response.json();
-                setFormData({ ...data });
-            }
-            catch (error) {
-                console.error("Error fetching About Recruiter", error);
-            }
-        };
-        fetchAboutRecruiter();
-    },[]);
+  useEffect(() => {
+    const fetchAboutRecruiter = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/host/addAboutRecruiter/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+        setFormData({ ...data });
+      } catch (error) {
+        console.error("Error fetching About Recruiter", error);
+      }
+    };
+    fetchAboutRecruiter();
+  }, []);
 
   const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value, });
-    };
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-    const handleArrayAdd = (e,field,value) => {
-      e.preventDefault();
-      if(value !== null && value.trim()!== "" && !formData[field].includes(value)){
-      setFormData({...formData,[field]:[...formData[field],value]});
-  
-      }
-    
-      
+  const handleArrayAdd = (e, field, value) => {
+    e.preventDefault();
+    if (
+      value !== null &&
+      value.trim() !== "" &&
+      !formData[field].includes(value)
+    ) {
+      setFormData({ ...formData, [field]: [...formData[field], value] });
     }
-  
-    const handleArrayRemove = (e,field,value) => {
-      e.preventDefault();
-      let elementsArray = [...formData[field]];
-      elementsArray = elementsArray.filter(ele => ele!==value);
-      setFormData({...formData,[field]:elementsArray});
-  }
-  
+  };
 
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        let response = await fetch("http://localhost:3000/host/addAboutRecruiter", {
+  const handleArrayRemove = (e, field, value) => {
+    e.preventDefault();
+    let elementsArray = [...formData[field]];
+    elementsArray = elementsArray.filter((ele) => ele !== value);
+    setFormData({ ...formData, [field]: elementsArray });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      let response = await fetch(
+        "http://localhost:3000/host/addAboutRecruiter",
+        {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           credentials: "include",
           body: JSON.stringify(formData),
-        });
-        const data = await response.json();
-
-        setErrors(data.errors ? data.errors : null);
-        if (!data.errors) {
-          setMessage("Profile Updated Successfully");
         }
-      }
-      catch (error) {
-        console.error("Error submitting:", error);
-      }
-    }
+      );
+      const data = await response.json();
 
-  
-  
+      setErrors(data.errors ? data.errors : null);
+      if (!data.errors) {
+        setMessage("Profile Updated Successfully");
+      }
+    } catch (error) {
+      console.error("Error submitting:", error);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h1 className="text-2xl font-bold mb-6 text-center">
-         Recruiter Profile
-      </h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">Recruiter Profile</h1>
       {message && (
-  <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-center">
-    {message}
-  </div>
-)}
+        <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-center">
+          {message}
+        </div>
+      )}
 
       {errors && (
         <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
@@ -115,8 +111,8 @@ export default function AddAboutRecruiter() {
         </div>
       )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-          <input type="hidden" name="_id" value={formData._id} />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input type="hidden" name="_id" value={formData._id} />
         {/* Full Name */}
         <InputField
           label="Full Name"
@@ -133,26 +129,31 @@ export default function AddAboutRecruiter() {
           onChange={handleChange}
         />
 
-<input 
-        type="text"
-        name="role"
-        onChange={(e)=>setRole(e.target.value)}
-        value={role}
+        <input
+          type="text"
+          name="role"
+          onChange={(e) => setRole(e.target.value)}
+          value={role}
         />
         <button
-
-        onClick ={(e)=>{handleArrayAdd(e,"rolesHiring",role);
-          setRole("");
-        }}
-        >add</button>
-        {formData.rolesHiring.map(role => {
-          return(
+          onClick={(e) => {
+            handleArrayAdd(e, "rolesHiring", role);
+            setRole("");
+          }}
+        >
+          add
+        </button>
+        {formData.rolesHiring.map((role) => {
+          return (
             <>
-            <p>{role}</p>
-            <button onClick={(e) => handleArrayRemove(e,"rolesHiring",role)}>
-              remove</button>
+              <p>{role}</p>
+              <button
+                onClick={(e) => handleArrayRemove(e, "rolesHiring", role)}
+              >
+                remove
+              </button>
             </>
-          )
+          );
         })}
 
         {/* Designation */}
@@ -216,12 +217,11 @@ export default function AddAboutRecruiter() {
           ></textarea>
         </div>
 
-       
-
         <button
           type="submit"
           className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
-        >Profile
+        >
+          Profile
         </button>
       </form>
     </div>

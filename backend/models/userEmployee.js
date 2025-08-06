@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema(
         type: String,
       },
       mobile: {
-        type:String,
+        type: String,
       },
       education: [
         {

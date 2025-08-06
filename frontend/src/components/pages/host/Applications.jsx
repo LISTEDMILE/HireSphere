@@ -208,7 +208,7 @@ export default function Applications() {
                 </div>
 
                 <div className="flex justify-end gap-3 pr-6">
-                <Link
+                  <Link
                     to={`/host/aboutEmployee/${application.applierProfile._id}`}
                     className="bg-cyan-600 text-white hover:bg-cyan-800 px-4 py-2  rounded-lg  "
                   >
