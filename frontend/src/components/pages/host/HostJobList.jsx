@@ -14,7 +14,7 @@ export default function HostJobList() {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          `https://hire-sphere.onrender.com/host/hostJobList`,
+          `{process.env.REACT_APP_API_URL}/host/hostJobList`,
           {
             method: "GET",
             headers: {
@@ -37,7 +37,7 @@ export default function HostJobList() {
   const handleDelete = async (jobId) => {
     try {
       const response = await fetch(
-        `https://hire-sphere.onrender.com/host/deleteJob/${jobId}`,
+        `{process.env.REACT_APP_API_URL}/host/deleteJob/${jobId}`,
         {
           method: "POST",
           headers: {

@@ -11,7 +11,7 @@ export default function FavouriteProfileList() {
     const fetchFavouriteProfiles = async () => {
       try {
         const response = await fetch(
-          `https://hire-sphere.onrender.com/host/onlyFavourites`,
+          `{process.env.REACT_APP_API_URL}/host/onlyFavourites`,
           {
             method: "GET",
             headers: {
@@ -32,7 +32,7 @@ export default function FavouriteProfileList() {
         })); // Add fav property
 
         const choosenResponse = await fetch(
-          `https://hire-sphere.onrender.com/host/getChoosenProfiles`,
+          `{process.env.REACT_APP_API_URL}/host/getChoosenProfiles`,
           {
             method: "GET",
             headers: {
@@ -86,7 +86,7 @@ export default function FavouriteProfileList() {
   const handleHireProfile = async (profileId) => {
     try {
       const response = await fetch(
-        `https://hire-sphere.onrender.com/host/hireProfile/${profileId}`,
+        `{process.env.REACT_APP_API_URL}/host/hireProfile/${profileId}`,
         {
           method: "POST",
           headers: {
@@ -121,7 +121,7 @@ export default function FavouriteProfileList() {
   const handleFavourite = async (profileId) => {
     try {
       await fetch(
-        `https://hire-sphere.onrender.com/host/favouriteProfile/${profileId}`,
+        `{process.env.REACT_APP_API_URL}/host/favouriteProfile/${profileId}`,
         {
           method: "POST",
           headers: {

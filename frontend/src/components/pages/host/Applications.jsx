@@ -13,7 +13,7 @@ export default function Applications() {
     const fetchApplications = async () => {
       try {
         const response = await fetch(
-          `https://hire-sphere.onrender.com/host/hostApplications`,
+          `{process.env.REACT_APP_API_URL}/host/hostApplications`,
           {
             method: "GET",
             credentials: "include",
@@ -41,7 +41,7 @@ export default function Applications() {
   const handleIgnore = async (jobId) => {
     try {
       await fetch(
-        `https://hire-sphere.onrender.com/host/ignoreApplication/${jobId}`,
+        `{process.env.REACT_APP_API_URL}/host/ignoreApplication/${jobId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -62,7 +62,7 @@ export default function Applications() {
   const handleAccept = async (jobId) => {
     try {
       await fetch(
-        `https://hire-sphere.onrender.com/host/acceptApplication/${jobId}`,
+        `{process.env.REACT_APP_API_URL}/host/acceptApplication/${jobId}`,
         {
           method: "POST",
 
@@ -88,7 +88,7 @@ export default function Applications() {
   const handleReject = async (jobId) => {
     try {
       await fetch(
-        `https://hire-sphere.onrender.com/host/rejectApplication/${jobId}`,
+        `{process.env.REACT_APP_API_URL}/host/rejectApplication/${jobId}`,
         {
           method: "POST",
           credentials: "include",

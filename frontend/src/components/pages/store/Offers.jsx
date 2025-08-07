@@ -13,7 +13,7 @@ export default function Offers() {
     const fetchOffers = async () => {
       try {
         const response = await fetch(
-          `https://hire-sphere.onrender.com/store/offers`,
+          `{process.env.REACT_APP_API_URL}/store/offers`,
           {
             method: "GET",
             credentials: "include",
@@ -38,7 +38,7 @@ export default function Offers() {
   const handleIgnore = async (offerId) => {
     try {
       await fetch(
-        `https://hire-sphere.onrender.com/store/ignoreOffer/${offerId}`,
+        `{process.env.REACT_APP_API_URL}/store/ignoreOffer/${offerId}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -59,7 +59,7 @@ export default function Offers() {
   const handleAccept = async (profileId) => {
     try {
       await fetch(
-        `https://hire-sphere.onrender.com/store/acceptOffer/${profileId}`,
+        `{process.env.REACT_APP_API_URL}/store/acceptOffer/${profileId}`,
         {
           method: "POST",
           credentials: "include",
@@ -83,7 +83,7 @@ export default function Offers() {
   const handleReject = async (profileId) => {
     try {
       await fetch(
-        `https://hire-sphere.onrender.com/store/rejectOffer/${profileId}`,
+        `{process.env.REACT_APP_API_URL}/store/rejectOffer/${profileId}`,
         {
           method: "POST",
           credentials: "include",

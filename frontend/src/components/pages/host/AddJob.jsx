@@ -53,7 +53,7 @@ export default function AddJob() {
   const fetchJobDetails = async () => {
     try {
       const response = await fetch(
-        `https://hire-sphere.onrender.com/host/editJob/${jobId}`,
+        `{process.env.REACT_APP_API_URL}/host/editJob/${jobId}`,
         {
           method: "GET",
           headers: {

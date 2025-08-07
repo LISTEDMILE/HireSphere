@@ -23,10 +23,7 @@ const store = new MongoDBStore({
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://hire-sphere-sy.vercel.app"
-    ],
+    origin: process.env.FRONTEND_URL, 
     credentials: true,
   })
 );
