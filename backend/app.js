@@ -57,15 +57,19 @@ app.use("/store", storeRouter);
 
 // app.use(errorr.errorr);
 
-const PORT = process.env.PORT;
+// Serve React build files
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
+
 
 mongoose
   .connect(DB_path)
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server Running at http://localhost:${PORT}`);
-    
-console.log("MONGO_URL from env:", process.env.MONGO_URL);
     });
   })
   .catch((err) => {
