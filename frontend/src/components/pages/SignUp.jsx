@@ -35,7 +35,8 @@ const SignUpPage = () => {
     }
     let er = await AddUserToServer(formData);
     setErrors(er.errors ? er.errors : null);
-    if (errors === null) {
+  
+    if (!er.errors) {
       navigate("/login");
     }
   };

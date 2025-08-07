@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
+import Empty from "../../compo/Empty";
+import Footer from "../../compo/Footer";
 
 export default function StoreProfilesList() {
   const [profiles, setProfiles] = useState([]);
@@ -11,7 +13,7 @@ export default function StoreProfilesList() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/store/storeProfileList",
+          `${process.env.REACT_APP_API_URL}/store/storeProfileList`,
           {
             method: "GET",
             headers: {
@@ -33,7 +35,7 @@ export default function StoreProfilesList() {
   const handleDelete = async (profileId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/store/deleteProfile/${profileId}`,
+        `${process.env.REACT_APP_API_URL}/store/deleteProfile/${profileId}`,
         {
           method: "POST",
           headers: {
@@ -56,12 +58,12 @@ export default function StoreProfilesList() {
   };
 
   return (
-    <div className="w-full text-white bg-black flex flex-col items-center">
+    <div className="w-full min-h-[100vh] text-white bg-black flex flex-col items-center">
       <NavHome />
 
-      <h1 className="text-5xl font-bold text-center my-12">
-        Here are the added Profiles
-      </h1>
+      <h1 className="text-3xl font-bold text-center my-4">Your Resumes</h1>
+
+      {profiles.length === 0 && <Empty />}
 
       <div className="w-[70%] pb-12">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
@@ -153,6 +155,7 @@ export default function StoreProfilesList() {
           ))}
         </ul>
       </div>
+      <Footer />
     </div>
   );
 }

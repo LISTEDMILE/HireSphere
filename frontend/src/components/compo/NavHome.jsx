@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { IoMdMenu , IoMdClose } from "react-icons/io";
+import { IoMdMenu, IoMdClose } from "react-icons/io";
 import { Link } from "react-router-dom";
 
 const NavHome = () => {
-  const { isLoggedIn, userType, userId } = useSelector((store) => store.userInfo);
+  const { isLoggedIn, userType, userId } = useSelector(
+    (store) => store.userInfo
+  );
   const [navOpen, setNavOpen] = useState(false);
 
   return (
@@ -161,31 +163,83 @@ const NavHome = () => {
         </div>
       )}
 
-      {isLoggedIn && <>
-        <button className="text-3xl mr-12 hover:cursor-pointer"
-          onClick={() => {
-            setNavOpen(true);
-          }}><IoMdMenu /></button>
-        {navOpen &&
-        
-          <div className="flex absolute  right-12 min-h-[50vh] items-start bg-rose-950 p-6 pr-24 top-6 flex-col gap-12 ">
-            <button className="text-3xl mr-12 hover:cursor-pointer"
-          onClick={() => {
-            setNavOpen(false);
-        }}><IoMdClose /></button>
-          <Link
-            className="flex gap-3 items-center"
-                to={`/store/addAboutEmployee/${userId}`}
+      {isLoggedIn && (
+        <>
+          <button
+            className="text-3xl mr-12 hover:cursor-pointer"
+            onClick={() => {
+              setNavOpen(true);
+            }}
+          >
+            <IoMdMenu />
+          </button>
+          {navOpen && (
+            <div className="flex absolute  right-12 min-h-[50vh] items-start bg-rose-950 p-6 w-72 top-6 flex-col gap-8 ">
+              <button
+                className="text-3xl self-end  hover:cursor-pointer"
+                onClick={() => {
+                  setNavOpen(false);
+                }}
               >
-            
-              <div className="h-[50px] w-[50px] bg-yellow-700"></div>
-             <p className="text-lg hover:underline">Profile</p> </Link>
-       
-        <div>Logout</div>
-        
-      </div>}
+                <IoMdClose />
+              </button>
+              {userType === "employee" && (
+                <Link
+                  className="flex border-b pb-1.5 w-full gap-3 items-center"
+                  to={`/store/addAboutEmployee`}
+                >
+                  <div className="h-[50px] w-[50px] bg-yellow-700"></div>
+                  <p className="text-lg hover:underline">Profile</p>{" "}
+                </Link>
+              )}
+
+              {userType === "recruiter" && (
+                <Link
+                  className="flex border-b pb-1.5 w-full gap-3 items-center"
+                  to={`/host/addAboutRecruiter`}
+                >
+                  <div className="h-[50px] w-[50px] bg-yellow-700"></div>
+                  <p className="text-lg hover:underline">Profile</p>{" "}
+                </Link>
+              )}
+
+              <a
+                href="/"
+                className=" hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+              >
+                Home
+              </a>
+
+              <div className="flex flex-col gap-4">
+                <a
+                  href="/help"
+                  className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+                >
+                  Help
+                </a>
+                <a
+                  href="/contact"
+                  className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+                >
+                  Contact-Us
+                </a>
+              </div>
+              <a
+                href="/about"
+                className="hover:underline hover:text-red-100 bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+              >
+                About-Us
+              </a>
+
+              <div>Logout</div>
+            </div>
+          )}
         </>
-      }
+      )}
     </header>
   );
 };

@@ -6,9 +6,11 @@ const errorr = require("./controllers/errorrController");
 const rootDir = require("./utils/pathUtils");
 const path = require("path");
 const session = require("express-session");
+require("dotenv").config();
 const MongoDBStore = require("connect-mongodb-session")(session);
 const { default: mongoose } = require("mongoose");
-const DB_path = "mongodb+srv://place:place@placement.4nretom.mongodb.net/";
+const DB_path = process.env.MONGO_URL;
+
 const cors = require("cors");
 
 const app = express();
@@ -20,7 +22,7 @@ const store = new MongoDBStore({
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // or wherever your frontend is running
+    origin: process.env.FRONTEND_URL, 
     credentials: true,
   })
 );
@@ -37,9 +39,9 @@ app.use(
     store: store,
     cookie: {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-    },
+      secure: process.env.NODE_ENV === "production", // true in prod (HTTPS only)
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    }
   })
 );
 
@@ -53,9 +55,9 @@ app.use("/", authRouter);
 app.use("/host", hostRouter);
 app.use("/store", storeRouter);
 
-app.use(errorr.errorr);
+// app.use(errorr.errorr);
 
-PORT = 3000;
+const PORT = process.env.PORT;
 
 mongoose
   .connect(DB_path)

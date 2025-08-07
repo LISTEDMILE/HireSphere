@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
+import Empty from "../../compo/Empty";
+import Footer from "../../compo/Footer";
 
 export default function FavouriteProfileList() {
   const [favouriteProfiles, setFavouriteProfiles] = useState([]);
@@ -9,7 +11,7 @@ export default function FavouriteProfileList() {
     const fetchFavouriteProfiles = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/host/onlyFavourites",
+          `${process.env.REACT_APP_API_URL}/host/onlyFavourites`,
           {
             method: "GET",
             headers: {
@@ -30,7 +32,7 @@ export default function FavouriteProfileList() {
         })); // Add fav property
 
         const choosenResponse = await fetch(
-          "http://localhost:3000/host/getChoosenProfiles",
+          `${process.env.REACT_APP_API_URL}/host/getChoosenProfiles`,
           {
             method: "GET",
             headers: {
@@ -84,7 +86,7 @@ export default function FavouriteProfileList() {
   const handleHireProfile = async (profileId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/host/hireProfile/${profileId}`,
+        `${process.env.REACT_APP_API_URL}/host/hireProfile/${profileId}`,
         {
           method: "POST",
           headers: {
@@ -118,13 +120,16 @@ export default function FavouriteProfileList() {
 
   const handleFavourite = async (profileId) => {
     try {
-      await fetch(`http://localhost:3000/host/favouriteProfile/${profileId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      await fetch(
+        `${process.env.REACT_APP_API_URL}/host/favouriteProfile/${profileId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
       setFavouriteProfiles((prevProfiles) =>
         prevProfiles.map((profile) =>
           profile._id === profileId
@@ -138,11 +143,12 @@ export default function FavouriteProfileList() {
   };
 
   return (
-    <div className="w-full text-white bg-black flex flex-col items-center">
+    <div className="w-full min-h-[100vh] text-white bg-black flex flex-col items-center">
       <NavHome />
 
-      <h1 className="text-5xl font-bold text-center my-12">Favourites</h1>
+      <h1 className="text-3xl font-bold text-center my-4">Favourite Resumes</h1>
 
+      {favouriteProfiles.length === 0 && <Empty />}
       <div className="w-[70%] pb-12">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
           {favouriteProfiles.map((detail) => (
@@ -255,6 +261,7 @@ export default function FavouriteProfileList() {
           ))}
         </ul>
       </div>
+      <Footer />
     </div>
   );
 }

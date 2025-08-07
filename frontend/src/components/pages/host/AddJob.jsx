@@ -4,6 +4,7 @@ import { AddJobToServer } from "../../../../services/Services";
 import { MdOutlineCancel } from "react-icons/md";
 import { GrRadialSelected } from "react-icons/gr";
 import NavHome from "../../compo/NavHome";
+import Footer from "../../compo/Footer";
 
 export default function AddJob() {
   const [errors, setErrors] = useState(null);
@@ -52,7 +53,7 @@ export default function AddJob() {
   const fetchJobDetails = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/host/editJob/${jobId}`,
+        `${process.env.REACT_APP_API_URL}/host/editJob/${jobId}`,
         {
           method: "GET",
           headers: {
@@ -398,7 +399,7 @@ export default function AddJob() {
           <div className="w-full flex space-y-6 p-6 border-2 border-white rounded-lg flex-col">
             <div>
               <label className="block text-gray-400 font-medium mb-2">
-                Tags
+                Tags:
               </label>
               <div className=" space-x-8">
                 <input
@@ -416,7 +417,7 @@ export default function AddJob() {
                   }}
                   className="bg-amber-800 px-8 py-2 rounded-lg"
                 >
-                  add
+                  Add
                 </button>
               </div>
             </div>
@@ -445,6 +446,7 @@ export default function AddJob() {
           </button>
         </form>
       </div>
+      <Footer/>
     </div>
   );
 }

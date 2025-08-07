@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
+import Empty from "../../compo/Empty";
+import Footer from "../../compo/Footer";
 
 export default function HostProfileList() {
   const [profiles, setProfiles] = useState([]);
@@ -9,7 +11,7 @@ export default function HostProfileList() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/host/hostProfileList",
+          `${process.env.REACT_APP_API_URL}/host/hostProfileList`,
           {
             method: "GET",
             headers: {
@@ -26,7 +28,7 @@ export default function HostProfileList() {
         let profileList = data.profiles;
 
         const favResponse = await fetch(
-          "http://localhost:3000/host/favouriteProfile",
+          `${process.env.REACT_APP_API_URL}/host/favouriteProfile`,
           {
             method: "GET",
             headers: {
@@ -47,7 +49,7 @@ export default function HostProfileList() {
         );
 
         const choosenResponse = await fetch(
-          "http://localhost:3000/host/getChoosenProfiles",
+          `${process.env.REACT_APP_API_URL}/host/getChoosenProfiles`,
           {
             method: "GET",
             headers: {
@@ -94,13 +96,16 @@ export default function HostProfileList() {
 
   const handleFavourite = async (profileId) => {
     try {
-      await fetch(`http://localhost:3000/host/favouriteProfile/${profileId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      await fetch(
+        `${process.env.REACT_APP_API_URL}/host/favouriteProfile/${profileId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
 
       setProfiles(
         profiles.map((profile) =>
@@ -117,7 +122,7 @@ export default function HostProfileList() {
   const handleHireProfile = async (profileId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/host/hireProfile/${profileId}`,
+        `${process.env.REACT_APP_API_URL}/host/hireProfile/${profileId}`,
         {
           method: "POST",
           headers: {
@@ -150,11 +155,12 @@ export default function HostProfileList() {
   };
 
   return (
-    <div className="w-full text-white bg-black flex flex-col items-center">
+    <div className="w-full min-h-[100vh] text-white bg-black flex flex-col items-center">
       <NavHome />
 
       <h1 className="text-5xl font-bold text-center my-12">Resumes</h1>
 
+      {profiles.length === 0 && <Empty />}
       <div className="w-[70%] pb-12">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
           {profiles.map((detail) => (
@@ -267,6 +273,7 @@ export default function HostProfileList() {
           ))}
         </ul>
       </div>
+      <Footer />
     </div>
   );
 }

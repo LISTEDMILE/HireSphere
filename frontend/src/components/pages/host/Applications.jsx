@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import { FaUserEdit } from "react-icons/fa";
+import Empty from "../../compo/Empty";
+import Footer from "../../compo/Footer";
 
 export default function Applications() {
   const [applications, setApplications] = useState([]);
@@ -11,7 +13,7 @@ export default function Applications() {
     const fetchApplications = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/host/hostApplications",
+          `${process.env.REACT_APP_API_URL}/host/hostApplications`,
           {
             method: "GET",
             credentials: "include",
@@ -38,7 +40,7 @@ export default function Applications() {
   // Handle Reject Application
   const handleIgnore = async (jobId) => {
     try {
-      await fetch(`http://localhost:3000/host/ignoreApplication/${jobId}`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/host/ignoreApplication/${jobId}`, {
         method: "DELETE",
         credentials: "include",
         headers: {
@@ -56,7 +58,7 @@ export default function Applications() {
 
   const handleAccept = async (jobId) => {
     try {
-      await fetch(`http://localhost:3000/host/acceptApplication/${jobId}`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/host/acceptApplication/${jobId}`, {
         method: "POST",
 
         credentials: "include",
@@ -79,7 +81,7 @@ export default function Applications() {
 
   const handleReject = async (jobId) => {
     try {
-      await fetch(`http://localhost:3000/host/rejectApplication/${jobId}`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/host/rejectApplication/${jobId}`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -100,11 +102,13 @@ export default function Applications() {
   };
 
   return (
-    <div className="w-full bg-black flex flex-col items-center">
+    <div className="w-full min-h-[100vh] bg-black flex flex-col items-center">
       <NavHome />
-      <h1 className="text-5xl font-bold my-6 text-white text-center">
+      <h1 className="text-3xl font-bold my-4 text-white text-center">
         Applications
       </h1>
+
+      {applications.length === 0 && <Empty/>}
       <div className="w-full ">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
           {applications.map((application) => (
@@ -253,6 +257,7 @@ export default function Applications() {
           ))}
         </ul>
       </div>
+      <Footer/>
     </div>
   );
 }

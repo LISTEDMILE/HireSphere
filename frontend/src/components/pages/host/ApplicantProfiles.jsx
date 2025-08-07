@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
+import Empty from "../../compo/Empty";
+import Footer from "../../compo/Footer";
 
 export default function ApplicantProfiles() {
   const [profiles, setProfiles] = useState([]);
@@ -12,7 +14,7 @@ export default function ApplicantProfiles() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/host/hostApplicantProfiles/${applicantId}`,
+          `${process.env.REACT_APP_API_URL}/host/hostApplicantProfiles/${applicantId}`,
           {
             method: "GET",
             headers: {
@@ -32,12 +34,14 @@ export default function ApplicantProfiles() {
   }, []);
 
   return (
-    <div className="w-full text-white bg-black flex flex-col items-center">
+    <div className="w-full min-h-[100vh] text-white bg-black flex flex-col items-center">
       <NavHome />
 
-      <h1 className="text-5xl font-bold text-center my-12">
-        Here are the added Profiles
+      <h1 className="text-3xl font-bold text-center my-4">
+        ({detail.profileName}) : Profile
       </h1>
+
+      {profiles.length === 0 && <Empty/>}
 
       <div className="w-[70%] pb-12">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
@@ -106,6 +110,7 @@ export default function ApplicantProfiles() {
           ))}
         </ul>
       </div>
+      <Footer/>
     </div>
   );
 }

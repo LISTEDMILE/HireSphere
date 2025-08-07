@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
+import Empty from "../../compo/Empty";
 
 export default function AppliedJobs() {
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -11,7 +12,7 @@ export default function AppliedJobs() {
     const fetchAppliedJobs = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/store/onlyAppliedJobs`,
+          `${process.env.REACT_APP_API_URL}/store/onlyAppliedJobs`,
           {
             method: "GET",
             credentials: "include",
@@ -34,7 +35,7 @@ export default function AppliedJobs() {
 
         // Add fav property to each job
         const favResponse = await fetch(
-          "http://localhost:3000/store/favourite",
+          `${process.env.REACT_APP_API_URL}/store/favourite`,
           {
             method: "GET",
             credentials: "include",
@@ -68,7 +69,7 @@ export default function AppliedJobs() {
   // Handle Apply
   const handleApply = async (jobId) => {
     try {
-      await fetch(`http://localhost:3000/store/apply/${jobId}`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/store/apply/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,7 +95,7 @@ export default function AppliedJobs() {
   // Handle Favorite Toggle
   const handleFavourite = async (jobId) => {
     try {
-      await fetch(`http://localhost:3000/store/favourite/${jobId}`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/store/favourite/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -112,11 +113,13 @@ export default function AppliedJobs() {
   };
 
   return (
-    <div className="w-full bg-black flex flex-col items-center">
+    <div className="w-full min-h-[100vh] bg-black flex flex-col items-center">
       <NavHome />
-      <h1 className="text-5xl font-bold my-6 text-white text-center">
+      <h1 className="text-3xl font-bold my-6 text-white text-center">
         You Applied To
       </h1>
+
+      {appliedJobs.length === 0 && <Empty />}
       <div className="w-full ">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
           {appliedJobs.map((job) => (

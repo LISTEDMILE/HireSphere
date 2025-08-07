@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
+import Empty from "../../compo/Empty";
+import Footer from "../../compo/Footer";
 
 export default function HostJobList() {
   const [jobs, setJobs] = useState([]);
@@ -11,13 +13,16 @@ export default function HostJobList() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch("http://localhost:3000/host/hostJobList", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/host/hostJobList`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
 
         let data = await response.json();
         await setJobs(data);
@@ -32,7 +37,7 @@ export default function HostJobList() {
   const handleDelete = async (jobId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/host/deleteJob/${jobId}`,
+        `${process.env.REACT_APP_API_URL}/host/deleteJob/${jobId}`,
         {
           method: "POST",
           headers: {
@@ -55,11 +60,12 @@ export default function HostJobList() {
   };
 
   return (
-    <div className="w-full bg-black flex flex-col items-center">
+    <div className="w-full min-h-[100vh] bg-black flex flex-col items-center">
       <NavHome />
-      <h1 className="text-5xl font-bold my-6 text-white text-center">
+      <h1 className="text-4xl font-bold my-4 text-white text-center">
         Uploaded Vacancies
       </h1>
+      {jobs.length === 0 && <Empty />}
       <div className="w-full ">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
           {jobs.map((job) => (
@@ -131,6 +137,7 @@ export default function HostJobList() {
           ))}
         </ul>
       </div>
+      <Footer />
     </div>
   );
 }

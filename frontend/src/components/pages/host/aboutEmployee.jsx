@@ -28,7 +28,7 @@ export default function AboutEmployee() {
     const fetchAboutEmployee = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/host/aboutEmployee/${userId}`,
+          `${process.env.REACT_APP_API_URL}/host/aboutEmployee/${userId}`,
           {
             method: "GET",
             headers: {
@@ -50,6 +50,11 @@ export default function AboutEmployee() {
   return (
     <div className="flex flex-col items-center w-full bg-black text-white">
       <NavHome />
+
+      <h1 className="text-3xl font-bold text-center my-4">
+        Employee Profile
+      </h1>
+
       <div className="w-[80%] p-12 bg-emerald-950 rounded-lg flex flex-col gap-8">
         <div className="flex flex-col gap-5 ">
           {[

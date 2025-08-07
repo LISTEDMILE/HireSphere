@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
+import Footer from "../../compo/Footer";
+import Empty from "../../compo/Empty";
 
 export default function StoreOffererJobs() {
   const [jobs, setJobs] = useState([]);
@@ -11,7 +13,7 @@ export default function StoreOffererJobs() {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/store/storeOffererJobs/${offererId}`,
+          `${process.env.REACT_APP_API_URL}/store/storeOffererJobs/${offererId}`,
           {
             method: "GET",
             headers: {
@@ -32,11 +34,12 @@ export default function StoreOffererJobs() {
   }, []);
 
   return (
-    <div className="w-full bg-black flex flex-col items-center">
+    <div className="w-full min-h-[100vh] bg-black flex flex-col items-center">
       <NavHome />
-      <h1 className="text-5xl font-bold my-6 text-white text-center">
-        Uploaded Vacancies
+      <h1 className="text-3xl font-bold my-6 text-white text-center">
+        Vacancies BY ...
       </h1>
+      {jobs.length === 0 && <Empty />}
       <div className="w-full ">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
           {jobs.map((job) => (
@@ -93,6 +96,7 @@ export default function StoreOffererJobs() {
           ))}
         </ul>
       </div>
+      <Footer />
     </div>
   );
 }

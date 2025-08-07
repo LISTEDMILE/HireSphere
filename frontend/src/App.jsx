@@ -39,7 +39,7 @@ function App() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/me", {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/me`, {
           method: "POST",
           credentials: "include",
           headers: {
@@ -54,7 +54,7 @@ function App() {
               firstname: data.user.firstname,
               userType: data.user.userType,
               lastname: data.user.lastname,
-              userId: data.user._id
+              userId: data.user._id,
             })
           );
         }
@@ -106,8 +106,8 @@ function App() {
       element: <StoreProfileDetails />,
     },
     { path: "/store/aboutRecruiter/:userId", element: <AboutRecruiter /> },
-    { path: "/store/addAboutEmployee/:userId", element: <AddAboutEmployee /> },
-    { path: "/host/addAboutRecruiter/:userId", element: <AddAboutRecruiter /> },
+    { path: "/store/addAboutEmployee", element: <AddAboutEmployee /> },
+    { path: "/host/addAboutRecruiter", element: <AddAboutRecruiter /> },
     { path: "/host/aboutEmployee/:userId", element: <AboutEmployee /> },
   ]);
   return <RouterProvider router={route}></RouterProvider>;

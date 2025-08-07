@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
+import Empty from "../../compo/Empty";
+import Footer from "../../compo/Footer";
 
 export default function Offers() {
   const [offers, setOffers] = useState([]);
@@ -10,13 +12,16 @@ export default function Offers() {
   useEffect(() => {
     const fetchOffers = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/store/offers`, {
-          method: "GET",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/store/offers`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const data = await response.json();
         if (data.error) {
           console.error("Error fetching Offers:", data.error);
@@ -32,13 +37,16 @@ export default function Offers() {
 
   const handleIgnore = async (offerId) => {
     try {
-      await fetch(`http://localhost:3000/store/ignoreOffer/${offerId}`, {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      await fetch(
+        `${process.env.REACT_APP_API_URL}/store/ignoreOffer/${offerId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       setOffers((prevOffers) =>
         prevOffers.filter((offer) => offer.profile._id !== offerId)
@@ -50,13 +58,16 @@ export default function Offers() {
 
   const handleAccept = async (profileId) => {
     try {
-      await fetch(`http://localhost:3000/store/acceptOffer/${profileId}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      await fetch(
+        `${process.env.REACT_APP_API_URL}/store/acceptOffer/${profileId}`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       setOffers((prevOffers) =>
         prevOffers.map((offer) =>
           offer.profile._id == profileId
@@ -71,13 +82,16 @@ export default function Offers() {
 
   const handleReject = async (profileId) => {
     try {
-      await fetch(`http://localhost:3000/store/rejectOffer/${profileId}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      await fetch(
+        `${process.env.REACT_APP_API_URL}/store/rejectOffer/${profileId}`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       setOffers((prevOffers) =>
         prevOffers.map((offer) =>
           offer.profile._id == profileId
@@ -91,10 +105,11 @@ export default function Offers() {
   };
 
   return (
-    <div className="w-full text-white bg-black flex flex-col items-center">
+    <div className="w-full min-h[100vh] text-white bg-black flex flex-col items-center">
       <NavHome />
 
       <h1 className="text-5xl font-bold text-center my-12">Offers</h1>
+      {offers.length === 0 && <Empty />}
 
       <div className="w-[70%] pb-12">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
@@ -262,6 +277,7 @@ export default function Offers() {
           ))}
         </ul>
       </div>
+      <Footer />
     </div>
   );
 }

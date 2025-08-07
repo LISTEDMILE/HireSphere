@@ -5,6 +5,7 @@ import NavHome from "../../compo/NavHome";
 import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
 import { IoArrowBackSharp } from "react-icons/io5";
+import Footer from "../../compo/Footer";
 
 export default function HostJobDetails() {
   const [job, setJob] = useState();
@@ -16,7 +17,7 @@ export default function HostJobDetails() {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/host/hostJobDetails/${jobId}`,
+          `${process.env.REACT_APP_API_URL}/host/hostJobDetails/${jobId}`,
           {
             method: "GET",
             headers: {
@@ -40,7 +41,7 @@ export default function HostJobDetails() {
   const handleDelete = async (jobId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/host/deleteJob/${jobId}`,
+        `${process.env.REACT_APP_API_URL}/host/deleteJob/${jobId}`,
         {
           method: "POST",
           headers: {
@@ -64,8 +65,10 @@ export default function HostJobDetails() {
   };
 
   return (
-    <div className="w-full bg-black flex flex-col items-center">
+    <div className="w-full min-h-[100vh] bg-black flex flex-col items-center">
       <NavHome />
+
+      <h1 className="text-3xl font-bold text-center my-4">Detailed Job</h1>
 
       {!fetching && (
         <div
@@ -212,6 +215,8 @@ export default function HostJobDetails() {
           </div>
         </div>
       )}
+
+      <Footer />
     </div>
   );
 }

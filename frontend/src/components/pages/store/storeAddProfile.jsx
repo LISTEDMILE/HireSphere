@@ -4,6 +4,7 @@ import { AddProfileToServer } from "../../../../services/Services";
 import { MdOutlineCancel } from "react-icons/md";
 import { GrRadialSelected } from "react-icons/gr";
 import NavHome from "../../compo/NavHome";
+import Footer from "../../compo/Footer";
 
 export default function ProfileForm() {
   const [errors, setErrors] = useState(null);
@@ -64,7 +65,7 @@ export default function ProfileForm() {
   const fetchProfileDetails = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/store/editProfile/${profileId}`,
+        `${process.env.REACT_APP_API_URL}/store/editProfile/${profileId}`,
         {
           method: "GET",
           headers: {
@@ -200,7 +201,7 @@ export default function ProfileForm() {
     <div className="w-full flex flex-col items-center bg-black">
       <NavHome active="addJob" />
       <div className="w-[80%] p-6 flex flex-col items-center shadow-md rounded-lg bg-[#0a1f1d] text-white">
-        <h1 className="text-4xl font-bold mb-6 text-center">
+        <h1 className="text-3xl font-bold mb-6 text-center">
           {editing ? "Edit" : "Add"} Resume
         </h1>
         {errors && (
@@ -606,6 +607,7 @@ export default function ProfileForm() {
           </div>
         </form>
       </div>
+      <Footer />
     </div>
   );
 }

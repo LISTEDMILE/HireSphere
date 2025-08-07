@@ -230,19 +230,7 @@ const LandingPage = () => {
       });
     });
 
-    gsap.to(".rocket", {
-      scrollTrigger: {
-        trigger: ".endingH",
-        toggleActions: "play none none reverse",
-        start: "top 60%",
-        end: "top 10%",
-        scrub: 3,
-      },
-      x: "-100%",
-      y: "20%",
-      rotate: 90,
-      opacity: 1,
-    });
+   
   });
 
   useEffect(() => {

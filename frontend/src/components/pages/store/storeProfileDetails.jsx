@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
+import Footer from "../../compo/Footer";
 
 export default function StoreProfilesDetails() {
   const [profile, setProfile] = useState();
@@ -14,7 +15,7 @@ export default function StoreProfilesDetails() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/store/storeProfileDetails/${profileId}`,
+          `${process.env.REACT_APP_API_URL}/store/storeProfileDetails/${profileId}`,
           {
             method: "GET",
             headers: {
@@ -37,7 +38,7 @@ export default function StoreProfilesDetails() {
   const handleDelete = async (profileId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/store/deleteProfile/${profileId}`,
+        `${process.env.REACT_APP_API_URL}/store/deleteProfile/${profileId}`,
         {
           method: "POST",
           headers: {
@@ -61,12 +62,10 @@ export default function StoreProfilesDetails() {
   };
 
   return (
-    <div className="w-full text-white bg-black flex flex-col items-center">
+    <div className="w-full min-h-[100vh] text-white bg-black flex flex-col items-center">
       <NavHome />
 
-      <h1 className="text-5xl font-bold text-center my-12">
-        Here are the added Profiles
-      </h1>
+      <h1 className="text-3xl font-bold text-center my-4">Detailed Resume</h1>
       {!fetching && (
         <div className="w-[70%] p-12  bg-[#0d212e80] rounden-lg">
           <div className="flex justify-end items-center text-2xl gap-12 pr-8">
@@ -278,6 +277,7 @@ export default function StoreProfilesDetails() {
           </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 }

@@ -100,11 +100,11 @@ profileSchema.pre("findOneAndDelete", async function (next) {
     { profilesPosted: profileId },
     { $pull: { profilesPosted: profileId } }
   );
-  await UserRecruiter.findOneAndUpdate(
+  await UserRecruiter.updateMany(
     { profileFavourites: profileId },
     { $pull: { profileFavourites: profileId } }
   );
-  await UserRecruiter.findOneAndUpdate(
+  await UserRecruiter.updateMany(
     { "choosenProfiles.Ids": profileId },
     { $pull: { choosenProfiles: { Ids: profileId } } }
   );

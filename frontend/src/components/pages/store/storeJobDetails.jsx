@@ -14,7 +14,7 @@ export default function StoreJobDetails() {
       try {
         // Fetch jobs
         const response = await fetch(
-          `http://localhost:3000/store/storeJobDetails/${jobId}`,
+          `${process.env.REACT_APP_API_URL}/store/storeJobDetails/${jobId}`,
           {
             method: "GET",
             credentials: "include",
@@ -34,7 +34,7 @@ export default function StoreJobDetails() {
 
         // Fetch favourites
         const favResponse = await fetch(
-          "http://localhost:3000/store/favourite",
+          `${process.env.REACT_APP_API_URL}/store/favourite`,
           {
             method: "GET",
             credentials: "include",
@@ -53,7 +53,7 @@ export default function StoreJobDetails() {
         const favIds = favs.favIds;
 
         const applyResponse = await fetch(
-          "http://localhost:3000/store/appliedJobs",
+          `${process.env.REACT_APP_API_URL}/store/appliedJobs`,
           {
             method: "GET",
             credentials: "include",
@@ -109,7 +109,7 @@ export default function StoreJobDetails() {
   //   // Handle Apply/Cancel Apply
   const handleApply = async (jobId) => {
     try {
-      await fetch(`http://localhost:3000/store/apply/${jobId}`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/store/apply/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +129,7 @@ export default function StoreJobDetails() {
   // Handle Favorite Toggle
   const handleFavourite = async (jobId) => {
     try {
-      await fetch(`http://localhost:3000/store/favourite/${jobId}`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/store/favourite/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -145,6 +145,10 @@ export default function StoreJobDetails() {
   return (
     <div className="w-full bg-black flex flex-col items-center">
       <NavHome />
+
+      <h1 className="text-3xl font-bold my-6 text-white text-center">
+        Detailed Post
+      </h1>
 
       {!fetching && (
         <div

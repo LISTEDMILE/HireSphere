@@ -1,5 +1,5 @@
 export const AddUserToServer = async (user) => {
-  const response = await fetch("http://localhost:3000/api/signUp", {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/api/signUp`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -8,10 +8,11 @@ export const AddUserToServer = async (user) => {
   });
   const data = await response.json();
   return data;
+
 };
 
 export const LoginUserToServer = async (user) => {
-  const response = await fetch("http://localhost:3000/api/login", {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -24,7 +25,7 @@ export const LoginUserToServer = async (user) => {
 };
 
 export const AddJobToServer = async (job) => {
-  const response = await fetch("http://localhost:3000/host/addJob", {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/host/addJob`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -37,7 +38,7 @@ export const AddJobToServer = async (job) => {
 };
 
 export const AddProfileToServer = async (profile) => {
-  const response = await fetch("http://localhost:3000/store/addProfile", {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/store/addProfile`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

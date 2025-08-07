@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { MdOutlineCancel } from "react-icons/md";
+import NavHome from "../../compo/NavHome";
+import Footer from "../../compo/Footer";
 
 export default function AddAboutRecruiter() {
   const [role, setRole] = useState("");
@@ -25,7 +28,7 @@ export default function AddAboutRecruiter() {
     const fetchAboutRecruiter = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/host/addAboutRecruiter/${userId}`,
+          `${process.env.REACT_APP_API_URL}/host/addAboutRecruiter/${userId}`,
           {
             method: "GET",
             headers: {
@@ -71,7 +74,7 @@ export default function AddAboutRecruiter() {
     e.preventDefault();
     try {
       let response = await fetch(
-        "http://localhost:3000/host/addAboutRecruiter",
+        `${process.env.REACT_APP_API_URL}/host/addAboutRecruiter`,
         {
           method: "POST",
           headers: {
@@ -93,153 +96,117 @@ export default function AddAboutRecruiter() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h1 className="text-2xl font-bold mb-6 text-center">Recruiter Profile</h1>
-      {message && (
-        <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-center">
-          {message}
-        </div>
-      )}
+    <div className=" flex flex-col bg-black text-white items-center ">
+      <NavHome />
+      <h1 className="text-4xl font-bold mb-6 text-center">Your Profile</h1>
+      <div className="w-[80%] bg-[#0a1f1d] rounded-lg p-12">
+        {message && (
+          <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-center">
+            {message}
+          </div>
+        )}
 
-      {errors && (
-        <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
-          <ul className="list-disc list-inside">
-            {errors.map((err, i) => (
-              <li key={i}>{err}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+        {errors && (
+          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+            <ul className="list-disc list-inside">
+              {errors.map((err, i) => (
+                <li key={i}>{err}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input type="hidden" name="_id" value={formData._id} />
-        {/* Full Name */}
-        <InputField
-          label="Full Name"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleChange}
-        />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-12 ">
+          <div className="flex flex-col gap-5 ">
+            {[
+              { field: "fullName", placeholder: "Full Name" },
+              { field: "profilePicture", placeholder: "Profile Picture" },
+              { field: "designation", placeholder: "Designation" },
+              { field: "company", placeholder: "Company" },
+              { field: "companyLogo", placeholder: "Company Logo" },
+              { field: "companyWebsite", placeholder: "Company Website" },
+              { field: "email", placeholder: "Email" },
+              { field: "linkedIn", placeholder: "Linked In Url" },
+            ].map(({ field, placeholder }) => {
+              return (
+                <div className="flex flex-col gap-2">
+                  <label className="text-gray-400 text-lg">{placeholder}</label>
+                  <input
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleChange}
+                    placeholder={placeholder}
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+                </div>
+              );
+            })}
+          </div>
 
-        {/* Profile Picture URL */}
-        <InputField
-          label="Profile Picture URL"
-          name="profilePicture"
-          value={formData.profilePicture}
-          onChange={handleChange}
-        />
+          <input type="hidden" name="_id" value={formData._id} />
 
-        <input
-          type="text"
-          name="role"
-          onChange={(e) => setRole(e.target.value)}
-          value={role}
-        />
-        <button
-          onClick={(e) => {
-            handleArrayAdd(e, "rolesHiring", role);
-            setRole("");
-          }}
-        >
-          add
-        </button>
-        {formData.rolesHiring.map((role) => {
-          return (
-            <>
-              <p>{role}</p>
-              <button
-                onClick={(e) => handleArrayRemove(e, "rolesHiring", role)}
-              >
-                remove
-              </button>
-            </>
-          );
-        })}
+          <div className="w-full flex p-6 border-2 border-white rounded-lg gap-6 flex-col">
+            <div>
+              <label className="block text-gray-400 font-medium mb-2">
+                Roles Hiring:
+              </label>
+              <div className=" space-x-8">
+                <input
+                  type="text"
+                  name="role"
+                  onChange={(e) => setRole(e.target.value)}
+                  value={role}
+                  className="w-1/3 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  placeholder="Roles"
+                />
+                <button
+                  onClick={(e) => {
+                    handleArrayAdd(e, "rolesHiring", role);
+                    setRole("");
+                  }}
+                  className="bg-amber-800 px-8 py-2 rounded-lg"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+            <div className="flex justify-start items-center gap-3 w-full flex-wrap">
+              {formData.rolesHiring.map((role) => {
+                return (
+                  <div className="bg-cyan-950 px-3 py-1 rounded-lg flex items-center">
+                    <span>{role}</span>
+                    <button
+                      onClick={(e) => handleArrayRemove(e, "rolesHiring", role)}
+                    >
+                      <MdOutlineCancel className=" h-full ml-2" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
-        {/* Designation */}
-        <InputField
-          label="Designation"
-          name="designation"
-          value={formData.designation}
-          onChange={handleChange}
-        />
+          {/* Bio */}
+          <div className="flex flex-col gap-3">
+            <label className="text-gray-400 text-lg">About Yourself</label>
+            <textarea
+              name="bio"
+              value={formData.bio}
+              onChange={handleChange}
+              placeholder="Bio"
+              className="w-full h-44 p-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+            />
+          </div>
 
-        {/* Company Name */}
-        <InputField
-          label="Company Name"
-          name="company"
-          value={formData.company}
-          onChange={handleChange}
-        />
-
-        {/* Company Logo */}
-        <InputField
-          label="Company Logo URL"
-          name="companyLogo"
-          value={formData.companyLogo}
-          onChange={handleChange}
-        />
-
-        {/* Company Website */}
-        <InputField
-          label="Company Website"
-          name="companyWebsite"
-          value={formData.companyWebsite}
-          onChange={handleChange}
-        />
-
-        {/* Email */}
-        <InputField
-          label="Contact Email"
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-
-        {/* LinkedIn */}
-        <InputField
-          label="LinkedIn Profile URL"
-          name="linkedIn"
-          value={formData.linkedIn}
-          onChange={handleChange}
-        />
-
-        {/* Bio */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Bio</label>
-          <textarea
-            name="bio"
-            value={formData.bio}
-            onChange={handleChange}
-            placeholder="Write a short professional bio"
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-          ></textarea>
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
-        >
-          Profile
-        </button>
-      </form>
-    </div>
-  );
-}
-
-// Reusable InputField component
-function InputField({ label, name, type = "text", value, onChange }) {
-  return (
-    <div>
-      <label className="block text-gray-700 font-medium mb-2">{label}</label>
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-      />
+          <button
+            className="w-fit self-center mt-12  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+            type="submit"
+          >
+            Update
+          </button>
+        </form>
+      </div>
+      <Footer/>
     </div>
   );
 }

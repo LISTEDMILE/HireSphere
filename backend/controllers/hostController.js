@@ -4,6 +4,7 @@ const UserRecruiter = require("../models/userRecruiter");
 const { check, validationResult } = require("express-validator");
 
 const Profile = require("../models/firstProfilemodel");
+const { jobList } = require("./storeController");
 
 exports.addJobPost = [
   check("jobCompany").notEmpty().withMessage("Job Company is required").trim(),
@@ -94,26 +95,24 @@ exports.addJobPost = [
 ];
 
 exports.postAddAboutRecruiter = [
-  // check("jobCompany").notEmpty().withMessage("Job Company is required").trim(),
-  // check("jobPost").notEmpty().withMessage("Job Post is required").trim(),
-  // check("jobLocation")
-  //   .notEmpty()
-  //   .withMessage("Job Location is required")
-  //   .trim(),
-  // check("jobOwnerMobile")
-  //   .notEmpty()
-  //   .withMessage("Job Owner Mobile is required")
-  //   .trim(),
-  // check("jobOwnerEmail")
-  //   .notEmpty()
-  //   .withMessage("Job Owner Email is required")
-  //   .isEmail()
-  //   .withMessage("Invalid email format")
-  //   .normalizeEmail(),
-  // check("description")
-  //   .notEmpty()
-  //   .withMessage("Job Description is required")
-  //   .trim(),
+check("companyWebsite")
+  .trim()
+  .isURL()
+  .withMessage("Invalid Website URL"),
+
+check("email")
+  .isEmail()
+  .withMessage("Invalid email format")
+  .normalizeEmail(),
+
+check("linkedIn")
+  .trim()
+  .isURL()
+    .withMessage("Invalid LinkedIn URL"),
+  
+check("rolesHiring")
+  .isArray()
+  .withMessage("Shoud be an array"),
 
   async (req, res) => {
     const errors = validationResult(req);
@@ -165,6 +164,9 @@ exports.getEditJob = async (req, res, next) => {
   if (!jobId) {
     return res.status(400).send({ error: "Job ID is required" });
   }
+  if (user.userType !== "recruiter") {
+    return res.status(400).json({ error: "Unautorized Access" });
+  }
 
   if (!user.jobsPosted.includes(jobId)) {
     return res.status(400).json({ error: "Unautorized Access" });
@@ -201,12 +203,15 @@ exports.getEditJob = async (req, res, next) => {
 };
 
 exports.getAddAboutRecruiter = async (req, res, next) => {
-  const userId = req.params.userId;
-
+  const userId = req.session.user._id;
   const user = await UserRecruiter.findById(userId);
   if (!user) {
     return res.status(400).json({ error: "Unauthorized access" });
-  } else {
+  }
+  else if (user.userType !== "recruiter") {
+    return res.status(400).json({ error: "Unauthorized Access" });
+  } 
+  else {
     return res.status(200).json(user.aboutRecruiter);
   }
 };
@@ -411,26 +416,6 @@ exports.rejectApplication = async (req, res, next) => {
   }
 };
 
-exports.postEditJob = (req, res, next) => {
-  const job = new Job(
-    req.body.jobCompany,
-    req.body.jobPost,
-    req.body.jobLocation,
-    req.body.jobOwnerMobile,
-    req.body.jobOwnerEmail,
-    req.body.description,
-    req.body._id
-  );
-  job
-    .save()
-    .then(() => {
-      res.redirect("/host/hostJobList");
-    })
-    .catch((err) => {
-      console.error("Error saving job:", err);
-    });
-};
-
 exports.hostJobList = async (req, res, next) => {
   try {
     if (!req.session || !req.session.user || !req.session.user._id) {
@@ -438,11 +423,14 @@ exports.hostJobList = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
+    if (req.session.user.userType !== "recruiter") {
+      return res.status(401), json({ error: "Only Recruiter can access his added Vacancy Edittable" });
+    }
     const jobProvider = await UserRecruiter.findById(
       req.session.user._id,
       "jobsPosted"
     );
-    jobList = jobProvider.jobsPosted;
+   let jobList = jobProvider.jobsPosted;
 
     const jobs = await Job.find({
       _id: { $in: jobList },
@@ -460,12 +448,22 @@ exports.getHostJobDetails = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
+    if (req.session.user.userType !== "recruiter") {
+      return res.status(401).json({error:"Unauthorized:"})
+    }
     const jobProvider = await UserRecruiter.findById(
       req.session.user._id,
       "jobsPosted"
     );
-    jobList = jobProvider.jobsPosted;
+   let jobList = jobProvider.jobsPosted;
+
+
     const jobId = req.params.jobId;
+
+  
+    if (!jobList.includes(jobId)) {
+      return res.status(404).json({ error: "Unauthorized Access" });
+    }
 
     const job = await Job.findById(jobId);
     return res.status(200).json(job);
@@ -476,6 +474,25 @@ exports.getHostJobDetails = async (req, res, next) => {
 
 exports.postDeleteJob = async (req, res, next) => {
   const jobId = req.params.jobId;
+
+  if (!req.session || !req.session.user || !req.session.user._id) {
+    return res
+      .status(401)
+      .json({ error: "Unauthorized: Please log in first" });
+  }
+  if (req.session.user.userType !== "recruiter") {
+    return res.status(401).json({error:"Unauthorized:"})
+  }
+  const jobProvider = await UserRecruiter.findById(
+    req.session.user._id,
+    "jobsPosted"
+  );
+ let jobList = jobProvider.jobsPosted;
+
+
+  if (!jobList.includes(jobId)) {
+    return res.status(404).json({ error: "Unauthorized Access" });
+  }
 
   try {
     const result = await Job.findByIdAndDelete(jobId);
@@ -521,6 +538,14 @@ exports.getHostProfileDetails = (req, res, next) => {
 };
 
 exports.getProfileFavourites = (req, res, next) => {
+  if (!req.session || !req.session.user || !req.session.user._id) {
+    return res
+      .status(401)
+      .json({ error: "Unauthorized: Please log in first" });
+  }
+  if (req.session.user.userType !== "recruiter") {
+    return res.status(401).json({error:"Unauthorized: User"})
+  }
   const favs = UserRecruiter.findById(req.session.user._id)
     .then((user) => {
       if (!user) {
@@ -544,6 +569,9 @@ exports.getOnlyProfileFavourites = async (req, res, next) => {
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
     }
+    if (req.session.user.userType !== "recruiter") {
+      return res.status(401).json({error:"Unauthorized: User"})
+    }
     const favs = await UserRecruiter.findById(
       req.session.user._id,
       "profileFavourites"
@@ -560,15 +588,19 @@ exports.getOnlyProfileFavourites = async (req, res, next) => {
 
 exports.postAddProfileFavourites = async (req, res, next) => {
   const profileId = req.params.profileId;
+  if (!req.session || !req.session.user || !req.session.user._id) {
+    return res
+      .status(401)
+      .json({ error: "Unauthorized: Please log in first" });
+  }
+  if (req.session.user.userType !== "recruiter") {
+    return res.status(401).json({error:"Unauthorized: User"})
+  }
   try {
     const user = await UserRecruiter.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
-    } else if (user.userType !== "recruiter") {
-      return res
-        .status(403)
-        .json({ error: "Access denied. Only recruiters can add favourites." });
-    }
+    } 
 
     if (user.profileFavourites.includes(profileId)) {
       user.profileFavourites.pull(profileId);
@@ -593,6 +625,9 @@ exports.getOnlyChoosenProfiles = async (req, res, next) => {
       return res
         .status(401)
         .json({ error: "Unauthorized: Please log in first" });
+    }
+    if (req.session.user.userType !== "recruiter") {
+      return res.status(401).json({error:"Unauthorized: User"})
     }
     const user = await UserRecruiter.findById(
       req.session.user._id,
@@ -619,25 +654,23 @@ exports.getOnlyChoosenProfiles = async (req, res, next) => {
 
 exports.postHireProfile = async (req, res, next) => {
   const profileId = req.params.profileId;
+  if (!req.session || !req.session.user || !req.session.user._id) {
+    return res
+      .status(401)
+      .json({ error: "Unauthorized: Please log in first" });
+  }
+  if (req.session.user.userType !== "recruiter") {
+    return res.status(401).json({error:"Unauthorized: User"})
+  }
   try {
     const user = await UserRecruiter.findById(req.session.user._id);
     const userEmployee = await UserEmployee.findOne({
       profilesPosted: profileId,
     });
-    if (!user) {
-      return res.status(404).json({ error: "User or Employee not found" });
-    } else if (user.userType !== "recruiter") {
-      return res
-        .status(403)
-        .json({ error: "Access denied. Only recruiters can hire profiles." });
-    }
+   
     if (!userEmployee) {
       return res.status(404).json({ error: "Profile not found" });
-    } else if (userEmployee.userType !== "employee") {
-      return res
-        .status(403)
-        .json({ error: "Access denied. Only employees can be hired." });
-    }
+    } 
 
     let choosenIds = user.choosenProfiles.map((pro) => pro.Ids.toString());
     if (choosenIds.includes(profileId.toString())) {
@@ -672,6 +705,15 @@ exports.postHireProfile = async (req, res, next) => {
 };
 
 exports.getChoosenProfiles = async (req, res, next) => {
+
+  if (!req.session || !req.session.user || !req.session.user._id) {
+    return res
+      .status(401)
+      .json({ error: "Unauthorized: Please log in first" });
+  }
+  if (req.session.user.userType !== "recruiter") {
+    return res.status(401).json({error:"Unauthorized: User"})
+  }
   const user = await UserRecruiter.findById(req.session.user._id)
     .then((user) => {
       if (!user) {

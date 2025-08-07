@@ -18,7 +18,6 @@ storeRouter.post("/addProfile", storeController.addProfilePost);
 storeRouter.get("/storeProfileList", storeController.storeProfileList);
 
 storeRouter.get("/editProfile/:profileId", storeController.getEditProfile);
-storeRouter.post("/editProfile", storeController.postEditProfile);
 
 storeRouter.post(
   "/deleteProfile/:profileId",

@@ -75,11 +75,11 @@ jobSchema.pre("findOneAndDelete", async function (next) {
     { jobsPosted: jobId },
     { $pull: { jobsPosted: jobId } }
   );
-  await UserEmployee.findOneAndUpdate(
+  await UserEmployee.updateMany(
     { favourites: jobId },
     { $pull: { favourites: jobId } }
   );
-  await UserEmployee.findOneAndUpdate(
+  await UserEmployee.updateMany(
     { "appliedJobs.Ids": jobId },
     { $pull: { appliedJobs: { Ids: jobId } } }
   );

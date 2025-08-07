@@ -61,7 +61,7 @@ export default function AddAboutEmployee() {
     const fetchAboutEmployee = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/store/addAboutEmployee/${userId}`,
+          `${process.env.REACT_APP_API_URL}/store/addAboutEmployee/${userId}`,
           {
             method: "GET",
             headers: {
@@ -270,12 +270,15 @@ export default function AddAboutEmployee() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3000/store/addAboutEmployee", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/store/addAboutEmployee",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json();
       setErrors(data.errors ? data.errors : null);
       if (!data.errors) {
@@ -289,6 +292,7 @@ export default function AddAboutEmployee() {
   return (
     <div className="flex flex-col items-center w-full bg-black text-white">
       <NavHome />
+      <h1 className="text-3xl font-bold my-6 text-center">Your Profile</h1>
       <form
         onSubmit={handleSubmit}
         className="w-[80%] p-8 bg-emerald-950 rounded-lg flex flex-col gap-8"

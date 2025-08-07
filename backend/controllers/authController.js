@@ -66,10 +66,10 @@ exports.postSignUp = [
     .withMessage("User Type must be either 'Employee' or 'Recruiter''"),
 
   (req, res, next) => {
-    if (req.body.userType == "recruiter") {
-      const { firstname, lastname, username, password, userType } = req.body;
 
-      const errors = validationResult(req);
+    const { firstname, lastname, username, password, userType } = req.body;
+
+    const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
         return res.status(400).json({
@@ -82,7 +82,12 @@ exports.postSignUp = [
             userType,
           },
         });
-      }
+    }
+    
+    if (req.body.userType == "recruiter") {
+      
+
+      
       bcrypt.hash(password, 12).then((hashedPassword) => {
         const user = new UserRecruiter({
           firstname: firstname,
@@ -114,23 +119,10 @@ exports.postSignUp = [
             });
           });
       });
-    } else {
-      const { firstname, lastname, username, password, userType } = req.body;
+    } else if(req.body.userType =="employee") {
+      
 
-      const errors = validationResult(req);
-
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          errors: errors.array().map((err) => err.msg),
-          oldInput: {
-            firstname,
-            lastname,
-            username,
-            password,
-            userType,
-          },
-        });
-      }
+      
       bcrypt.hash(password, 12).then((hashedPassword) => {
         const user = new UserEmployee({
           firstname: firstname,
@@ -139,6 +131,7 @@ exports.postSignUp = [
           password: hashedPassword,
           userType: userType,
         });
+        
 
         user
           .save()

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import NavHome from "../../compo/NavHome";
+import Footer from "../../compo/Footer";
 
 export default function AboutRecruiter() {
   const { userId } = useParams();
@@ -20,7 +22,7 @@ export default function AboutRecruiter() {
     const fetchAboutRecruiter = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/store/aboutRecruiter/${userId}`,
+          `${process.env.REACT_APP_API_URL}/store/aboutRecruiter/${userId}`,
           {
             method: "GET",
             headers: {
@@ -39,83 +41,57 @@ export default function AboutRecruiter() {
   }, [userId]);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h1 className="text-2xl font-bold mb-6 text-center">Recruiter Profile</h1>
+    <div className=" flex flex-col bg-black text-white items-center ">
+      <NavHome />
+      <h1 className="text-3xl font-bold my-6 text-center">Recruiter Profile</h1>
+      <div className="w-[80%] bg-[#0a1f1d] rounded-lg p-12">
+        <div className="flex flex-col gap-12 ">
+          <div className="flex flex-col gap-5 ">
+            {[
+              { field: "fullName", placeholder: "Full Name" },
+              { field: "profilePicture", placeholder: "Profile Picture" },
+              { field: "designation", placeholder: "Designation" },
+              { field: "company", placeholder: "Company" },
+              { field: "companyLogo", placeholder: "Company Logo" },
+              { field: "companyWebsite", placeholder: "Company Website" },
+              { field: "email", placeholder: "Email" },
+              { field: "linkedIn", placeholder: "Linked In Url" },
+            ].map(({ field, placeholder }) => {
+              return (
+                <div className="flex items-center gap-3">
+                  <label className="text-gray-400 text-lg">{placeholder}</label>
+                  <p className="text-md">{formData[field]}</p>
+                </div>
+              );
+            })}
+          </div>
 
-      {formData.profilePicture && (
-        <div className="flex justify-center mb-4">
-          <img
-            src={formData.profilePicture}
-            alt="Profile"
-            className="w-32 h-32 rounded-full object-cover"
-          />
-        </div>
-      )}
+          <div className="w-full flex p-6 border-2 border-white rounded-lg gap-6 flex-col">
+            <label className="block text-gray-400 font-medium mb-2">
+              Roles Hiring:
+            </label>
 
-      <InfoItem label="Full Name" value={formData.fullName} />
-      <InfoItem label="Designation" value={formData.designation} />
+            <div className="flex justify-start items-center gap-3 w-full flex-wrap">
+              {formData.rolesHiring.map((role) => {
+                return (
+                  <span className="bg-cyan-950 px-3 py-1 rounded-lg flex items-center">
+                    {role}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
 
-      {formData.companyLogo && (
-        <div className="flex items-center mb-4">
-          <img
-            src={formData.companyLogo}
-            alt="Company Logo"
-            className="w-16 h-16 object-contain mr-4"
-          />
-          <div>
-            <div className="text-lg font-semibold">{formData.company}</div>
-            {formData.companyWebsite && (
-              <a
-                href={formData.companyWebsite}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline text-sm"
-              >
-                {formData.companyWebsite}
-              </a>
-            )}
+          {/* Bio */}
+          <div className="flex flex-col gap-3">
+            <label className="text-gray-400 text-lg">About Recruiter</label>
+            <p className="w-full h-44 p-4 border border-gray-300 rounded ">
+              {formData.bio}
+            </p>
           </div>
         </div>
-      )}
-
-      <InfoItem label="Email" value={formData.email} />
-      <InfoItem
-        label="LinkedIn"
-        value={
-          formData.linkedIn ? (
-            <a
-              href={formData.linkedIn}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 underline"
-            >
-              {formData.linkedIn}
-            </a>
-          ) : (
-            ""
-          )
-        }
-      />
-
-      <InfoItem label="Bio" value={formData.bio} />
-      <InfoItem
-        label="Roles Hiring For"
-        value={
-          formData.rolesHiring && formData.rolesHiring.length > 0
-            ? formData.rolesHiring.join(", ")
-            : "N/A"
-        }
-      />
-    </div>
-  );
-}
-
-// Reusable display-only field
-function InfoItem({ label, value }) {
-  return (
-    <div className="mb-4">
-      <div className="text-gray-600 font-medium">{label}</div>
-      <div className="text-gray-900">{value || "N/A"}</div>
+      </div>
+      <Footer />
     </div>
   );
 }
