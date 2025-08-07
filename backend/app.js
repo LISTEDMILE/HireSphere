@@ -56,9 +56,6 @@ app.use("/", authRouter);
 app.use("/host", hostRouter);
 app.use("/store", storeRouter);
 
-// app.use(errorr.errorr);
-
-// Serve React build files
 app.use(express.static(path.join(rootDir, "../frontend/")));
 
 app.get("*", (req, res) => {

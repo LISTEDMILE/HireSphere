@@ -14,7 +14,7 @@ export default function StoreJobDetails() {
       try {
         // Fetch jobs
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/store/storeJobDetails/${jobId}`,
+          `https://hire-sphere.onrender.com/store/storeJobDetails/${jobId}`,
           {
             method: "GET",
             credentials: "include",
@@ -34,7 +34,7 @@ export default function StoreJobDetails() {
 
         // Fetch favourites
         const favResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/store/favourite`,
+          `https://hire-sphere.onrender.com/store/favourite`,
           {
             method: "GET",
             credentials: "include",
@@ -53,7 +53,7 @@ export default function StoreJobDetails() {
         const favIds = favs.favIds;
 
         const applyResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/store/appliedJobs`,
+          `https://hire-sphere.onrender.com/store/appliedJobs`,
           {
             method: "GET",
             credentials: "include",
@@ -109,7 +109,7 @@ export default function StoreJobDetails() {
   //   // Handle Apply/Cancel Apply
   const handleApply = async (jobId) => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/store/apply/${jobId}`, {
+      await fetch(`https://hire-sphere.onrender.com/store/apply/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +129,7 @@ export default function StoreJobDetails() {
   // Handle Favorite Toggle
   const handleFavourite = async (jobId) => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/store/favourite/${jobId}`, {
+      await fetch(`https://hire-sphere.onrender.com/store/favourite/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

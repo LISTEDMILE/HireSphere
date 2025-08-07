@@ -14,7 +14,7 @@ export default function ApplicantProfiles() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/host/hostApplicantProfiles/${applicantId}`,
+          `https://hire-sphere.onrender.com/host/hostApplicantProfiles/${applicantId}`,
           {
             method: "GET",
             headers: {
@@ -41,7 +41,7 @@ export default function ApplicantProfiles() {
         ({detail.profileName}) : Profile
       </h1>
 
-      {profiles.length === 0 && <Empty/>}
+      {profiles.length === 0 && <Empty />}
 
       <div className="w-[70%] pb-12">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
@@ -110,7 +110,7 @@ export default function ApplicantProfiles() {
           ))}
         </ul>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

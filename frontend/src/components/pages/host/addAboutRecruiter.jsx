@@ -28,7 +28,7 @@ export default function AddAboutRecruiter() {
     const fetchAboutRecruiter = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/host/addAboutRecruiter/${userId}`,
+          `https://hire-sphere.onrender.com/host/addAboutRecruiter/${userId}`,
           {
             method: "GET",
             headers: {
@@ -74,7 +74,7 @@ export default function AddAboutRecruiter() {
     e.preventDefault();
     try {
       let response = await fetch(
-        `${process.env.REACT_APP_API_URL}/host/addAboutRecruiter`,
+        `https://hire-sphere.onrender.com/host/addAboutRecruiter`,
         {
           method: "POST",
           headers: {
@@ -206,7 +206,7 @@ export default function AddAboutRecruiter() {
           </button>
         </form>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
