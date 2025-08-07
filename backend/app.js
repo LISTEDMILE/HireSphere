@@ -64,6 +64,8 @@ mongoose
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server Running at http://localhost:${PORT}`);
+    
+console.log("MONGO_URL from env:", process.env.MONGO_URL);
     });
   })
   .catch((err) => {
