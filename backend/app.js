@@ -10,6 +10,7 @@ require("dotenv").config();
 const MongoDBStore = require("connect-mongodb-session")(session);
 const { default: mongoose } = require("mongoose");
 const DB_path = process.env.MONGO_URL;
+const PORT = process.env.PORT;
 
 const cors = require("cors");
 
