@@ -271,7 +271,7 @@ export default function AddAboutEmployee() {
     e.preventDefault();
     try {
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/store/addAboutEmployee",
+        `${process.env.REACT_APP_API_URL}/store/addAboutEmployee`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
