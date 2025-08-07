@@ -125,9 +125,9 @@ const LandingPage = () => {
         scrub: 3,
       },
       opacity: 0,
-      transform: "translateY(300px)",
+      transform: "translateY(300px) translateX(300px)",
       scale: 0,
-      transform: "translateX(300px)",
+      
     });
 
     gsap.to(".TitleBlack", {
