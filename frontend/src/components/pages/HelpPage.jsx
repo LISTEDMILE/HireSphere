@@ -4,7 +4,7 @@ import Footer from "../compo/Footer";
 
 const HelpPage = () => {
   return (
-    <div className="m-0 flex flex-col min-h-screen">
+    <div className="bg-black text-white m-0 flex flex-col min-h-screen">
       <NavHome active="helpPage" />
       <div className="flex flex-col justify-items-center p-8 flex-grow">
         <h1 className="text-5xl mb-14">

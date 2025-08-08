@@ -4,7 +4,7 @@ import Footer from "../compo/Footer";
 
 const AboutPage = () => {
   return (
-    <div className="m-0 flex flex-col min-h-screen">
+    <div className="bg-black text-white m-0 flex flex-col min-h-screen">
       <NavHome active="aboutPage" />
       <div className="pt-8 w-full flex-grow">
         {/* Section 1 */}

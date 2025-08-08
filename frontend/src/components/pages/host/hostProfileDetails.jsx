@@ -45,7 +45,7 @@ export default function HostProfileDetails() {
 
         const ProfileWithFav = favIds.includes(profileFetched._id)
           ? { ...profileFetched, fav: true }
-          : { profileFetched, fav: false };
+          : { ...profileFetched, fav: false };
 
         const choosenResponse = await fetch(
           `${apiURL}/host/getChoosenProfiles`,
@@ -83,7 +83,6 @@ export default function HostProfileDetails() {
         } else if (updatedProfile.choosen == false) {
           updatedProfileWithstatus = updatedProfile;
         }
-
         setProfile(updatedProfileWithstatus); // ✅ update once with combined data
       } catch (error) {
         console.error("Error fetching profiles:", error);

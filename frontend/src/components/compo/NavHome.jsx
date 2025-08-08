@@ -106,7 +106,7 @@ const NavHome = () => {
             className="hover:underline hover:text-red-100 bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
           >
-            Choosens
+        Offers
           </a>
         </div>
       )}
@@ -174,7 +174,7 @@ const NavHome = () => {
             <IoMdMenu />
           </button>
           {navOpen && (
-            <div className="flex absolute  right-12 min-h-[50vh] items-start bg-rose-950 p-6 w-72 top-6 flex-col gap-8 ">
+            <div className="flex absolute z-50  right-12 min-h-[50vh] items-start bg-rose-950 p-6 w-72 top-6 flex-col gap-8 ">
               <button
                 className="text-3xl self-end  hover:cursor-pointer"
                 onClick={() => {
