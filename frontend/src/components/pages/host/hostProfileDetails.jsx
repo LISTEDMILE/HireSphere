@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function HostProfileDetails() {
   const [profile, setProfile] = useState();
@@ -12,7 +13,7 @@ export default function HostProfileDetails() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `https://hire-sphere.onrender.com/host/hostProfileDetails/${profileId}`,
+          `${apiURL}/host/hostProfileDetails/${profileId}`,
           {
             method: "GET",
             headers: {
@@ -28,16 +29,13 @@ export default function HostProfileDetails() {
         }
         let profileFetched = data.profile;
 
-        const favResponse = await fetch(
-          `https://hire-sphere.onrender.com/host/favouriteProfile`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
+        const favResponse = await fetch(`${apiURL}/host/favouriteProfile`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
         const favs = await favResponse.json();
         if (favs.error) {
           console.error("Error fetching favourites:", favs.error);
@@ -50,7 +48,7 @@ export default function HostProfileDetails() {
           : { profileFetched, fav: false };
 
         const choosenResponse = await fetch(
-          `https://hire-sphere.onrender.com/host/getChoosenProfiles`,
+          `${apiURL}/host/getChoosenProfiles`,
           {
             method: "GET",
             headers: {
@@ -97,16 +95,13 @@ export default function HostProfileDetails() {
 
   const handleFavourite = async (profileId) => {
     try {
-      await fetch(
-        `https://hire-sphere.onrender.com/host/favouriteProfile/${profileId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      await fetch(`${apiURL}/host/favouriteProfile/${profileId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
       setProfile({ ...profile, fav: !profile.fav });
     } catch (error) {
@@ -116,16 +111,13 @@ export default function HostProfileDetails() {
 
   const handleHireProfile = async (profileId) => {
     try {
-      const response = await fetch(
-        `https://hire-sphere.onrender.com/host/hireProfile/${profileId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
       const data = await response.json();
       if (data.error) {

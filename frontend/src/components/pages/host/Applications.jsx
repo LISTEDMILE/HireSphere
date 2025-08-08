@@ -4,6 +4,7 @@ import NavHome from "../../compo/NavHome";
 import { FaUserEdit } from "react-icons/fa";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function Applications() {
   const [applications, setApplications] = useState([]);
@@ -12,16 +13,13 @@ export default function Applications() {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const response = await fetch(
-          `https://hire-sphere.onrender.com/host/hostApplications`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${apiURL}/host/hostApplications`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         const data = await response.json();
         if (data.error) {
@@ -40,16 +38,13 @@ export default function Applications() {
   // Handle Reject Application
   const handleIgnore = async (jobId) => {
     try {
-      await fetch(
-        `https://hire-sphere.onrender.com/host/ignoreApplication/${jobId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await fetch(`${apiURL}/host/ignoreApplication/${jobId}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       setApplications((prevApplications) =>
         prevApplications.filter((application) => application.job._id !== jobId)
@@ -61,17 +56,14 @@ export default function Applications() {
 
   const handleAccept = async (jobId) => {
     try {
-      await fetch(
-        `https://hire-sphere.onrender.com/host/acceptApplication/${jobId}`,
-        {
-          method: "POST",
+      await fetch(`${apiURL}/host/acceptApplication/${jobId}`, {
+        method: "POST",
 
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       setApplications(
         (prevApplications) =>
           prevApplications.map((application) =>
@@ -87,16 +79,13 @@ export default function Applications() {
 
   const handleReject = async (jobId) => {
     try {
-      await fetch(
-        `https://hire-sphere.onrender.com/host/rejectApplication/${jobId}`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await fetch(`${apiURL}/host/rejectApplication/${jobId}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       setApplications(
         (prevApplications) =>
           prevApplications.map((application) =>

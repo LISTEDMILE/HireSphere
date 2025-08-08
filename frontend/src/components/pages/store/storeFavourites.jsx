@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 import Empty from "../../compo/Empty";
 
 export default function StoreFavourites() {
@@ -11,16 +12,13 @@ export default function StoreFavourites() {
   useEffect(() => {
     const fetchFavouriteJobs = async () => {
       try {
-        const response = await fetch(
-          `https://hire-sphere.onrender.com/store/onlyFavourites`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${apiURL}/store/onlyFavourites`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         const data = await response.json();
         if (data.error || data.length === 0) {
           console.error("Error fetching favourites:", data.error);
@@ -32,16 +30,13 @@ export default function StoreFavourites() {
           })); // Add fav property
         }
 
-        const applyResponse = await fetch(
-          `https://hire-sphere.onrender.com/store/appliedJobs`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const applyResponse = await fetch(`${apiURL}/store/appliedJobs`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         const appliedData = await applyResponse.json();
         if (appliedData.error) {
           console.error("Error fetching applied jobs:", appliedData.error);
@@ -85,7 +80,7 @@ export default function StoreFavourites() {
   //   // Handle Apply/Cancel Apply
   const handleApply = async (jobId) => {
     try {
-      await fetch(`https://hire-sphere.onrender.com/store/apply/${jobId}`, {
+      await fetch(`${apiURL}/store/apply/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,7 +106,7 @@ export default function StoreFavourites() {
   // Handle Favorite Toggle
   const handleFavourite = async (jobId) => {
     try {
-      await fetch(`https://hire-sphere.onrender.com/store/favourite/${jobId}`, {
+      await fetch(`${apiURL}/store/favourite/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

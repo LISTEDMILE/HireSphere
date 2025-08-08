@@ -5,6 +5,7 @@ import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function HostJobList() {
   const [jobs, setJobs] = useState([]);
@@ -13,16 +14,13 @@ export default function HostJobList() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch(
-          `https://hire-sphere.onrender.com/host/hostJobList`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
+        const response = await fetch(`${apiURL}/host/hostJobList`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
 
         let data = await response.json();
         await setJobs(data);
@@ -36,16 +34,13 @@ export default function HostJobList() {
 
   const handleDelete = async (jobId) => {
     try {
-      const response = await fetch(
-        `https://hire-sphere.onrender.com/host/deleteJob/${jobId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${apiURL}/host/deleteJob/${jobId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
       let data = await response.json();
       if (!data.error) {

@@ -5,6 +5,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import { GrRadialSelected } from "react-icons/gr";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function ProfileForm() {
   const [errors, setErrors] = useState(null);
@@ -64,16 +65,13 @@ export default function ProfileForm() {
 
   const fetchProfileDetails = async () => {
     try {
-      const response = await fetch(
-        `https://hire-sphere.onrender.com/store/editProfile/${profileId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${apiURL}/store/editProfile/${profileId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
       const data = await response.json();
       setFormData({ ...data });
     } catch (error) {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 import Empty from "../../compo/Empty";
 
 export default function StoreOffererJobs() {
@@ -13,7 +14,7 @@ export default function StoreOffererJobs() {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          `https://hire-sphere.onrender.com/store/storeOffererJobs/${offererId}`,
+          `${apiURL}/store/storeOffererJobs/${offererId}`,
           {
             method: "GET",
             headers: {

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userActions } from "../store";
+import { apiURL } from "../apiUrl";
 
 //routes
 import LandingPage from "./components/pages/LandingPage";
@@ -39,16 +40,13 @@ function App() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(
-          `https://hire-sphere.onrender.com/api/me`,
-          {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${apiURL}/api/me`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         const data = await response.json();
         if (data.isLoggedIn) {
           dispatch(

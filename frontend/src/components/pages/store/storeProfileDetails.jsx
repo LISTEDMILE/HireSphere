@@ -5,6 +5,7 @@ import NavHome from "../../compo/NavHome";
 import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function StoreProfilesDetails() {
   const [profile, setProfile] = useState();
@@ -15,7 +16,7 @@ export default function StoreProfilesDetails() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `https://hire-sphere.onrender.com/store/storeProfileDetails/${profileId}`,
+          `${apiURL}/store/storeProfileDetails/${profileId}`,
           {
             method: "GET",
             headers: {
@@ -38,7 +39,7 @@ export default function StoreProfilesDetails() {
   const handleDelete = async (profileId) => {
     try {
       const response = await fetch(
-        `https://hire-sphere.onrender.com/store/deleteProfile/${profileId}`,
+        `${apiURL}/store/deleteProfile/${profileId}`,
         {
           method: "POST",
           headers: {

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { MdOutlineCancel } from "react-icons/md";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function AddAboutRecruiter() {
   const [role, setRole] = useState("");
@@ -28,7 +29,7 @@ export default function AddAboutRecruiter() {
     const fetchAboutRecruiter = async () => {
       try {
         const response = await fetch(
-          `https://hire-sphere.onrender.com/host/addAboutRecruiter/${userId}`,
+          `${apiURL}/host/addAboutRecruiter/${userId}`,
           {
             method: "GET",
             headers: {
@@ -73,17 +74,14 @@ export default function AddAboutRecruiter() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let response = await fetch(
-        `https://hire-sphere.onrender.com/host/addAboutRecruiter`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(formData),
-        }
-      );
+      let response = await fetch(`${apiURL}/host/addAboutRecruiter`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
       const data = await response.json();
 
       setErrors(data.errors ? data.errors : null);

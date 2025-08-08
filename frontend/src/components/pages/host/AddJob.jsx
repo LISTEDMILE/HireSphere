@@ -5,6 +5,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import { GrRadialSelected } from "react-icons/gr";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function AddJob() {
   const [errors, setErrors] = useState(null);
@@ -52,16 +53,13 @@ export default function AddJob() {
 
   const fetchJobDetails = async () => {
     try {
-      const response = await fetch(
-        `https://hire-sphere.onrender.com/host/editJob/${jobId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${apiURL}/host/editJob/${jobId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
       const data = await response.json();
       setFormData({ ...data });
     } catch (error) {

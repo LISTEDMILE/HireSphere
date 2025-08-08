@@ -5,6 +5,7 @@ import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function Offers() {
   const [offers, setOffers] = useState([]);
@@ -12,16 +13,13 @@ export default function Offers() {
   useEffect(() => {
     const fetchOffers = async () => {
       try {
-        const response = await fetch(
-          `https://hire-sphere.onrender.com/store/offers`,
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch(`${apiURL}/store/offers`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         const data = await response.json();
         if (data.error) {
           console.error("Error fetching Offers:", data.error);
@@ -37,16 +35,13 @@ export default function Offers() {
 
   const handleIgnore = async (offerId) => {
     try {
-      await fetch(
-        `https://hire-sphere.onrender.com/store/ignoreOffer/${offerId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await fetch(`${apiURL}/store/ignoreOffer/${offerId}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       setOffers((prevOffers) =>
         prevOffers.filter((offer) => offer.profile._id !== offerId)
@@ -58,16 +53,13 @@ export default function Offers() {
 
   const handleAccept = async (profileId) => {
     try {
-      await fetch(
-        `https://hire-sphere.onrender.com/store/acceptOffer/${profileId}`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await fetch(`${apiURL}/store/acceptOffer/${profileId}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       setOffers((prevOffers) =>
         prevOffers.map((offer) =>
           offer.profile._id == profileId
@@ -82,16 +74,13 @@ export default function Offers() {
 
   const handleReject = async (profileId) => {
     try {
-      await fetch(
-        `https://hire-sphere.onrender.com/store/rejectOffer/${profileId}`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await fetch(`${apiURL}/store/rejectOffer/${profileId}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       setOffers((prevOffers) =>
         prevOffers.map((offer) =>
           offer.profile._id == profileId

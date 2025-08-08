@@ -5,6 +5,7 @@ import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function StoreProfilesList() {
   const [profiles, setProfiles] = useState([]);
@@ -12,16 +13,13 @@ export default function StoreProfilesList() {
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        const response = await fetch(
-          `https://hire-sphere.onrender.com/store/storeProfileList`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
+        const response = await fetch(`${apiURL}/store/storeProfileList`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
 
         let data = await response.json();
         await setProfiles(data);
@@ -35,7 +33,7 @@ export default function StoreProfilesList() {
   const handleDelete = async (profileId) => {
     try {
       const response = await fetch(
-        `https://hire-sphere.onrender.com/store/deleteProfile/${profileId}`,
+        `${apiURL}/store/deleteProfile/${profileId}`,
         {
           method: "POST",
           headers: {

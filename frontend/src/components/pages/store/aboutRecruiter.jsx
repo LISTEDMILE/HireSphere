@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function AboutRecruiter() {
   const { userId } = useParams();
@@ -22,7 +23,7 @@ export default function AboutRecruiter() {
     const fetchAboutRecruiter = async () => {
       try {
         const response = await fetch(
-          `https://hire-sphere.onrender.com/store/aboutRecruiter/${userId}`,
+          `${apiURL}/store/aboutRecruiter/${userId}`,
           {
             method: "GET",
             headers: {

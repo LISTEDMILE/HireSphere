@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function ApplicantProfiles() {
   const [profiles, setProfiles] = useState([]);
@@ -14,7 +15,7 @@ export default function ApplicantProfiles() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `https://hire-sphere.onrender.com/host/hostApplicantProfiles/${applicantId}`,
+          `${apiURL}/host/hostApplicantProfiles/${applicantId}`,
           {
             method: "GET",
             headers: {

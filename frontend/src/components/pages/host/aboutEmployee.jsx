@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
+import { apiURL } from "../../../../apiUrl";
 
 export default function AboutEmployee() {
   const { userId } = useParams();
@@ -27,16 +28,13 @@ export default function AboutEmployee() {
   useEffect(() => {
     const fetchAboutEmployee = async () => {
       try {
-        const response = await fetch(
-          `https://hire-sphere.onrender.com/host/aboutEmployee/${userId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
+        const response = await fetch(`${apiURL}/host/aboutEmployee/${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
         const data = await response.json();
         setFormData({ ...data });
       } catch (error) {

@@ -4,6 +4,7 @@ import Footer from "../compo/Footer";
 import { AddUserToServer } from "../../../services/Services";
 import { useNavigate } from "react-router-dom";
 import { BackgroundAnimation } from "../compo/anima";
+import { apiURL } from "../../../apiUrl";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
