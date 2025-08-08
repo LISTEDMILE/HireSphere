@@ -40,8 +40,8 @@ app.use(
     store: store,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // true in prod (HTTPS only)
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: true, // true in prod (HTTPS only)
+      sameSite: 'none',
     }
   })
 );
