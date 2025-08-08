@@ -140,7 +140,7 @@ export default function HostProfileDetails() {
       <NavHome />
 
       <h1 className="text-3xl font-bold text-center my-4">
-        Detailed Resume : {profile.profileName}
+        Detailed Resume : 
       </h1>
 
       {!fetching && (

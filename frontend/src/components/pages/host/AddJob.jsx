@@ -369,7 +369,7 @@ export default function AddJob() {
             </label>
             <input
               required
-              type="number"
+              type="text"
               name="jobOwnerMobile"
               value={formData.jobOwnerMobile}
               onChange={handleChange}
