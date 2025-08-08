@@ -319,3 +319,23 @@ exports.postMe = (req, res, next) => {
     });
   }
 };
+
+exports.postLogOut = (req,res,next) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Session destroy error:", err);
+      return res.status(500).json({
+        success: false,
+        errors: ["An error occurred while logging out."],
+      });
+    }
+
+    // Optional: explicitly clear the cookie on the client
+    res.clearCookie("connect.sid"); // use your session cookie name
+
+    return res.status(200).json({
+      success: true,
+      message: "Logged out successfully.",
+    });
+  });
+};

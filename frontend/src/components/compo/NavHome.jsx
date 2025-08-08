@@ -1,13 +1,35 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { IoMdMenu, IoMdClose } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { apiURL } from "../../../apiUrl";
 
 const NavHome = () => {
+  const navigate = useNavigate();
   const { isLoggedIn, userType, userId } = useSelector(
     (store) => store.userInfo
   );
   const [navOpen, setNavOpen] = useState(false);
+
+  const LogOut = async () => {
+    const response = await fetch(`${apiURL}/api/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include"
+    })
+    const data = await response.json();
+    
+     if (data.success == true) {
+       navigate("/");
+       window.location.reload();
+    }
+    else if (data.success == false) {
+      alert(data.errors);
+    }
+    
+  }
 
   return (
     <header className="  flex items-center justify-between py-4 w-full mb-5 text-white z-30 ">
@@ -235,7 +257,8 @@ const NavHome = () => {
                 About-Us
               </a>
 
-              <div>Logout</div>
+              <button onClick={() => LogOut()}
+              className="bg-cyan-800 hover:bg-cyan-950 hover:cursor-pointer py-2 px-4 rounded-lg">Logout</button>
             </div>
           )}
         </>
