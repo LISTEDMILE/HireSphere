@@ -65,7 +65,7 @@ export default function ProfileForm() {
   const fetchProfileDetails = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/store/editProfile/${profileId}`,
+        `https://localhost:3000/store/editProfile/${profileId}`,
         {
           method: "GET",
           headers: {

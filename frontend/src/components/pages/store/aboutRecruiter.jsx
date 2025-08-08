@@ -22,7 +22,7 @@ export default function AboutRecruiter() {
     const fetchAboutRecruiter = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/store/aboutRecruiter/${userId}`,
+          `https://localhost:3000/store/aboutRecruiter/${userId}`,
           {
             method: "GET",
             headers: {

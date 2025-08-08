@@ -12,7 +12,7 @@ export default function AppliedJobs() {
     const fetchAppliedJobs = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/store/onlyAppliedJobs`,
+          `https://localhost:3000/store/onlyAppliedJobs`,
           {
             method: "GET",
             credentials: "include",
@@ -35,7 +35,7 @@ export default function AppliedJobs() {
 
         // Add fav property to each job
         const favResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/store/favourite`,
+          `https://localhost:3000/store/favourite`,
           {
             method: "GET",
             credentials: "include",
@@ -69,7 +69,7 @@ export default function AppliedJobs() {
   // Handle Apply
   const handleApply = async (jobId) => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/store/apply/${jobId}`, {
+      await fetch(`https://localhost:3000/store/apply/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export default function AppliedJobs() {
   // Handle Favorite Toggle
   const handleFavourite = async (jobId) => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/store/favourite/${jobId}`, {
+      await fetch(`https://localhost:3000/store/favourite/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

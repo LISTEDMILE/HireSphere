@@ -61,7 +61,7 @@ export default function AddAboutEmployee() {
     const fetchAboutEmployee = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/store/addAboutEmployee/${userId}`,
+          `https://localhost:3000/store/addAboutEmployee/${userId}`,
           {
             method: "GET",
             headers: {
@@ -270,15 +270,12 @@ export default function AddAboutEmployee() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/store/addAboutEmployee`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(formData),
-        }
-      );
+      const res = await fetch(`https://localhost:3000/store/addAboutEmployee`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
       const data = await res.json();
       setErrors(data.errors ? data.errors : null);
       if (!data.errors) {

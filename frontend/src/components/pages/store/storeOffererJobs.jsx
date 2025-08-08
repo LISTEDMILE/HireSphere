@@ -13,7 +13,7 @@ export default function StoreOffererJobs() {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/store/storeOffererJobs/${offererId}`,
+          `https://localhost:3000/store/storeOffererJobs/${offererId}`,
           {
             method: "GET",
             headers: {
