@@ -41,7 +41,7 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // true in prod (HTTPS only)
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      sameSite: "lax",
     }
   })
 );
