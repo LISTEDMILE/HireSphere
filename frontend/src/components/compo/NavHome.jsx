@@ -233,7 +233,7 @@ const NavHome = () => {
                 Home
               </a>
 
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 mb-4">
                 <a
                   href="/help"
                   className="hover:underline hover:text-red-100 bg-transparent
@@ -248,14 +248,15 @@ const NavHome = () => {
                 >
                   Contact-Us
                 </a>
-              </div>
+              
               <a
                 href="/about"
                 className="hover:underline hover:text-red-100 bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
               >
                 About-Us
-              </a>
+                </a>
+                </div>
 
               <button onClick={() => LogOut()}
               className="bg-cyan-800 hover:bg-cyan-950 hover:cursor-pointer py-2 px-4 rounded-lg">Logout</button>
