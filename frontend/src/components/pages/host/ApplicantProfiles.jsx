@@ -39,7 +39,7 @@ export default function ApplicantProfiles() {
       <NavHome />
 
       <h1 className="text-3xl font-bold text-center my-4">
-        ({detail.profileName}) : Profile
+          Resumes by Applicant ....
       </h1>
 
       {profiles.length === 0 && <Empty />}
