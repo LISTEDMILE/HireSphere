@@ -17,7 +17,7 @@ export default function HostJobDetails() {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          `{process.env.REACT_APP_API_URL}/host/hostJobDetails/${jobId}`,
+          `${process.env.REACT_APP_API_URL}/host/hostJobDetails/${jobId}`,
           {
             method: "GET",
             headers: {
@@ -41,7 +41,7 @@ export default function HostJobDetails() {
   const handleDelete = async (jobId) => {
     try {
       const response = await fetch(
-        `{process.env.REACT_APP_API_URL}/host/deleteJob/${jobId}`,
+        `${process.env.REACT_APP_API_URL}/host/deleteJob/${jobId}`,
         {
           method: "POST",
           headers: {

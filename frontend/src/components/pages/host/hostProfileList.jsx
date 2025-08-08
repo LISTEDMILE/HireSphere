@@ -11,7 +11,7 @@ export default function HostProfileList() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `{process.env.REACT_APP_API_URL}/host/hostProfileList`,
+          `${process.env.REACT_APP_API_URL}/host/hostProfileList`,
           {
             method: "GET",
             headers: {
@@ -28,7 +28,7 @@ export default function HostProfileList() {
         let profileList = data.profiles;
 
         const favResponse = await fetch(
-          `{process.env.REACT_APP_API_URL}/host/favouriteProfile`,
+          `${process.env.REACT_APP_API_URL}/host/favouriteProfile`,
           {
             method: "GET",
             headers: {
@@ -49,7 +49,7 @@ export default function HostProfileList() {
         );
 
         const choosenResponse = await fetch(
-          `{process.env.REACT_APP_API_URL}/host/getChoosenProfiles`,
+          `${process.env.REACT_APP_API_URL}/host/getChoosenProfiles`,
           {
             method: "GET",
             headers: {
@@ -97,7 +97,7 @@ export default function HostProfileList() {
   const handleFavourite = async (profileId) => {
     try {
       await fetch(
-        `{process.env.REACT_APP_API_URL}/host/favouriteProfile/${profileId}`,
+        `${process.env.REACT_APP_API_URL}/host/favouriteProfile/${profileId}`,
         {
           method: "POST",
           headers: {
@@ -122,7 +122,7 @@ export default function HostProfileList() {
   const handleHireProfile = async (profileId) => {
     try {
       const response = await fetch(
-        `{process.env.REACT_APP_API_URL}/host/hireProfile/${profileId}`,
+        `${process.env.REACT_APP_API_URL}/host/hireProfile/${profileId}`,
         {
           method: "POST",
           headers: {

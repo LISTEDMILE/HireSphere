@@ -28,7 +28,7 @@ export default function AddAboutRecruiter() {
     const fetchAboutRecruiter = async () => {
       try {
         const response = await fetch(
-          `{process.env.REACT_APP_API_URL}/host/addAboutRecruiter/${userId}`,
+          `${process.env.REACT_APP_API_URL}/host/addAboutRecruiter/${userId}`,
           {
             method: "GET",
             headers: {
@@ -74,7 +74,7 @@ export default function AddAboutRecruiter() {
     e.preventDefault();
     try {
       let response = await fetch(
-        `{process.env.REACT_APP_API_URL}/host/addAboutRecruiter`,
+        `${process.env.REACT_APP_API_URL}/host/addAboutRecruiter`,
         {
           method: "POST",
           headers: {

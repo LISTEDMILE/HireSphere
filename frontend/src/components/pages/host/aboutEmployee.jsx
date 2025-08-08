@@ -28,7 +28,7 @@ export default function AboutEmployee() {
     const fetchAboutEmployee = async () => {
       try {
         const response = await fetch(
-          `{process.env.REACT_APP_API_URL}/host/aboutEmployee/${userId}`,
+          `${process.env.REACT_APP_API_URL}/host/aboutEmployee/${userId}`,
           {
             method: "GET",
             headers: {

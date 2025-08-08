@@ -15,7 +15,7 @@ export default function StoreProfilesDetails() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `{process.env.REACT_APP_API_URL}/store/storeProfileDetails/${profileId}`,
+          `${process.env.REACT_APP_API_URL}/store/storeProfileDetails/${profileId}`,
           {
             method: "GET",
             headers: {
@@ -38,7 +38,7 @@ export default function StoreProfilesDetails() {
   const handleDelete = async (profileId) => {
     try {
       const response = await fetch(
-        `{process.env.REACT_APP_API_URL}/store/deleteProfile/${profileId}`,
+        `${process.env.REACT_APP_API_URL}/store/deleteProfile/${profileId}`,
         {
           method: "POST",
           headers: {

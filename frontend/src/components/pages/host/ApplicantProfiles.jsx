@@ -14,7 +14,7 @@ export default function ApplicantProfiles() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `{process.env.REACT_APP_API_URL}/host/hostApplicantProfiles/${applicantId}`,
+          `${process.env.REACT_APP_API_URL}/host/hostApplicantProfiles/${applicantId}`,
           {
             method: "GET",
             headers: {

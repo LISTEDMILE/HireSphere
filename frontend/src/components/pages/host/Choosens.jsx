@@ -12,7 +12,7 @@ export default function ChoosenProfiles() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `{process.env.REACT_APP_API_URL}/host/onlyChoosenProfiles`,
+          `${process.env.REACT_APP_API_URL}/host/onlyChoosenProfiles`,
           {
             method: "GET",
             credentials: "include",
@@ -34,7 +34,7 @@ export default function ChoosenProfiles() {
         }
 
         const favResponse = await fetch(
-          `{process.env.REACT_APP_API_URL}/host/favouriteProfile`,
+          `${process.env.REACT_APP_API_URL}/host/favouriteProfile`,
           {
             method: "GET",
             credentials: "include",
@@ -68,7 +68,7 @@ export default function ChoosenProfiles() {
   const handleHire = async (profileId) => {
     try {
       await fetch(
-        `{process.env.REACT_APP_API_URL}/host/hireProfile/${profileId}`,
+        `${process.env.REACT_APP_API_URL}/host/hireProfile/${profileId}`,
         {
           method: "POST",
           credentials: "include",
@@ -97,7 +97,7 @@ export default function ChoosenProfiles() {
   const handleFavourite = async (profileId) => {
     try {
       await fetch(
-        `{process.env.REACT_APP_API_URL}/host/favouriteProfile/${profileId}`,
+        `${process.env.REACT_APP_API_URL}/host/favouriteProfile/${profileId}`,
         {
           method: "POST",
           credentials: "include",

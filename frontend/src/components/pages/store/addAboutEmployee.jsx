@@ -61,7 +61,7 @@ export default function AddAboutEmployee() {
     const fetchAboutEmployee = async () => {
       try {
         const response = await fetch(
-          `https://hire-sphere.onrender.com/store/addAboutEmployee/${userId}`,
+          `${process.env.REACT_APP_API_URL}/store/addAboutEmployee/${userId}`,
           {
             method: "GET",
             headers: {
@@ -271,7 +271,7 @@ export default function AddAboutEmployee() {
     e.preventDefault();
     try {
       const res = await fetch(
-        `https://hire-sphere.onrender.com/store/addAboutEmployee`,
+        `${process.env.REACT_APP_API_URL}/store/addAboutEmployee`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
