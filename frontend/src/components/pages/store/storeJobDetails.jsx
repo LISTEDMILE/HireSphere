@@ -150,8 +150,15 @@ export default function StoreJobDetails() {
           key={job._id}
           className="bg-[#0d212e80] flex gap-12 flex-col  border-white shadow-md  wrap-break-word rounded-lg p-6 w-[90%] mb-24"
         >
-          <div className="flex justify-end items-center text-2xl  px-8">
-            <div className="flex gap-12 items-center">
+          <div className="flex justify-between items-center text-3xl pr-8">
+                <span></span>
+
+                {job.applied == true && (
+                  <div className="mt-2 flex gap-3">
+                    <label className=" text-gray-400 text-xl">Status:</label>
+                    <p className="text-white text-xl">{job.status}</p>
+                  </div>
+                )}
               <button
                 onClick={() => handleFavourite(job._id)}
                 className={`${
@@ -160,7 +167,7 @@ export default function StoreJobDetails() {
               >
                 {job.fav ? "★" : "☆"}
               </button>
-            </div>
+          
           </div>
           <div className="flex gap-24 ">
             <div className="h-[100px] w-[100px] bg-amber-200"></div>
