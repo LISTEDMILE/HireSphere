@@ -61,7 +61,7 @@ export default function AddAboutEmployee() {
     const fetchAboutEmployee = async () => {
       try {
         const response = await fetch(
-          `https://localhost:3000/store/addAboutEmployee/${userId}`,
+          `https://hire-sphere.onrender.com/store/addAboutEmployee/${userId}`,
           {
             method: "GET",
             headers: {
@@ -270,12 +270,15 @@ export default function AddAboutEmployee() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`https://localhost:3000/store/addAboutEmployee`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `https://hire-sphere.onrender.com/store/addAboutEmployee`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json();
       setErrors(data.errors ? data.errors : null);
       if (!data.errors) {

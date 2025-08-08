@@ -12,7 +12,7 @@ export default function HostProfileDetails() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/host/hostProfileDetails/${profileId}`,
+          `https://hire-sphere.onrender.com/host/hostProfileDetails/${profileId}`,
           {
             method: "GET",
             headers: {
@@ -29,7 +29,7 @@ export default function HostProfileDetails() {
         let profileFetched = data.profile;
 
         const favResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/host/favouriteProfile`,
+          `https://hire-sphere.onrender.com/host/favouriteProfile`,
           {
             method: "GET",
             headers: {
@@ -50,7 +50,7 @@ export default function HostProfileDetails() {
           : { profileFetched, fav: false };
 
         const choosenResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/host/getChoosenProfiles`,
+          `https://hire-sphere.onrender.com/host/getChoosenProfiles`,
           {
             method: "GET",
             headers: {
@@ -98,7 +98,7 @@ export default function HostProfileDetails() {
   const handleFavourite = async (profileId) => {
     try {
       await fetch(
-        `${process.env.REACT_APP_API_URL}/host/favouriteProfile/${profileId}`,
+        `https://hire-sphere.onrender.com/host/favouriteProfile/${profileId}`,
         {
           method: "POST",
           headers: {
@@ -117,7 +117,7 @@ export default function HostProfileDetails() {
   const handleHireProfile = async (profileId) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/host/hireProfile/${profileId}`,
+        `https://hire-sphere.onrender.com/host/hireProfile/${profileId}`,
         {
           method: "POST",
           headers: {

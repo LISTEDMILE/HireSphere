@@ -65,7 +65,7 @@ export default function ProfileForm() {
   const fetchProfileDetails = async () => {
     try {
       const response = await fetch(
-        `https://localhost:3000/store/editProfile/${profileId}`,
+        `https://hire-sphere.onrender.com/store/editProfile/${profileId}`,
         {
           method: "GET",
           headers: {

@@ -13,7 +13,7 @@ export default function StoreOffererJobs() {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          `https://localhost:3000/store/storeOffererJobs/${offererId}`,
+          `https://hire-sphere.onrender.com/store/storeOffererJobs/${offererId}`,
           {
             method: "GET",
             headers: {

@@ -12,7 +12,7 @@ export default function ChoosenProfiles() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/host/onlyChoosenProfiles`,
+          `https://hire-sphere.onrender.com/host/onlyChoosenProfiles`,
           {
             method: "GET",
             credentials: "include",
@@ -34,7 +34,7 @@ export default function ChoosenProfiles() {
         }
 
         const favResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/host/favouriteProfile`,
+          `https://hire-sphere.onrender.com/host/favouriteProfile`,
           {
             method: "GET",
             credentials: "include",
@@ -68,7 +68,7 @@ export default function ChoosenProfiles() {
   const handleHire = async (profileId) => {
     try {
       await fetch(
-        `${process.env.REACT_APP_API_URL}/host/hireProfile/${profileId}`,
+        `https://hire-sphere.onrender.com/host/hireProfile/${profileId}`,
         {
           method: "POST",
           credentials: "include",
@@ -97,7 +97,7 @@ export default function ChoosenProfiles() {
   const handleFavourite = async (profileId) => {
     try {
       await fetch(
-        `${process.env.REACT_APP_API_URL}/host/favouriteProfile/${profileId}`,
+        `https://hire-sphere.onrender.com/host/favouriteProfile/${profileId}`,
         {
           method: "POST",
           credentials: "include",

@@ -15,7 +15,7 @@ export default function StoreProfilesDetails() {
     const fetchProfiles = async () => {
       try {
         const response = await fetch(
-          `https://localhost:3000/store/storeProfileDetails/${profileId}`,
+          `https://hire-sphere.onrender.com/store/storeProfileDetails/${profileId}`,
           {
             method: "GET",
             headers: {
@@ -38,7 +38,7 @@ export default function StoreProfilesDetails() {
   const handleDelete = async (profileId) => {
     try {
       const response = await fetch(
-        `https://localhost:3000/store/deleteProfile/${profileId}`,
+        `https://hire-sphere.onrender.com/store/deleteProfile/${profileId}`,
         {
           method: "POST",
           headers: {

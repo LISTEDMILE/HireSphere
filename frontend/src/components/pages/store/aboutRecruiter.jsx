@@ -22,7 +22,7 @@ export default function AboutRecruiter() {
     const fetchAboutRecruiter = async () => {
       try {
         const response = await fetch(
-          `https://localhost:3000/store/aboutRecruiter/${userId}`,
+          `https://hire-sphere.onrender.com/store/aboutRecruiter/${userId}`,
           {
             method: "GET",
             headers: {
