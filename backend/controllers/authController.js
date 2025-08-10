@@ -330,8 +330,7 @@ exports.postLogOut = (req,res,next) => {
       });
     }
 
-    // Optional: explicitly clear the cookie on the client
-    res.clearCookie("connect.sid"); // use your session cookie name
+    res.clearCookie("connect.sid"); 
 
     return res.status(200).json({
       success: true,
@@ -339,3 +338,56 @@ exports.postLogOut = (req,res,next) => {
     });
   });
 };
+
+
+
+
+
+exports.postDeleteAccount = async (req, res, next) => {
+  try {
+    if (!req.session?.user?._id) {
+      return res.status(401).json({ error: "Unauthorized: Please log in first" });
+    }
+
+    const { password } = req.body;
+    let user;
+
+    if (req.session.user.userType === "recruiter") {
+      user = await UserRecruiter.findOne({ username: req.session.user.username });
+    } else {
+      user = await UserEmployee.findOne({ username: req.session.user.username });
+    }
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ password: "Wrong Credentials" });
+    }
+
+ 
+    if (req.session.user.userType === "recruiter") {
+      await UserRecruiter.findByIdAndDelete(req.session.user._id);
+    } else {
+      await UserEmployee.findByIdAndDelete(req.session.user._id);
+    }
+
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session:", err);
+      }
+      res.clearCookie("connect.sid");
+      res.status(200).json({
+        success: true,
+        message: "Account Deleted Successfully.",
+      });
+    });
+
+  } catch (error) {
+    console.error("Error deleting account", error);
+    res.status(500).json({ error: "Failed to delete account" });
+  }
+};
+

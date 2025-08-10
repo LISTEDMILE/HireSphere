@@ -11,9 +11,9 @@ hostRouter.get("/hostApplications", hostController.getApplications);
 
 hostRouter.post("/deleteJob/:jobId", hostController.postDeleteJob);
 
-hostRouter.delete("/ignoreApplication/:jobId", hostController.ignoreApplication);
-hostRouter.post("/acceptApplication/:jobId", hostController.acceptApplication);
-hostRouter.post("/rejectApplication/:jobId", hostController.rejectApplication);
+hostRouter.delete("/ignoreApplication/:applicationId", hostController.ignoreApplication);
+hostRouter.post("/acceptApplication/:applicationId", hostController.acceptApplication);
+hostRouter.post("/rejectApplication/:applicationId", hostController.rejectApplication);
 
 hostRouter.get("/hostProfileList", hostController.profileList);
 

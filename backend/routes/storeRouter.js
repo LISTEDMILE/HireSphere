@@ -24,9 +24,9 @@ storeRouter.post(
   storeController.postDeleteProfile
 );
 
-storeRouter.delete("/ignoreOffer/:profileId", storeController.ignoreOffer);
-storeRouter.post("/acceptOffer/:profileId", storeController.acceptOffer);
-storeRouter.post("/rejectOffer/:profileId", storeController.rejectOffer);
+storeRouter.delete("/ignoreOffer/:offerId", storeController.ignoreOffer);
+storeRouter.post("/acceptOffer/:offerId", storeController.acceptOffer);
+storeRouter.post("/rejectOffer/:offerId", storeController.rejectOffer);
 storeRouter.get(
   "/storeOffererJobs/:offererId",
   storeController.getStoreOffererJobs

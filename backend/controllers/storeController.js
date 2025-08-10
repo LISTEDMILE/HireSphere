@@ -113,6 +113,7 @@ exports.getOffers = async (req, res, next) => {
           profile: profile,
           offeredBy: offeredBy,
           status: detail.status,
+          _id:detail._id
         };
       })
     );
@@ -130,9 +131,9 @@ exports.getOffers = async (req, res, next) => {
 };
 
 exports.ignoreOffer = async (req, res, next) => {
-  const profileId = req.params.profileId;
+  const offerId = req.params.offerId;
   if (
-    !profileId ||
+    !offerId ||
     !req.session ||
     !req.session.user ||
     !req.session.user._id
@@ -150,26 +151,20 @@ exports.ignoreOffer = async (req, res, next) => {
       return res.status(404).json({ error: "User not found" });
     }
     const offer = user.offers.find(
-      (off) => off.profile.toString() === profileId
+      (off) => off._id.toString() === offerId
     );
+  
     user.offers = user.offers.filter(
-      (offer) => offer.profile._id.toString() !== profileId
+      (offer) => offer._id.toString() !== offerId
     );
     const userRecruiter = await UserRecruiter.findById(offer.offeredBy);
     userRecruiter.choosenProfiles = userRecruiter.choosenProfiles.map((off) => {
-      if (off.Ids == profileId) {
+      if (off.Ids.toString() == offer.profile.toString()) {
         return { ...off, status: "ignored" };
       } else {
         return off;
       }
     });
-    user.acceptedOffers = user.acceptedOffers.filter(
-      (offer) => offer._id.toString() !== profileId
-    );
-    user.rejectedOffers = user.rejectedOffers.filter(
-      (offer) => offer._id.toString() !== profileId
-    );
-
     await userRecruiter.save();
     await user.save();
     return res.status(200).json({ message: "Offer ignored successfully" });
@@ -180,9 +175,9 @@ exports.ignoreOffer = async (req, res, next) => {
 };
 
 exports.acceptOffer = async (req, res, next) => {
-  const profileId = req.params.profileId;
+  const offerId = req.params.offerId;
   if (
-    !profileId ||
+    !offerId ||
     !req.session ||
     !req.session.user ||
     !req.session.user._id
@@ -200,7 +195,7 @@ exports.acceptOffer = async (req, res, next) => {
       return res.status(404).json({ error: "User not found" });
     }
     const offer = user.offers.find(
-      (offer) => offer.profile._id.toString() === profileId
+      (offer) => offer._id.toString() === offerId
     );
     if (!offer) {
       return res.status(404).json({ error: "Offer not found" });
@@ -210,18 +205,12 @@ exports.acceptOffer = async (req, res, next) => {
     if (!userRecruiter) {
       return res.status(404).json({ error: "Offer provider not found" });
     }
-    if (!user.acceptedOffers.includes(profileId)) {
-      user.acceptedOffers.push(profileId);
-    }
-    if (user.rejectedOffers.includes(profileId)) {
-      user.rejectedOffers = user.rejectedOffers.filter(
-        (offer) => offer._id.toString() !== profileId
-      );
-    }
+   
     userRecruiter.choosenProfiles = userRecruiter.choosenProfiles.map((off) => {
-      if (off.Ids == profileId) {
+      if (off.Ids.toString() == offer.profile.toString()) {
         return { ...off, status: "accepted" };
       } else {
+        
         return off;
       }
     });
@@ -235,9 +224,9 @@ exports.acceptOffer = async (req, res, next) => {
 };
 
 exports.rejectOffer = async (req, res, next) => {
-  const profileId = req.params.profileId;
+  const offerId = req.params.offerId;
   if (
-    !profileId ||
+    !offerId ||
     !req.session ||
     !req.session.user ||
     !req.session.user._id
@@ -255,7 +244,7 @@ exports.rejectOffer = async (req, res, next) => {
       return res.status(404).json({ error: "User not found" });
     }
     const offer = user.offers.find(
-      (offer) => offer.profile.toString() === profileId
+      (offer) => offer._id.toString() === offerId
     );
     if (!offer) {
       return res.status(404).json({ error: "Offer not found" });
@@ -265,16 +254,9 @@ exports.rejectOffer = async (req, res, next) => {
     if (!userRecruiter) {
       return res.status(404).json({ error: "Offer provider not found" });
     }
-    if (!user.rejectedOffers.includes(profileId)) {
-      user.rejectedOffers.push(profileId);
-    }
-    if (user.acceptedOffers.includes(profileId)) {
-      user.acceptedOffers = user.acceptedOffers.filter(
-        (offer) => offer._id.toString() !== profileId
-      );
-    }
+   
     userRecruiter.choosenProfiles = userRecruiter.choosenProfiles.map((off) => {
-      if (off.Ids == profileId) {
+      if (off.Ids.toString() == offer.profile.toString()) {
         return { ...off, status: "rejected" };
       } else {
         return off;

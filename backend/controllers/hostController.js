@@ -1,9 +1,10 @@
 const Job = require("../models/firstmodel");
+const Profile = require("../models/firstProfilemodel");
 const UserEmployee = require("../models/userEmployee");
 const UserRecruiter = require("../models/userRecruiter");
 const { check, validationResult } = require("express-validator");
 
-const Profile = require("../models/firstProfilemodel");
+
 const { jobList } = require("./storeController");
 
 exports.addJobPost = [
@@ -258,6 +259,7 @@ exports.getApplications = async (req, res, next) => {
           job: job,
           applierProfile: applier,
           status: detail.status,
+          _id:detail._id
         };
       })
     );
@@ -275,7 +277,7 @@ exports.getApplications = async (req, res, next) => {
 };
 
 exports.ignoreApplication = async (req, res, next) => {
-  const jobId = req.params.jobId;
+  const applicationId = req.params.applicationId;
   if (!req.session || !req.session.user || !req.session.user._id) {
     return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
@@ -286,27 +288,22 @@ exports.ignoreApplication = async (req, res, next) => {
       return res.status(404).json({ error: "User not found" });
     }
     const application = user.applications.find(
-      (app) => app.job.toString() === jobId
+      (app) => app._id.toString() === applicationId
     );
     user.applications = user.applications.filter(
-      (app) => app.job.toString() !== jobId
+      (app) => app._id.toString() !== applicationId
     );
     const userEmployee = await UserEmployee.findById(
       application.applierProfile
     );
     userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
-      if (appl.Ids == jobId) {
+      if (appl.Ids.toString() == application.job.toString()) {
         return { ...appl, status: "ignored" };
       } else {
         return appl;
       }
     });
-    user.acceptedJobs = user.acceptedJobs.filter(
-      (job) => job.toString() !== jobId
-    );
-    user.rejectedJobs = user.rejectedJobs.filter(
-      (job) => job.toString() !== jobId
-    );
+  
     await userEmployee.save();
     await user.save();
     return res
@@ -319,7 +316,7 @@ exports.ignoreApplication = async (req, res, next) => {
 };
 
 exports.acceptApplication = async (req, res, next) => {
-  const jobId = req.params.jobId;
+  const applicationId = req.params.applicationId;
   if (!req.session || !req.session.user || !req.session.user._id) {
     return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
@@ -328,8 +325,9 @@ exports.acceptApplication = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+   
     const application = user.applications.find(
-      (app) => app.job.toString() === jobId
+      (app) => app._id.toString() === applicationId 
     );
     if (!application) {
       return res.status(404).json({ error: "Application not found" });
@@ -341,16 +339,9 @@ exports.acceptApplication = async (req, res, next) => {
     if (!userEmployee) {
       return res.status(404).json({ error: "Applier not found" });
     }
-    if (!user.acceptedJobs.includes(jobId)) {
-      user.acceptedJobs.push(jobId); // Add the job to the accepted jobs of the applier
-    }
-    if (user.rejectedJobs.includes(jobId)) {
-      user.rejectedJobs = user.rejectedJobs.filter(
-        (job) => job.toString() !== jobId
-      ); // Remove the job from rejected jobs if it was rejected
-    }
+    
     userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
-      if (appl.Ids == jobId) {
+      if (appl.Ids.toString() == application.job.toString()) {
         return { ...appl, status: "accepted" };
       } else {
         return appl;
@@ -368,7 +359,7 @@ exports.acceptApplication = async (req, res, next) => {
 };
 
 exports.rejectApplication = async (req, res, next) => {
-  const jobId = req.params.jobId;
+  const applicationId = req.params.applicationId;
   if (!req.session || !req.session.user || !req.session.user._id) {
     return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
@@ -378,7 +369,7 @@ exports.rejectApplication = async (req, res, next) => {
       return res.status(404).json({ error: "User not found" });
     }
     const application = user.applications.find(
-      (app) => app.job.toString() === jobId
+      (app) => app._id.toString() === applicationId
     );
     if (!application) {
       return res.status(404).json({ error: "Application not found" });
@@ -390,17 +381,9 @@ exports.rejectApplication = async (req, res, next) => {
     if (!userEmployee) {
       return res.status(404).json({ error: "Applier not found" });
     }
-    if (user.acceptedJobs.includes(jobId)) {
-      user.acceptedJobs = user.acceptedJobs.filter(
-        (job) => job.toString() !== jobId
-      ); // Remove the job from accepted jobs if it was accepted
-    }
-
-    if (!user.rejectedJobs.includes(jobId)) {
-      user.rejectedJobs.push(jobId); // Add the job to the rejected jobs of the applier
-    }
+    
     userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
-      if (appl.Ids == jobId) {
+      if (appl.Ids.toString() == application.job.toString()) {
         return { ...appl, status: "rejected" };
       } else {
         return appl;

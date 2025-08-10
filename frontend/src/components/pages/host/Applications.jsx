@@ -36,9 +36,9 @@ export default function Applications() {
   }, []);
 
   // Handle Reject Application
-  const handleIgnore = async (jobId) => {
+  const handleIgnore = async (applicationId) => {
     try {
-      await fetch(`${apiURL}/host/ignoreApplication/${jobId}`, {
+      await fetch(`${apiURL}/host/ignoreApplication/${applicationId}`, {
         method: "DELETE",
         credentials: "include",
         headers: {
@@ -47,16 +47,16 @@ export default function Applications() {
       });
 
       setApplications((prevApplications) =>
-        prevApplications.filter((application) => application.job._id !== jobId)
+        prevApplications.filter((application) => application._id !== applicationId)
       ); // Remove the rejected application from the list
     } catch (error) {
       console.error("Error rejecting application:", error);
     }
   };
 
-  const handleAccept = async (jobId) => {
+  const handleAccept = async (applicationId) => {
     try {
-      await fetch(`${apiURL}/host/acceptApplication/${jobId}`, {
+      await fetch(`${apiURL}/host/acceptApplication/${applicationId}`, {
         method: "POST",
 
         credentials: "include",
@@ -67,7 +67,7 @@ export default function Applications() {
       setApplications(
         (prevApplications) =>
           prevApplications.map((application) =>
-            application.job._id == jobId
+            application._id == applicationId
               ? { ...application, status: "accepted" }
               : application
           ) // Mark the application as accepted
@@ -77,9 +77,9 @@ export default function Applications() {
     }
   };
 
-  const handleReject = async (jobId) => {
+  const handleReject = async (applicationId) => {
     try {
-      await fetch(`${apiURL}/host/rejectApplication/${jobId}`, {
+      await fetch(`${apiURL}/host/rejectApplication/${applicationId}`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -89,7 +89,7 @@ export default function Applications() {
       setApplications(
         (prevApplications) =>
           prevApplications.map((application) =>
-            application.job._id == jobId
+            application._id == applicationId
               ? { ...application, status: "rejected" }
               : application
           ) // Mark the application as rejected
@@ -111,7 +111,7 @@ export default function Applications() {
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
           {applications.map((application) => (
             <li
-              key={application.job._id}
+              key={application._id}
               className="bg-[#0d212e80] flex gap-12 flex-col  border-white shadow-md  wrap-break-word rounded-lg p-6 w-[70%]"
             >
               <div className="flex justify-end items-center text-2xl gap-12 pr-8">
@@ -230,14 +230,14 @@ export default function Applications() {
                 {application.status !== "rejected" && (
                   <button
                     className="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded mt-4"
-                    onClick={() => handleReject(application.job._id)}
+                    onClick={() => handleReject(application._id)}
                   >
                     Reject
                   </button>
                 )}
                 {application.status !== "accepted" && (
                   <button
-                    onClick={() => handleAccept(application.job._id)} // Replace with your accept function
+                    onClick={() => handleAccept(application._id)} // Replace with your accept function
                     className="bg-green-700 hover:bg-green-900 text-white px-4 py-2 rounded mt-4 ml-2"
                   >
                     Accept
@@ -245,7 +245,7 @@ export default function Applications() {
                 )}
 
                 <button
-                  onClick={() => handleIgnore(application.job._id)}
+                  onClick={() => handleIgnore(application._id)}
                   className="bg-cyan-700 hover:bg-cyan-900 text-white px-4 py-2 rounded mt-4 ml-2"
                 >
                   Ignore

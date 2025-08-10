@@ -36,7 +36,7 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: "NodeJs",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
     store: store,
@@ -44,6 +44,7 @@ app.use(
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // true in prod (HTTPS only)
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 1000 * 60 * 60 * 24,
     }
   })
 );

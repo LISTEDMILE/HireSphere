@@ -95,4 +95,15 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.pre("findOneAndDelete", async function (next) {
+  
+const Job = require("../models/firstmodel");
+  const userId = new mongoose.Types.ObjectId(this.getQuery()["_id"]);
+  const jobIds = await Job.find({jobUploader:userId});
+ await Promise.all(jobIds.map(jobId =>  Job.findByIdAndDelete(jobId._id)
+  ));
+  next();
+})
+
+
 module.exports = mongoose.model("UserRecruiter", userSchema);

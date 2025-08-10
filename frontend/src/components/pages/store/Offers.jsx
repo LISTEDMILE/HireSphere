@@ -44,16 +44,16 @@ export default function Offers() {
       });
 
       setOffers((prevOffers) =>
-        prevOffers.filter((offer) => offer.profile._id !== offerId)
+        prevOffers.filter((offer) => offer._id !== offerId)
       ); // Remove the ignored offer from the list
     } catch (error) {
       console.error("Error ignoring offer:", error);
     }
   };
 
-  const handleAccept = async (profileId) => {
+  const handleAccept = async (offerId) => {
     try {
-      await fetch(`${apiURL}/store/acceptOffer/${profileId}`, {
+      await fetch(`${apiURL}/store/acceptOffer/${offerId}`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -62,7 +62,7 @@ export default function Offers() {
       });
       setOffers((prevOffers) =>
         prevOffers.map((offer) =>
-          offer.profile._id == profileId
+          offer._id == offerId
             ? { ...offer, status: "accepted" }
             : offer
         )
@@ -72,9 +72,9 @@ export default function Offers() {
     }
   };
 
-  const handleReject = async (profileId) => {
+  const handleReject = async (offerId) => {
     try {
-      await fetch(`${apiURL}/store/rejectOffer/${profileId}`, {
+      await fetch(`${apiURL}/store/rejectOffer/${offerId}`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -83,7 +83,7 @@ export default function Offers() {
       });
       setOffers((prevOffers) =>
         prevOffers.map((offer) =>
-          offer.profile._id == profileId
+          offer._id == offerId
             ? { ...offer, status: "rejected" }
             : offer
         )
@@ -104,7 +104,7 @@ export default function Offers() {
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
           {offers.map((offer) => (
             <li
-              key={offer.profile._id}
+              key={offer._id}
               className="bg-[#0d212e80] rounded-2xl shadow-md p-6 flex flex-col w-full justify-between "
             >
               <div className="flex justify-end items-center text-2xl gap-12 pr-8">
@@ -178,8 +178,11 @@ export default function Offers() {
                 </div>
               </div>
 
-              <div className="w-full mt-6 flex justify-center ">
-                <div className="flex  w-[90%] justify-end items-center mt-4">
+              <div className="mt-4 flex justify-between">
+                <div className="flex gap-3 items-center ml-6">
+                  <span className="text-gray-400 text-xl"> Status:</span>
+                  <p className="text-cyan-300 text-xl">{offer.status}</p>
+                </div>
                   <Link
                     to={`/store/storeProfileDetails/${offer.profile._id}`}
                     className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg mr-4 "
@@ -187,7 +190,8 @@ export default function Offers() {
                     Details
                   </Link>
                 </div>
-              </div>
+             
+      
 
               {/*offeredBy */}
               <div className="mt-6 bg-[#0e201c8f] flex flex-col gap-3 p-8 rounded-lg shadow-inner">
@@ -240,14 +244,14 @@ export default function Offers() {
 
               <div className="flex mt-6 items-center justify-end pr-6 gap-3">
                 <button
-                  onClick={() => handleIgnore(offer.profile._id)}
+                  onClick={() => handleIgnore(offer._id)}
                   className="bg-cyan-700 hover:bg-cyan-900 text-white px-4 py-2 rounded mt-4 ml-2"
                 >
                   Ignore
                 </button>
                 {offer.status !== "accepted" && (
                   <button
-                    onClick={() => handleAccept(offer.profile._id)}
+                    onClick={() => handleAccept(offer._id)}
                     className="bg-green-700 hover:bg-green-900 text-white px-4 py-2 rounded mt-4 ml-2"
                   >
                     Accept
@@ -255,7 +259,7 @@ export default function Offers() {
                 )}
                 {offer.status !== "rejected" && (
                   <button
-                    onClick={() => handleReject(offer.profile._id)}
+                    onClick={() => handleReject(offer._id)}
                     className="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded mt-4"
                   >
                     Reject

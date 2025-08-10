@@ -10,6 +10,7 @@ const NavHome = () => {
     (store) => store.userInfo
   );
   const [navOpen, setNavOpen] = useState(false);
+  const [pass, setPass] = useState("");
 
   const LogOut = async () => {
     const response = await fetch(`${apiURL}/api/logout`, {
@@ -29,6 +30,25 @@ const NavHome = () => {
       alert(data.errors);
     }
     
+  }
+
+  const DeleteAccount = async () => {
+    const response = await fetch(`${apiURL}/api/deleteAccount`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ password: pass })
+    })
+    const data = await response.json();
+    if (data.success == true) {
+      navigate("/");
+      window.location.reload();
+   }
+   else  {
+      alert("Wrong Credentials");
+   }
   }
 
   return (
@@ -180,7 +200,7 @@ const NavHome = () => {
             className="hover:underline hover:text-red-100 bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
           >
-            Choosens
+            Selected
           </a>
         </div>
       )}
@@ -259,7 +279,10 @@ const NavHome = () => {
                 </div>
 
               <button onClick={() => LogOut()}
-              className="bg-cyan-800 hover:bg-cyan-950 hover:cursor-pointer py-2 px-4 rounded-lg">Logout</button>
+                className="bg-cyan-800 hover:bg-cyan-950 hover:cursor-pointer py-2 px-4 rounded-lg">Logout</button>
+              <button onClick={() => DeleteAccount()}
+                className="bg-cyan-800 hover:bg-cyan-950 hover:cursor-pointer py-2 px-4 rounded-lg">Delete Account </button>
+              <input type="text" onChange={(e) => setPass(e.target.value)}/>
             </div>
           )}
         </>
