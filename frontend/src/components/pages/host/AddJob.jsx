@@ -26,7 +26,6 @@ export default function AddJob() {
     jobEmploymentType: [],
     jobExperienceRequired: "",
     jobSkills: [],
-    jobCompanyLogo: "",
     jobType: [],
     jobIndustry: "",
     jobTags: [],
@@ -336,18 +335,7 @@ export default function AddJob() {
             </div>
           </div>
 
-          <div className="w-full">
-            <label className="block text-gray-400 font-medium mb-2">
-              Company Logo
-            </label>
-            <input
-              name="jobCompanyLogo"
-              value={formData.jobCompanyLogo}
-              onChange={handleChange}
-              placeholder="Company Logo"
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
+        
 
           <div className="w-full">
             <label className="block text-gray-400 font-medium mb-2">

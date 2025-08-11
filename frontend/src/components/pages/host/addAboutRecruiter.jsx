@@ -73,26 +73,33 @@ export default function AddAboutRecruiter() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    const fd = new FormData();
+    
+    // Add normal fields
+    for (let key in formData) {
+      if (Array.isArray(formData[key])) {
+        formData[key].forEach((item) => fd.append(key, item)); // arrays
+      } else {
+        fd.append(key, formData[key]);
+      }
+    }
+  
     try {
       let response = await fetch(`${apiURL}/host/addAboutRecruiter`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         credentials: "include",
-        body: JSON.stringify(formData),
+        body: fd, // No JSON.stringify, no headers
       });
+  
       const data = await response.json();
-
       setErrors(data.errors ? data.errors : null);
-      if (!data.errors) {
-        setMessage("Profile Updated Successfully");
-      }
+      if (!data.errors) setMessage("Profile Updated Successfully");
     } catch (error) {
       console.error("Error submitting:", error);
     }
   };
-
+  
   return (
     <div className=" flex flex-col bg-black text-white items-center ">
       <NavHome />
@@ -114,14 +121,12 @@ export default function AddAboutRecruiter() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-12 ">
+        <form onSubmit={handleSubmit} enctype="multipart/form-data" className="flex flex-col gap-12 ">
           <div className="flex flex-col gap-5 ">
             {[
               { field: "fullName", placeholder: "Full Name" },
-              { field: "profilePicture", placeholder: "Profile Picture" },
               { field: "designation", placeholder: "Designation" },
               { field: "company", placeholder: "Company" },
-              { field: "companyLogo", placeholder: "Company Logo" },
               { field: "companyWebsite", placeholder: "Company Website" },
               { field: "email", placeholder: "Email" },
               { field: "linkedIn", placeholder: "Linked In Url" },
@@ -139,6 +144,21 @@ export default function AddAboutRecruiter() {
                 </div>
               );
             })}
+
+
+<div className="flex flex-col gap-2">
+                  <label className="text-gray-400 text-lg">Profile Picture</label>
+              <input
+                type="file"
+                    name="profilePicture"
+                    onChange={(e) =>
+                      setFormData({ ...formData, profilePicture: e.target.files[0] })
+                    }
+                accept="image/*"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+            </div> 
+            
           </div>
 
           <input type="hidden" name="_id" value={formData._id} />

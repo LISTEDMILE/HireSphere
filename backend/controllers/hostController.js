@@ -2,10 +2,10 @@ const Job = require("../models/firstmodel");
 const Profile = require("../models/firstProfilemodel");
 const UserEmployee = require("../models/userEmployee");
 const UserRecruiter = require("../models/userRecruiter");
+const fs = require("fs");
+const path = require("path");
 const { check, validationResult } = require("express-validator");
 
-
-const { jobList } = require("./storeController");
 
 exports.addJobPost = [
   check("jobCompany").notEmpty().withMessage("Job Company is required").trim(),
@@ -72,7 +72,6 @@ exports.addJobPost = [
         existingJob.jobEmploymentType = jobToAdd.jobEmploymentType;
         existingJob.jobExperienceRequired = jobToAdd.jobExperienceRequired;
         existingJob.jobSkills = jobToAdd.jobSkills;
-        existingJob.jobCompanyLogo = jobToAdd.jobCompanyLogo;
         existingJob.jobType = jobToAdd.jobType;
         existingJob.jobIndustry = jobToAdd.jobIndustry;
         existingJob.jobTags = jobToAdd.jobTags;
@@ -118,14 +117,12 @@ check("rolesHiring")
   async (req, res) => {
     const errors = validationResult(req);
     const data = req.body;
-
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array().map((err) => err.msg),
-        oldInput: {
-          ...data,
-        },
+        oldInput: {...data}
       });
+
     }
 
     try {
@@ -141,9 +138,25 @@ check("rolesHiring")
           .json({ errors: ["Access denied. Only Recruiters can update."] });
       }
 
-      user.aboutRecruiter = {
-        ...data,
-      };
+      let profilePath;
+      
+      if (req.file) {
+        profilePath = `/uploads/${req.file.filename}`;
+        const oldImagePath = path.join(__dirname, `..${user.aboutRecruiter.profilePicture}`);
+        fs.unlink(oldImagePath, (error) => {
+          if (error) {
+            console.log("Error uploading image",error);
+          }
+        })
+      }
+      else if(user.aboutRecruiter.profilePicture){
+        profilePath = user.aboutRecruiter.profilePicture;
+      }
+      else {
+        profilePath = null;
+      }
+
+      user.aboutRecruiter = {...data, profilePicture:profilePath};
 
       await user.save();
 
@@ -188,7 +201,6 @@ exports.getEditJob = async (req, res, next) => {
             jobEmploymentType: job.jobEmploymentType,
             jobExperienceRequired: job.jobExperienceRequired,
             jobSkills: job.jobSkills,
-            jobCompanyLogo: job.jobCompanyLogo,
             jobType: job.jobType,
             jobIndustry: job.jobIndustry,
             jobTags: job.jobTags,

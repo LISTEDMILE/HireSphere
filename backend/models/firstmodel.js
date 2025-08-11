@@ -48,9 +48,6 @@ const jobSchema = new mongoose.Schema({
     type: String,
   },
   jobSkills: [{ type: String }],
-  jobCompanyLogo: {
-    type: String,
-  },
   jobType: [
     {
       type: String,
@@ -87,14 +84,6 @@ const UserRecruiter = require("../models/userRecruiter");
   await UserRecruiter.findOneAndUpdate(
     { "applications.job": jobId },
     { $pull: { applications: { job: jobId } } }
-  );
-  await UserRecruiter.findOneAndUpdate(
-    { acceptedJobs: jobId },
-    { $pull: { acceptedJobs: jobId } }
-  );
-  await UserRecruiter.findOneAndUpdate(
-    { rejectedJobs: jobId },
-    { $pull: { rejectedJobs: jobId } }
   );
   next();
 });

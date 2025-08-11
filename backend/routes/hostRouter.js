@@ -1,6 +1,8 @@
 const express = require("express");
 const hostController = require("../controllers/hostController");
 const hostRouter = express.Router();
+const upload = require("../utils/uploadUtils");
+
 
 hostRouter.post("/addJob", hostController.addJobPost);
 hostRouter.get("/hostJobList", hostController.hostJobList);
@@ -42,7 +44,10 @@ hostRouter.get(
   "/addAboutRecruiter/:userId",
   hostController.getAddAboutRecruiter
 );
-hostRouter.post("/addAboutRecruiter", hostController.postAddAboutRecruiter);
+ 
+
+hostRouter.post("/addAboutRecruiter", upload.single("profilePicture"), hostController.postAddAboutRecruiter);
+
 hostRouter.get("/aboutEmployee/:userId", hostController.getAboutEmployee);
 
 module.exports = hostRouter;

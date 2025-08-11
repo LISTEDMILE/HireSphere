@@ -112,15 +112,7 @@ profileSchema.pre("findOneAndDelete", async function (next) {
     { "offers.profile": profileId },
     { $pull: { offers: { profile: profileId } } }
   );
-  await UserEmployee.findOneAndUpdate(
-    { acceptedOffers: profileId },
-    { $pull: { acceptedOffers: profileId } }
-  );
-
-  await UserEmployee.findOneAndUpdate(
-    { rejectedOffers: profileId },
-    { $pull: { rejectedOffers: profileId } }
-  );
+ 
   next();
 });
 

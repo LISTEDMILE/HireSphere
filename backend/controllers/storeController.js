@@ -3,6 +3,8 @@ const UserEmployee = require("../models/userEmployee");
 const UserRecruiter = require("../models/userRecruiter");
 const { check, validationResult } = require("express-validator");
 const Profile = require("../models/firstProfilemodel");
+const path = require("path");
+const fs = require("fs");
 
 exports.jobList = (req, res, next) => {
   const details = Job.find()
@@ -570,54 +572,6 @@ exports.addProfilePost = [
 ];
 
 exports.postAddAboutEmployee = [
-  // check("profileName")
-  //   .notEmpty()
-  //   .withMessage("Profile Name is required")
-  //   .trim(),
-  // check("profileGender")
-  //   .notEmpty()
-  //   .withMessage("Profile Gender is required")
-  //   .trim(),
-  // check("profilePost")
-  //   .notEmpty()
-  //   .withMessage("Profile Post is required")
-  //   .trim(),
-  // check("profileCourse")
-  //   .notEmpty()
-  //   .withMessage("Profile Course is required")
-  //   .trim(),
-  // check("profileSkills")
-  //   .notEmpty()
-  //   .withMessage("Profile Skills is required")
-  //   .trim(),
-  // check("profileEmail")
-  //   .isEmail()
-  //   .withMessage("Profile Email is required")
-  //   .normalizeEmail(),
-  // check("profileMobile")
-  //   .notEmpty()
-  //   .withMessage("Profile Mobile is required")
-  //   .trim(),
-  // check("profileTenth")
-  //   .notEmpty()
-  //   .withMessage("Profile Tenth is required")
-  //   .trim(),
-  // check("profileTwelth")
-  //   .notEmpty()
-  //   .withMessage("Profile Twelth is required")
-  //   .trim(),
-  // check("profileGraduation")
-  //   .notEmpty()
-  //   .withMessage("Profile Graduation is required")
-  //   .trim(),
-  // check("profileDescription")
-  //   .notEmpty()
-  //   .withMessage("Profile Description is required")
-  //   .trim(),
-  // check("profilePostDescription")
-  //   .notEmpty()
-  //   .withMessage("Profile Post Description is required")
-  //   .trim(),
 
   async (req, res) => {
     const errors = validationResult(req);
@@ -638,21 +592,40 @@ exports.postAddAboutEmployee = [
         oldInput: { ...data },
       });
     }
-
+    const user = await UserEmployee.findById(req.session.user._id);
+    if (!user) {
+      return res.status(404).json({ errors: ["User not found"] });
+    }
     try {
-      const user = await UserEmployee.findById(req.session.user._id);
+    let profilePath;
+     if (req.file) {
+            profilePath = `/uploads/${req.file.filename}`;
+            const oldImagePath = path.join(__dirname, `..${user.aboutEmployee.profilePicture}`);
+            fs.unlink(oldImagePath, (error) => {
+              if (error) {
+                console.log("Error uploading image",error);
+              }
+            })
+          }
+          else if(user.aboutEmployee.profilePicture){
+            profilePath = user.aboutEmployee.profilePicture;
+          }
+          else {
+            profilePath = null;
+          }
 
-      if (!user) {
-        return res.status(404).json({ errors: ["User not found"] });
-      }
+   
+      
 
-      user.aboutEmployee = { ...data };
+      
+
+      user.aboutEmployee = { ...data, profilePicture:profilePath };
 
       await user.save();
       return res.status(201).json({
         message: "Profile Updated Successfully",
       });
-    } catch (er) {
+    } catch (err) {
       console.error(err);
       return res.status(500).json({
         errors: ["Something went wrong"],

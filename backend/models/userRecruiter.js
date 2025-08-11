@@ -79,18 +79,7 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-    acceptedJobs: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Job",
-      },
-    ],
-    rejectedJobs: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Job",
-      },
-    ],
+    
   },
   { timestamps: true }
 );

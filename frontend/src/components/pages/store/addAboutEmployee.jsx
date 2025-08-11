@@ -270,13 +270,25 @@ export default function AddAboutEmployee() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    const fd = new FormData();
+    
+    // Add normal fields
+    for (let key in formData) {
+      if (Array.isArray(formData[key])) {
+        formData[key].forEach((item) => fd.append(key, item)); // arrays
+      } else {
+        fd.append(key, formData[key]);
+      }
+    }
+
     try {
       const res = await fetch(`${apiURL}/store/addAboutEmployee`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(formData),
+        body: fd, // No JSON.stringify, no headers
       });
+      
       const data = await res.json();
       setErrors(data.errors ? data.errors : null);
       if (!data.errors) {
@@ -291,14 +303,13 @@ export default function AddAboutEmployee() {
     <div className="flex flex-col items-center w-full bg-black text-white">
       <NavHome />
       <h1 className="text-3xl font-bold my-6 text-center">Your Profile</h1>
-      <form
+      <form enctype="multipart/form-data"
         onSubmit={handleSubmit}
         className="w-[80%] p-8 bg-emerald-950 rounded-lg flex flex-col gap-8"
       >
         <div className="flex flex-col gap-5 ">
           {[
             { field: "fullName", placeholder: "Full Name" },
-            { field: "profilePicture", placeholder: "Profile Picture" },
             { field: "profession", placeholder: "Profession" },
             { field: "location", placeholder: "Location" },
             { field: "email", placeholder: "Email" },
@@ -319,6 +330,19 @@ export default function AddAboutEmployee() {
               </div>
             );
           })}
+
+<div className="flex flex-col gap-2">
+                  <label className="text-gray-400 text-lg">Profile Picture</label>
+              <input
+                type="file"
+                    name="profilePicture"
+                    onChange={(e) =>
+                      setFormData({ ...formData, profilePicture: e.target.files[0] })
+                    }
+                accept="image/*"
+                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+            </div> 
         </div>
 
         <div className="flex flex-col gap-3">

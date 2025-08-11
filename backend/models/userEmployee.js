@@ -126,18 +126,7 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
-    acceptedOffers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Profile",
-      },
-    ],
-    rejectedOffers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Profile",
-      },
-    ],
+   
   },
   { timestamps: true }
 );
