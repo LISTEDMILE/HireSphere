@@ -2,6 +2,8 @@ const { check, validationResult } = require("express-validator");
 const UserEmployee = require("../models/userEmployee");
 const UserRecruiter = require("../models/userRecruiter");
 const bcrypt = require("bcryptjs");
+const path = require("path");
+const fs = require("fs");
 
 exports.postSignUp = [
   check("firstname")
@@ -339,10 +341,6 @@ exports.postLogOut = (req,res,next) => {
   });
 };
 
-
-
-
-
 exports.postDeleteAccount = async (req, res, next) => {
   try {
     if (!req.session?.user?._id) {
@@ -367,10 +365,27 @@ exports.postDeleteAccount = async (req, res, next) => {
       return res.status(401).json({ password: "Wrong Credentials" });
     }
 
+    
  
     if (req.session.user.userType === "recruiter") {
+      if (user.aboutRecruiter.profilePicture && user.aboutRecruiter.profilePicture !== null) {
+        const oldImagePath = path.join(__dirname, `..${user.aboutRecruiter.profilePicture}`);
+        fs.unlink(oldImagePath, (error) => {
+          if (error) {
+            console.log("Error uploading image", error);
+          }
+        })
+      }
       await UserRecruiter.findByIdAndDelete(req.session.user._id);
     } else {
+      if (user.aboutEmployee.profilePicture && user.aboutEmployee.profilePicture !== null) {
+        const oldImagePath = path.join(__dirname, `..${user.aboutEmployee.profilePicture}`);
+        fs.unlink(oldImagePath, (error) => {
+          if (error) {
+            console.log("Error uploading image", error);
+          }
+        })
+      }
       await UserEmployee.findByIdAndDelete(req.session.user._id);
     }
 

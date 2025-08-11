@@ -130,9 +130,7 @@ export default function Offers() {
                   </button>
                 </form>
               </div>
-              <div className="flex gap-24 ">
-                <div className="h-[100px] w-[100px] bg-amber-200"></div>
-                <div className="w-full flex flex-col gap-4">
+              <div className="w-full flex flex-col gap-4 pl-16">
                   <h2 className="text-3xl text-cyan-400 font-semibold">
                     {offer.profile.profilePost}
                   </h2>
@@ -162,7 +160,7 @@ export default function Offers() {
                     </p>
                   </div>
                 </div>
-              </div>
+
               <div className="w-full mt-8 flex justify-center">
                 <div className=" flex gap-6 w-[80%] flex-col ">
                   <label className=" text-gray-400 font-medium">Skills:</label>

@@ -51,6 +51,8 @@ export default function AddAboutRecruiter() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setErrors(null);
+    setMessage(null);
   };
 
   const handleArrayAdd = (e, field, value) => {
@@ -122,6 +124,9 @@ export default function AddAboutRecruiter() {
         )}
 
         <form onSubmit={handleSubmit} enctype="multipart/form-data" className="flex flex-col gap-12 ">
+           <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
+                 
+                    className="w-[250px] h-[250px] self-center rounded-full mb-6" />
           <div className="flex flex-col gap-5 ">
             {[
               { field: "fullName", placeholder: "Full Name" },

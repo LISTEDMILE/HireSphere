@@ -55,6 +55,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use("/uploads",require("cors")(), express.static(path.join(__dirname, "uploads")));
+
 app.use("/", authRouter);
 app.use("/host", hostRouter);
 app.use("/store", storeRouter);

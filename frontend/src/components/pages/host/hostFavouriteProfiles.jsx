@@ -166,9 +166,9 @@ export default function FavouriteProfileList() {
                   {detail.fav ? "★" : "☆"}
                 </button>
               </div>
-              <div className="flex gap-24 ">
-                <div className="h-[100px] w-[100px] bg-amber-200"></div>
-                <div className="w-full flex flex-col gap-4">
+              
+               
+                <div className="w-full flex flex-col gap-4 pl-16">
                   <h2 className="text-3xl text-cyan-400 font-semibold">
                     {detail.profilePost}
                   </h2>
@@ -196,7 +196,7 @@ export default function FavouriteProfileList() {
                     </p>
                   </div>
                 </div>
-              </div>
+             
               <div className="w-full flex-col  mt-8 px-24 flex">
                 <div className=" flex gap-6 w-full flex-col ">
                   <label className=" text-gray-400 font-medium">Skills:</label>

@@ -140,9 +140,9 @@ export default function AppliedJobs() {
                   {job.fav ? "★" : "☆"}
                 </button>
               </div>
-              <div className="flex gap-24 ">
-                <div className="h-[100px] w-[100px] bg-amber-200"></div>
-                <div className="w-full flex flex-col gap-4">
+    
+               
+                <div className="w-full flex flex-col gap-4 pl-16">
                   <h2 className="text-3xl text-cyan-400 font-semibold">
                     {job.jobPost}
                   </h2>
@@ -197,7 +197,7 @@ export default function AppliedJobs() {
                     </Link>
                   </div>
                 </div>
-              </div>
+          
 
               <div className="mt-8 items-center gap-3 pr-4 flex justify-end">
                 <button

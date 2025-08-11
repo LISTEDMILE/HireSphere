@@ -93,9 +93,9 @@ export default function HostJobDetails() {
               </button>
             </div>
           </div>
-          <div className="flex gap-24 ">
-            <div className="h-[100px] w-[100px] bg-amber-200"></div>
-            <div className="w-full flex flex-col gap-4">
+
+           
+            <div className="w-full flex flex-col gap-4 pl-16">
               <h2 className="text-3xl text-cyan-400 font-semibold">
                 {job.jobPost}
               </h2>
@@ -129,7 +129,7 @@ export default function HostJobDetails() {
                 <p className="text-white">{job.jobExperienceRequired}</p>
               </div>
             </div>
-          </div>
+ 
 
           <div className="flex justify-center w-full">
             <div className="flex flex-col mt-4 w-[80%]">

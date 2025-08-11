@@ -52,10 +52,12 @@ export default function AboutEmployee() {
       <h1 className="text-3xl font-bold text-center my-4">Employee Profile</h1>
 
       <div className="w-[80%] p-12 bg-emerald-950 rounded-lg flex flex-col gap-8">
-        <div className="flex flex-col gap-5 ">
+        <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
+       
+          className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+        <div className="flex flex-col gap-5 mb-7">
           {[
             { field: "fullName", placeholder: "Full Name" },
-            { field: "profilePicture", placeholder: "Profile Picture" },
             { field: "profession", placeholder: "Profession" },
             { field: "location", placeholder: "Location" },
             { field: "email", placeholder: "Email" },

@@ -49,10 +49,10 @@ export default function ApplicantProfiles() {
           {profiles.map((detail) => (
             <li
               key={detail._id}
-              className="bg-[#0d212e80] rounded-2xl shadow-md p-6 flex flex-col w-full justify-between "
+              className="bg-[#0d212e80] rounded-2xl shadow-md py-8 px-12 flex flex-col w-full justify-between "
             >
-              <div className="flex gap-24 ">
-                <div className="h-[100px] w-[100px] bg-amber-200"></div>
+              
+               
                 <div className="w-full flex flex-col gap-4">
                   <h2 className="text-3xl text-cyan-400 font-semibold">
                     {detail.profilePost}
@@ -80,7 +80,7 @@ export default function ApplicantProfiles() {
                       {detail.profileTwelth}
                     </p>
                   </div>
-                </div>
+                
               </div>
               <div className="w-full mt-8 flex justify-center">
                 <div className=" flex gap-6 w-[80%] flex-col ">

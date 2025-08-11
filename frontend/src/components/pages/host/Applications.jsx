@@ -122,9 +122,9 @@ export default function Applications() {
                   <FaUserEdit />
                 </Link>
               </div>
-              <div className="flex gap-24 ">
-                <div className="h-[100px] w-[100px] bg-amber-200"></div>
-                <div className="w-full flex flex-col gap-4">
+   
+               
+                <div className="w-full flex flex-col gap-4 pl-16">
                   <h2 className="text-3xl text-cyan-400 font-semibold">
                     {application.job.jobPost}
                   </h2>
@@ -162,7 +162,7 @@ export default function Applications() {
                       {application.job.jobExperienceRequired}
                     </p>
                   </div>
-                </div>
+     
               </div>
 
               <div className="mt-4 flex justify-between">

@@ -48,9 +48,7 @@ export default function StoreOffererJobs() {
               key={job._id}
               className="bg-[#0d212e80] flex gap-12 flex-col  border-white shadow-md  wrap-break-word rounded-lg p-6 w-[70%]"
             >
-              <div className="flex gap-24 ">
-                <div className="h-[100px] w-[100px] bg-amber-200"></div>
-                <div className="w-full flex flex-col gap-4">
+             <div className="w-full flex flex-col gap-4 pl-16">
                   <h2 className="text-3xl text-cyan-400 font-semibold">
                     {job.jobPost}
                   </h2>
@@ -83,7 +81,7 @@ export default function StoreOffererJobs() {
                     <p className="text-white">{job.jobExperienceRequired}</p>
                   </div>
                 </div>
-              </div>
+              
 
               <div className="mt-4 flex justify-end">
                 <Link

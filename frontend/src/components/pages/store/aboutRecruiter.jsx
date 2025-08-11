@@ -47,10 +47,12 @@ export default function AboutRecruiter() {
       <h1 className="text-3xl font-bold my-6 text-center">Recruiter Profile</h1>
       <div className="w-[80%] bg-[#0a1f1d] rounded-lg p-12">
         <div className="flex flex-col gap-12 ">
+           <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
+                 
+                    className="w-[250px] h-[250px] self-center rounded-full mb-6" />
           <div className="flex flex-col gap-5 ">
             {[
               { field: "fullName", placeholder: "Full Name" },
-              { field: "profilePicture", placeholder: "Profile Picture" },
               { field: "designation", placeholder: "Designation" },
               { field: "company", placeholder: "Company" },
               { field: "companyLogo", placeholder: "Company Logo" },

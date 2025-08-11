@@ -307,6 +307,9 @@ export default function AddAboutEmployee() {
         onSubmit={handleSubmit}
         className="w-[80%] p-8 bg-emerald-950 rounded-lg flex flex-col gap-8"
       >
+         <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
+               
+                  className="w-[250px] h-[250px] self-center rounded-full mb-6" />
         <div className="flex flex-col gap-5 ">
           {[
             { field: "fullName", placeholder: "Full Name" },
