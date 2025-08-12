@@ -6,7 +6,7 @@ import { apiURL } from "../../../apiUrl";
 
 const NavHome = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, userType, userId } = useSelector(
+  const { isLoggedIn, userType  } = useSelector(
     (store) => store.userInfo
   );
   const [navOpen, setNavOpen] = useState(false);
@@ -227,20 +227,22 @@ const NavHome = () => {
               </button>
               {userType === "employee" && (
                 <Link
-                  className="flex border-b pb-1.5 w-full gap-3 items-center"
+                  className="flex border-b pb-1.5 w-full gap-5 items-center"
                   to={`/store/addAboutEmployee`}
                 >
-                  <div className="h-[50px] w-[50px] bg-yellow-700"></div>
+                   <img src={ "/AlternateProfilePic.png"}
+                              className="w-[50px] h-[50px]  rounded-full " />
                   <p className="text-lg hover:underline">Profile</p>{" "}
                 </Link>
               )}
 
               {userType === "recruiter" && (
                 <Link
-                  className="flex border-b pb-1.5 w-full gap-3 items-center"
+                  className="flex border-b pb-1.5 w-full gap-5 items-center"
                   to={`/host/addAboutRecruiter`}
                 >
-                  <div className="h-[50px] w-[50px] bg-yellow-700"></div>
+                   <img src={ "/AlternateProfilePic.png"}
+                    className="w-[50px] h-[50px]  rounded-full " />
                   <p className="text-lg hover:underline">Profile</p>{" "}
                 </Link>
               )}
@@ -282,7 +284,8 @@ const NavHome = () => {
                 className="bg-cyan-800 hover:bg-cyan-950 hover:cursor-pointer py-2 px-4 rounded-lg">Logout</button>
               <button onClick={() => DeleteAccount()}
                 className="bg-cyan-800 hover:bg-cyan-950 hover:cursor-pointer py-2 px-4 rounded-lg">Delete Account </button>
-              <input type="text" onChange={(e) => setPass(e.target.value)}/>
+              <input className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+              placeholder="Enter Password for Deletion"  type="text" onChange={(e) => setPass(e.target.value)} />
             </div>
           )}
         </>
