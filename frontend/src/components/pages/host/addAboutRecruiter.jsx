@@ -81,7 +81,11 @@ export default function AddAboutRecruiter() {
     // Add normal fields
     for (let key in formData) {
       if (Array.isArray(formData[key])) {
-        formData[key].forEach((item) => fd.append(key, item)); // arrays
+        if (formData[key].length > 0) {
+          formData[key].forEach((item) => fd.append(key, item));
+        } else {
+          fd[key]=[]; 
+        }
       } else {
         fd.append(key, formData[key]);
       }

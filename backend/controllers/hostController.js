@@ -110,9 +110,7 @@ check("linkedIn")
   .isURL()
     .withMessage("Invalid LinkedIn URL"),
   
-check("rolesHiring")
-  .isArray()
-  .withMessage("Shoud be an array"),
+
 
   async (req, res) => {
     const errors = validationResult(req);

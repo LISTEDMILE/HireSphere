@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+
 
 export default function AboutEmployee() {
   const { userId } = useParams();
@@ -52,9 +53,14 @@ export default function AboutEmployee() {
       <h1 className="text-3xl font-bold text-center my-4">Employee Profile</h1>
 
       <div className="w-[80%] p-12 bg-emerald-950 rounded-lg flex flex-col gap-8">
+        <div className="flex justify-between px-32">
         <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
-       
-          className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+            className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+          <div className='flex flex-col justify-around items-center'>
+            <a href={`/${formData.linkedIn}`}>Linked In</a>
+            <a href={`/${formData.gitHub}`}>Git Hub</a>
+          </div>
+          </div>
         <div className="flex flex-col gap-5 mb-7">
           {[
             { field: "fullName", placeholder: "Full Name" },
