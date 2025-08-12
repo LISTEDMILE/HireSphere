@@ -228,13 +228,17 @@ exports.getAddAboutRecruiter = async (req, res, next) => {
 };
 
 exports.getAboutEmployee = async (req, res, next) => {
-  const userId = req.params.userId;
+  try {
+    const userId = req.params.userId;
 
-  const user = await UserEmployee.findById(userId);
-  if (!user) {
-    return res.status(400).json({ error: "Unauthorized access" });
-  } else {
-    return res.status(200).json(user.aboutEmployee);
+    const user = await UserEmployee.findById(userId);
+    if (!user) {
+      return res.status(400).json({ error: "Unauthorized access" });
+    } else {
+      return res.status(200).json(user.aboutEmployee);
+    }
+  } catch (err) {
+    console.log("Not found", err);
   }
 };
 

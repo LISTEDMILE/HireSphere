@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import { FaLinkedin } from "react-icons/fa";
+import { FaGlobeAmericas } from "react-icons/fa";
 
 export default function AboutRecruiter() {
   const { userId } = useParams();
@@ -47,9 +49,16 @@ export default function AboutRecruiter() {
       <h1 className="text-3xl font-bold my-6 text-center">Recruiter Profile</h1>
       <div className="w-[80%] bg-[#0a1f1d] rounded-lg p-12">
         <div className="flex flex-col gap-12 ">
-           <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
-                 
-                    className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+           <div className="flex justify-between px-32">
+                  <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
+                      className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+                    <div className='flex flex-col justify-center gap-8 items-start'>
+                      <a className="flex gap-4 items-center hover:underline hover:text-red-100 bg-blue-900
+                    hover:bg-[#183b34ab] px-6 py-3 rounded transition-all duration-300 ease-in-out" target={formData.linkedIn ? "_blank" : "_self"} href={formData.linkedIn ? `${formData.linkedIn}`: ""}><span className="text-3xl"> <FaLinkedin/> </span>Linked In  </a>
+                      <a className="flex gap-4 items-center hover:underline hover:text-red-100 bg-cyan-600
+                    hover:bg-[#183b34ab] px-6 py-3 rounded transition-all duration-300 ease-in-out" target={formData.companyWebsite ? "_blank" : "_self"} href={formData.companyWebsite ? `${formData.companyWebsite}` : ""}> <span className="text-3xl"> < FaGlobeAmericas/> </span>Company Website </a>
+                    </div>
+                    </div>
           <div className="flex flex-col gap-5 ">
             {[
               { field: "fullName", placeholder: "Full Name" },

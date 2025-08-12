@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import { FaLinkedin } from "react-icons/fa";
+import { SiGithub } from "react-icons/si";
+
 
 
 export default function AboutEmployee() {
@@ -56,9 +59,11 @@ export default function AboutEmployee() {
         <div className="flex justify-between px-32">
         <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
             className="w-[250px] h-[250px] self-center rounded-full mb-6" />
-          <div className='flex flex-col justify-around items-center'>
-            <a href={`/${formData.linkedIn}`}>Linked In</a>
-            <a href={`/${formData.gitHub}`}>Git Hub</a>
+          <div className='flex flex-col justify-center gap-8 items-start'>
+            <a className="flex gap-4 items-center hover:underline hover:text-red-100 bg-blue-900
+          hover:bg-[#183b34ab] px-6 py-3 rounded transition-all duration-300 ease-in-out" target={formData.linkedIn ? "_blank" : "_self"} href={formData.linkedIn ? `${formData.linkedIn}`: ""}><span className="text-3xl"> <FaLinkedin/> </span>Linked In  </a>
+            <a className="flex gap-4 items-center hover:underline hover:text-red-100  bg-black
+          hover:bg-[#183b34ab] px-6 py-3 rounded transition-all duration-300 ease-in-out" target={formData.gitHub ? "_blank" : "_self"} href={formData.gitHub ? `${formData.gitHub}` : ""}> <span className="text-3xl"> <SiGithub/> </span>Git Hub</a>
           </div>
           </div>
         <div className="flex flex-col gap-5 mb-7">

@@ -33,6 +33,7 @@ import AddAboutEmployee from "./components/pages/store/addAboutEmployee";
 import AddAboutRecruiter from "./components/pages/host/addAboutRecruiter";
 import AboutEmployee from "./components/pages/host/aboutEmployee";
 import StoreOffererJobs from "./components/pages/store/storeOffererJobs";
+import ErrorPage from "./components/pages/ErrorPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -110,6 +111,10 @@ function App() {
     { path: "/store/addAboutEmployee", element: <AddAboutEmployee /> },
     { path: "/host/addAboutRecruiter", element: <AddAboutRecruiter /> },
     { path: "/host/aboutEmployee/:userId", element: <AboutEmployee /> },
+
+
+
+    {path:"*", element:<ErrorPage/>}
   ]);
   return <RouterProvider router={route}></RouterProvider>;
 }
