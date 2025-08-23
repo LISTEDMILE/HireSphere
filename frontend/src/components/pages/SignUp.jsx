@@ -4,7 +4,6 @@ import Footer from "../compo/Footer";
 import { AddUserToServer } from "../../../services/Services";
 import { useNavigate } from "react-router-dom";
 import { BackgroundAnimation } from "../compo/anima";
-import { apiURL } from "../../../apiUrl";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -17,6 +16,8 @@ const SignUpPage = () => {
     confirmPassword: "",
     userType: "employee",
   });
+
+  const [display, setDisplay] = useState(false);
 
   const [errors, setErrors] = useState(null);
 
@@ -36,7 +37,7 @@ const SignUpPage = () => {
     }
     let er = await AddUserToServer(formData);
     setErrors(er.errors ? er.errors : null);
-  
+
     if (!er.errors) {
       navigate("/login");
     }
@@ -50,7 +51,7 @@ const SignUpPage = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-[#0d212ec9] relative shadow-lg text-white rounded-lg p-8 w-[400px]"
+        className="bg-[#0d212ec9] relative shadow-lg text-white rounded-lg p-8 w-[95%] sm:w-[600px]"
       >
         {errors && (
           <div className="bg-[#330e0e] border-2 border-white  text-white p-3 rounded-md mb-4">
@@ -64,20 +65,6 @@ const SignUpPage = () => {
             <button
               type="button"
               name="userType"
-              value="recruiter"
-              className={`${
-                formData.userType == "recruiter"
-                  ? "text-yellow-400 underline"
-                  : "text-white"
-              } text-lg `}
-              onClick={handleChange}
-            >
-              Recruiter
-            </button>
-
-            <button
-              type="button"
-              name="userType"
               value="employee"
               className={`${
                 formData.userType == "employee"
@@ -87,6 +74,20 @@ const SignUpPage = () => {
               onClick={handleChange}
             >
               Employee
+            </button>
+
+            <button
+              type="button"
+              name="userType"
+              value="recruiter"
+              className={`${
+                formData.userType == "recruiter"
+                  ? "text-yellow-400 underline"
+                  : "text-white"
+              } text-lg `}
+              onClick={handleChange}
+            >
+              Recruiter
             </button>
           </div>
           <label className="block font-medium mb-2">First Name</label>
@@ -126,27 +127,42 @@ const SignUpPage = () => {
         </div>
         <div className="mb-4">
           <label className="block  font-medium mb-2">Password</label>
+          <div className="w-full focus-within:ring-2 focus-within:ring-cyan-500 flex items-center justify-between rounded border">
           <input
-            type="password"
+            type={`${display?"text":"password"}`}
             name="password"
             value={formData.password}
             onChange={handleChange}
             placeholder="Enter your password"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 outline-none"
             required
-          />
+            />
+            <button onClick={(e) => {
+              e.preventDefault();
+              setDisplay(!display);
+            }}
+            className="mr-2"> {display ? "👁️": "🙈" }</button>
+          </div>
+          
         </div>
         <div className="mb-4">
           <label className="block  font-medium mb-2">Confirm Password</label>
+          <div className="w-full focus-within:ring-2 focus-within:ring-cyan-500 flex items-center justify-between rounded border">
           <input
-            type="password"
+            type={`${display?"text":"password"}`}
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
             placeholder="Confirm your password"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 outline-none"
             required
-          />
+            />
+            <button onClick={(e) => {
+              e.preventDefault();
+              setDisplay(!display);
+            }}
+            className="mr-2"> {display ? "👁️": "🙈" }</button>
+          </div>
         </div>
         <div className="mb-4">
           <label className="block  font-medium mb-2">User Type</label>
@@ -182,6 +198,16 @@ const SignUpPage = () => {
         >
           Sign Up
         </button>
+
+        <div className="mt-10 flex gap-3 items-center self-center">
+          <h1 className="text-md text-white">Already have an Account </h1>{" "}
+          <a
+            href="/login"
+            className="px-4 py-2 text-lg text-white bg-amber-600 rounded-lg"
+          >
+            Login
+          </a>
+        </div>
       </form>
 
       <Footer />
