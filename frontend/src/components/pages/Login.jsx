@@ -9,6 +9,7 @@ import { BackgroundAnimation } from "../compo/anima";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [display, setDisplay] = useState(false);
   const [errors, setErrors] = useState(null);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -44,14 +45,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative w-full flex flex-col items-center justify-center min-h-screen bg-black">
+    <div className=" w-[100vw] flex flex-col items-center justify-center min-h-screen bg-black">
       <NavHome active="login" />
       <BackgroundAnimation />
 
       <h1 className="text-4xl font-bold mb-6 text-white">Login</h1>
       <form
         onSubmit={handleSubmit}
-        className="bg-[#0d212ec9] relative shadow-lg rounded-lg p-8 w-[400px] "
+        className="bg-[#0d212ec9] relative shadow-lg rounded-lg p-8 w-[95%] sm:w-[400px] "
       >
         {errors && (
           <div className=" border-2  bg-red-100 text-red-900  p-3 rounded-md mb-4">
@@ -65,20 +66,6 @@ export default function LoginPage() {
             <button
               type="button"
               name="userType"
-              value="recruiter"
-              className={`${
-                formData.userType == "recruiter"
-                  ? "text-yellow-400 underline"
-                  : "text-white"
-              } text-lg `}
-              onClick={handleChange}
-            >
-              Recruiter
-            </button>
-
-            <button
-              type="button"
-              name="userType"
               value="employee"
               className={`${
                 formData.userType == "employee"
@@ -88,6 +75,19 @@ export default function LoginPage() {
               onClick={handleChange}
             >
               Employee
+            </button>
+            <button
+              type="button"
+              name="userType"
+              value="recruiter"
+              className={`${
+                formData.userType == "recruiter"
+                  ? "text-yellow-400 underline"
+                  : "text-white"
+              } text-lg `}
+              onClick={handleChange}
+            >
+              Recruiter
             </button>
           </div>
           <label className="block text-white font-medium mb-2">Username</label>
@@ -102,21 +102,67 @@ export default function LoginPage() {
         </div>
         <div className="mb-4">
           <label className="block text-white font-medium mb-2">Password</label>
+          <div className="w-full focus-within:ring-2 focus-within:ring-cyan-500 flex items-center justify-between rounded border text-white">
           <input
-            type="password"
+            type={`${display?"text":"password"}`}
             name="password"
             value={formData.password}
             onChange={handleChange}
             placeholder="Enter your password"
-            className="w-full p-2 border rounded text-white"
-          />
+            className="w-full p-2 outline-none"
+            required
+            />
+            <button onClick={(e) => {
+              e.preventDefault();
+              setDisplay(!display);
+            }}
+            className="mr-2"> {display ? "👁️": "🙈" }</button>
+          </div>
         </div>
+        <div className="my-8  text-white">
+          <label className="block  font-medium mb-2">User Type</label>
+          <div className="flex items-center space-x-4">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="userType"
+                value="employee"
+                checked={formData.userType === "employee"}
+                onChange={handleChange}
+                className="mr-2"
+              />
+              Employee
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="userType"
+                value="recruiter"
+                checked={formData.userType === "recruiter"}
+                onChange={handleChange}
+                className="mr-2"
+              />
+              Recruiter
+            </label>
+          </div>
+        </div>
+
         <button
           type="submit"
           className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-900 transition"
         >
           Login
         </button>
+
+        <div className="mt-10 flex gap-3 items-center self-center">
+          <h1 className="text-md text-white">If not registered </h1>{" "}
+          <a
+            href="/signUp"
+            className="px-4 py-2 text-lg text-white bg-amber-600 rounded-lg"
+          >
+            SignUp
+          </a>
+        </div>
       </form>
       <Footer />
     </div>
