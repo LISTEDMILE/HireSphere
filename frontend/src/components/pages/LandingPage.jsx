@@ -103,25 +103,56 @@ const LandingPage = () => {
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.to(".rocket", {
-      scrollTrigger: {
-        trigger: ".logoDiv",
-        toggleActions: "play none none reverse",
-        start: "top 10px",
-        end: "bottom 70%",
-        scrub: 3,
-        ease: "bounce.out",
+    let mm = gsap.matchMedia();
+
+    mm.add(
+      {
+        // mobile
+        isMobile: "(max-width: 768px)",
+        // desktop
+        isDesktop: "(min-width: 769px)",
       },
-      yPercent: 230,
-      rotate: -90,
-    });
+      (context) => {
+        let { isMobile, isDesktop } = context.conditions;
+
+        if (isMobile) {
+          gsap.to(".rocket", {
+            scrollTrigger: {
+              trigger: ".logoDiv",
+              toggleActions: "play none none reverse",
+              start: "top 10px",
+              end: "bottom 70%",
+              scrub: 3,
+              ease: "bounce.out",
+            },
+            y:"850px",
+            rotate: -90,
+          });
+        }
+        else {
+          gsap.to(".rocket", {
+            scrollTrigger: {
+              trigger: ".logoDiv",
+              toggleActions: "play none none reverse",
+              start: "top 10px",
+              end: "bottom 70%",
+              scrub: 3,
+              ease: "bounce.out",
+            },
+            yPercent: 230,
+            rotate: -90,
+          });
+        }
+      });
+
+    
 
     gsap.from(".logoImg", {
       scrollTrigger: {
         trigger: ".logoImg",
         toggleActions: "play none none reverse",
-        start: "top 80%",
-        end: "top 35%",
+        start: "top 100%",
+        end: "top 85%",
         scrub: 3,
       },
       opacity: 0,
@@ -259,14 +290,14 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <div className="bg-black min-h-screen flex flex-col justify-between">
+    <div className="bg-black min-h-screen flex flex-col justify-between w-[100vw]">
       <NavHome active="landingPage" />
 
       <BackgroundAnimation />
 
-      <div className="absolute h-[500px] w-full flex flex-col justify-center items-center">
+      <div className="absolute h-[60vh] sm:h-[100vh] w-full flex flex-col justify-center items-center">
         <h1
-          className=" overflow-hidden whitespace-nowrap border-r-4 border-white text-6xl font-bold text-white"
+          className="w-full overflow-hidden whitespace-nowrap border-r-4 border-white text-3xl sm:text-6xl font-bold text-white"
           style={{
             width: "22ch",
             animation:
@@ -275,7 +306,7 @@ const LandingPage = () => {
         >
           Welcome to HireSphere
         </h1>
-        <h1 className="text-white text-9xl">
+        <h1 className="text-white text-5xl sm:text-9xl">
           <RiScrollToBottomLine />{" "}
         </h1>
       </div>
@@ -288,30 +319,30 @@ const LandingPage = () => {
             className="logoImg h-72 mb-40 mt-96 rounded-lg shadow-lg shadow-yellow-200"
           />
         </div>
-        <div className="rocket z-30 fixed top-[-300px] left-32">
+        <div className="rocket z-30 fixed top-[-300px] left-10">
           <img
             src="/Rocket.png"
             alt="Rocket"
-            className=" h-[300px] w-auto object-cover opacity-100 filter drop-shadow-[0_-50px_15px_yellow]"
+            className=" h-[150px] sm:h-[300px] w-auto object-cover opacity-100 filter drop-shadow-[0_-50px_15px_yellow]"
           />
           <RocketFlames />
         </div>
 
         <div className="TitleTrigger overflow-hidden relative w-fit h-fit flex justify-center items-center mt-64 ">
-          <p className="Title z-0 text-5xl font-extrabold bg-gradient-to-r from-teal-500 via-red-600 to-green-600 text-transparent bg-clip-text">
+          <p className="Title text-center break-words z-0 text-3xl h-fit sm:text-5xl font-extrabold bg-gradient-to-r from-teal-500 via-red-600 to-green-600 text-transparent bg-clip-text">
             The ultimate solution for Placements
           </p>
           <div className="TitleBlack absolute top-0 left-0 bg-black w-full h-full z-10"></div>
         </div>
-        <div className="mt-[1800px]"></div>
+        <div className="mt-[2000px] sm:mt-[1800px]"></div>
 
         <div className="flex items-center flex-col w-full ">
-          <h1 className="headings text-white text-6xl mb-24 underline">
+          <h1 className="headings w-full text-center text-white text-4xl mb-24 underline">
             <IoMdNotificationsOutline className="text-yellow-400 inline mr-6" />
             Key Features...
           </h1>
 
-          <div className="flex w-[70%] mb-64 justify-around flex-wrap h-fit">
+          <div className="flex flex-col sm:flex-row w-[90%] sm:w-[70%] mb-64 justify-around flex-wrap h-fit">
             {features.map((fea, index) => {
               return (
                 <div
@@ -320,7 +351,7 @@ const LandingPage = () => {
                   } `}
                   key={index}
                 >
-                  <div className="bg-[#0E1F1B]/60 h-full w-[400px] rounded-lg p-8">
+                  <div className="bg-[#0E1F1B]/60 h-full w-full sm:w-[400px] rounded-lg p-8">
                     <div className="space-x-6 flex items-center pb-2 mb-6 border-b-[1px] border-[#1D8A6D] ">
                       <fea.icon className="text-white text-5xl" />
                       <h2 className="text-cyan-400 text-2xl">{fea.feature}</h2>
@@ -336,11 +367,11 @@ const LandingPage = () => {
         </div>
 
         <div className="flex items-center flex-col w-full mb-10">
-          <h1 className="headings text-white text-6xl mb-24 underline">
+          <h1 className="headings w-full text-center text-white text-4xl mb-24 underline">
             <GiCompass className="text-yellow-400 inline mr-6" />
             Get Started...
           </h1>
-          <div className="flex flex-col items-center w-[70%]">
+          <div className="flex flex-col items-center w-[90%] sm:w-[70%]">
             {steps.map((step) => {
               return (
                 <div className=" steps bg-black w-full mb-4">
@@ -382,10 +413,11 @@ const LandingPage = () => {
           </div>
         </div>
 
-        <h1 className=" endingH text-cyan-400 text-5xl  flex justify-center align-center w-full p-12 py-72">
-          {" "}
-          Registor Now..
-        </h1>
+        <a className="endingH text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-center w-full py-32 md:py-48 animate-pulse drop-shadow-[0_0_20px_rgba(0,255,255,0.6)] cursor-pointer"
+          href="/login"
+        >
+  Get Started..
+</a>
       </div>
       <Footer />
     </div>
