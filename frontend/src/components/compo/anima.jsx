@@ -381,7 +381,7 @@ export const BackgroundAnimation = () => {
   });
   return (
     <>
-      <div className="fixed h-[100vh] w-full top-0 left-0 z-0">
+      <div className="fixed h-[100vh] w-[100vw] top-0 left-0 z-0">
         <div
           ref={circle1}
           className="absolute bg-white rounded-full animate-pulse w-2 h-2 shadow-[0_0_50px_5px_white] top-[38%] left-[91%]"
@@ -465,7 +465,7 @@ export const BackgroundAnimation = () => {
         />
       </div>
 
-      <div className="fixed h-[100vh] w-full top-0 left-0 z-0 ">
+      <div className="fixed h-[100vh] w-[100vw] top-0 left-0 z-0 ">
         <div
           ref={rain1}
           className="h-[40px]  w-[1px] bg-gradient-to-t from-white to-transparent  absolute top-[-40px] left-[10%] "
