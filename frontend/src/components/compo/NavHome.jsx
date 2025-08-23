@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { IoMdMenu, IoMdClose } from "react-icons/io";
+
+import { IoMdMenu, IoMdClose, IoMdHome, } from "react-icons/io";
+import {  FaHeart, FaBriefcase, FaFileAlt, FaGift } from "react-icons/fa";
+import { MdOutlineWork } from "react-icons/md";
+
 import { Link, useNavigate } from "react-router-dom";
 import { apiURL } from "../../../apiUrl";
 
@@ -50,9 +54,9 @@ const NavHome = () => {
     <header className="  flex items-center justify-between py-4 w-full mb-5 text-white z-30 ">
       <a
         href="/"
-        className=" bg-red-800 text-white rounded-md px-4 py-1.5 text-xl ml-8 hover:underline hover:bg-red-600 transition-all duration-300 ease-in-out"
+        className=" bg-red-800 text-white rounded-md px-4 py-1.5 flex gap-1 text-xl ml-8 hover:underline hover:bg-red-600 transition-all duration-300 ease-in-out"
       >
-        Home
+       <IoMdHome className="text-2xl" /> Home
       </a>
       {!isLoggedIn && (
         <>
@@ -98,7 +102,7 @@ const NavHome = () => {
       )}
 
       {isLoggedIn && userType === "employee" && (
-        <div className="flex items-center space-x-4 text-lg">
+        <div className="hidden sm:flex items-center space-x-4 text-lg">
           <a
             href="/store/favourite"
             className="hover:underline hover:text-red-100 bg-transparent
@@ -150,7 +154,7 @@ const NavHome = () => {
       )}
 
       {isLoggedIn && userType === "recruiter" && (
-        <div className="flex items-center space-x-4 texl-lg">
+        <div className="hidden sm:flex items-center space-x-4 texl-lg">
           <a
             href="/host/addJob"
             className="hover:underline hover:text-red-100 bg-transparent
@@ -202,7 +206,7 @@ const NavHome = () => {
       )}
 
       <button
-        className="text-3xl mr-8 hover:cursor-pointer sm:hidden"
+        className="text-3xl mr-8 hover:cursor-pointer"
         onClick={() => {
           setNavOpen(true);
         }}
@@ -212,11 +216,15 @@ const NavHome = () => {
       {navOpen && (
         <>
           <div
-            className="inset-0 fixed"
+            className="inset-0 fixed bg-black opacity-70"
             onClick={() => setNavOpen(false)}
           ></div>
-          <div className="flex fixed z-50 top-0  right-0 min-h-[50vh] items-start bg-gradient-to-b from-gray-900 via-gray-800 to-black
- p-6 w-72 flex-col gap-8 h-full">
+          <div className="flex fixed overflow-y-scroll overflow-x-hidden z-30 top-0  right-0 min-h-[50vh] items-start bg-gradient-to-b from-gray-900 via-gray-800 to-black
+ p-6 w-72 flex-col gap-8 h-full"
+           style={{
+    scrollbarWidth: "none",       
+    msOverflowStyle: "none",    
+  }}>
             <button
               className="text-3xl self-end  hover:cursor-pointer"
               onClick={() => {
@@ -251,15 +259,126 @@ const NavHome = () => {
               </Link>
             )}
 
-            <a
-              href="/"
-              className=" hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-            >
-              Home
-            </a>
 
-            <div className="flex flex-col gap-4 mb-4">
+
+
+
+
+{isLoggedIn && userType === "employee" && (
+        <div className="flex items-start flex-col gap-3 text-lg">
+          <a
+            href="/store/favourite"
+            className="hover:underline hover:text-red-100 bg-transparent flex gap-3 items-center
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+           <FaHeart className="text-red-400"/>  Favourites
+          </a>
+
+          <a
+            href="/store/storeJobList"
+            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+          <FaBriefcase className="text-blue-400"/>  Vacancies
+          </a>
+
+          <a
+            href="/store/appliedJobs"
+            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+           <MdOutlineWork className="text-green-400"/>  Applied
+          </a>
+
+          <a
+            href="/store/addProfile"
+            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+           <FaFileAlt className="text-yellow-400"/>  Add Resume
+          </a>
+
+          <a
+            href="/store/storeProfileList"
+            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+           <FaFileAlt className="text-indigo-400"/>  Resumes
+          </a>
+
+          <a
+            href="/store/offers/"
+            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+           <FaGift  className="text-purple-400"/> Offers
+          </a>
+        </div>
+      )}
+
+      {isLoggedIn && userType === "recruiter" && (
+        <div className="flex items-start flex-col gap-3 texl-lg">
+          <a
+            href="/host/addJob"
+            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+           <FaHeart className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-red-400" /> 
+           <FaBriefcase className="text-blue-400" />  Add Vacancy
+          </a>
+
+          <a
+            href="/host/hostJobList"
+            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+           <FaListUl className="text-orange-400" /> Added by you
+          </a>
+
+          <a
+            href="/host/hostApplications"
+            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+          <MdOutlineWork className="text-green-400" />  Applications
+          </a>
+
+          <a
+            href="/host/hostProfileList"
+            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+           <FaFileAlt className="text-indigo-400" /> Resumes
+          </a>
+
+          <a
+            href="/host/favouriteProfile"
+            className="hover:underline hover:text-red-100  flex gap-3 items-center not-only-of-type:bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+          <FaHeart className="text-pink-500" />  Favourites
+          </a>
+
+          <a
+            href="/host/choosenProfiles"
+            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          >
+           <FaCheckCircle className="text-teal-400" /> Selected
+          </a>
+        </div>
+      )}
+
+
+
+
+
+            
+
+
+            
+
+            <div className="flex flex-col gap-1 mb-2 mt-6">
               <a
                 href="/help"
                 className="hover:underline hover:text-red-100 bg-transparent
@@ -270,7 +389,7 @@ const NavHome = () => {
               <a
                 href="/contact"
                 className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          hover:bg-[#183b34ab] mb-96 px-4 py-1 rounded transition-all duration-300 ease-in-out"
               >
                 Contact-Us
               </a>
@@ -278,7 +397,7 @@ const NavHome = () => {
               <a
                 href="/about"
                 className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          hover:bg-[#183b34ab] mb-96 px-4 py-1 rounded transition-all duration-300 ease-in-out"
               >
                 About-Us
               </a>
@@ -294,7 +413,7 @@ const NavHome = () => {
                 </button>
                 <button
                   onClick={() => DeleteAccount()}
-                  className="bg-cyan-800 hover:bg-cyan-950 hover:cursor-pointer py-2 px-4 rounded-lg"
+                  className="bg-red-800 hover:bg-red-950 hover:cursor-pointer py-2 px-4 rounded-lg"
                 >
                   Delete Account{" "}
                 </button>
