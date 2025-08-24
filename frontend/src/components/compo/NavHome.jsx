@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { IoMdMenu, IoMdClose, IoMdHome, } from "react-icons/io";
-import {  FaHeart, FaBriefcase, FaFileAlt, FaGift } from "react-icons/fa";
+import { IoMdMenu, IoMdClose, IoMdHome } from "react-icons/io";
+import { 
+  FaHeart, 
+  FaBriefcase, 
+  FaFileAlt, 
+  FaGift, 
+  FaListUl, 
+  FaCheckCircle 
+} from "react-icons/fa";
 import { MdOutlineWork } from "react-icons/md";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -323,7 +330,7 @@ const NavHome = () => {
             className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
           >
-           <FaHeart className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-red-400" /> 
+           
            <FaBriefcase className="text-blue-400" />  Add Vacancy
           </a>
 
@@ -389,7 +396,7 @@ const NavHome = () => {
               <a
                 href="/contact"
                 className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] mb-96 px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
               >
                 Contact-Us
               </a>
@@ -397,7 +404,7 @@ const NavHome = () => {
               <a
                 href="/about"
                 className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] mb-96 px-4 py-1 rounded transition-all duration-300 ease-in-out"
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
               >
                 About-Us
               </a>
