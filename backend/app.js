@@ -67,11 +67,10 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(rootDir, "../frontend/index.html"));
 });
 
-
 mongoose
   .connect(DB_path)
   .then(() => {
-    app.listen(PORT, () => {
+    app.listen(PORT,"0.0.0.0", () => {
       console.log(`Server Running at http://localhost:${PORT}`);
     });
   })
