@@ -4,7 +4,7 @@ import React from "react";
 export default function Empty() {
     return (
         <div className=" flex flex-col gap-12">
-        <div className="rotate-90">
+        <div className="rotate-180 sm:rotate-90 scale-70 sm:scale-100">
         <img
                     src="/Rocket.png"
                     alt="Rocket"
