@@ -196,12 +196,15 @@ export default function ProfileForm() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center bg-black">
-      <NavHome active="addJob" />
-      <div className="w-[80%] p-6 flex flex-col items-center shadow-md rounded-lg bg-[#0a1f1d] text-white">
-        <h1 className="text-3xl font-bold mb-6 text-center">
-          {editing ? "Edit" : "Add"} Resume
-        </h1>
+    <div className="w-full min-h-[100vh] flex flex-col items-center z-[">
+      <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
+      <NavHome />
+      <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
+        <span className="relative z-10">{editing ? "Edit" : "Add"} Resume</span>
+        <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
+      </h1>
+
+      <div className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white">
         {errors && (
           <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
             <ul className="list-disc list-inside">
@@ -215,39 +218,47 @@ export default function ProfileForm() {
           onSubmit={handleSubmit}
           action={`/store/${editing ? "editProfile" : "addProfile"}`}
           method="POST"
-          className="space-y-8 p-6 flex flex-col items-center w-full"
+          className="space-y-8 py-6 sm:px-6 flex flex-col items-center w-full"
         >
           {editing && <input type="hidden" name="_id" value={formData._id} />}
 
           {/* Input fields */}
-          {[
-            ["Name", "profileName", "text"],
-            ["Gender", "profileGender", "text"],
-            ["Post", "profilePost", "text"],
-            ["Courses Done", "profileCourse", "text"],
+          <div
+            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+          >
+            {[
+              ["Name", "profileName", "text"],
+              ["Gender", "profileGender", "text"],
+              ["Post", "profilePost", "text"],
+              ["Courses Done", "profileCourse", "text"],
 
-            ["Email", "profileEmail", "email"],
-            ["Mobile", "profileMobile", "number"],
-            ["Expected Salary", "profileExpectedSalary", "text"],
-            ["Experience", "profileExperience", "text"],
-          ].map(([label, name, type]) => (
-            <div key={name} className="w-full">
-              <label className="block text-gray-400 font-medium mb-2">
-                {label}
-              </label>
-              <input
-                required
-                type={type}
-                name={name}
-                placeholder={label}
-                value={formData[name]}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-              />
-            </div>
-          ))}
+              ["Email", "profileEmail", "email"],
+              ["Mobile", "profileMobile", "number"],
+              ["Expected Salary", "profileExpectedSalary", "text"],
+              ["Experience", "profileExperience", "text"],
+            ].map(([label, name, type]) => (
+              <div key={name} className="w-full">
+                <label className="block text-gray-400 font-medium mb-2">
+                  {label}
+                </label>
+                <input
+                  required
+                  type={type}
+                  name={name}
+                  placeholder={label}
+                  value={formData[name]}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                />
+              </div>
+            ))}
+          </div>
 
-          <div className="w-[80%] bg-[#3C2A21] p-4 rounded-lg">
+          <div
+            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+          >
             <div className="w-full flex space-y-2 flex-col">
               <div>
                 <label className="block text-gray-400 font-medium mb-2">
@@ -297,8 +308,11 @@ export default function ProfileForm() {
           </div>
 
           {/* Skills */}
-          <div className="w-full flex justify-between">
-            <div className="w-[55%] bg-[#3C2A21] p-4 rounded-lg">
+          <div className="w-full flex justify-between gap-y-6 flex-col sm:flex-row">
+            <div
+              className="w-full sm:w-[55%] bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+            >
               <div className="w-full flex space-y-2 flex-col">
                 <div>
                   <label className="block text-gray-400 font-medium mb-2">
@@ -342,7 +356,10 @@ export default function ProfileForm() {
               </div>
             </div>
 
-            <div className="w-[40%] bg-[#3C2A21] p-4 rounded-lg flex flex-col text-lg gap-4">
+            <div
+              className="w-full sm:w-[40%] bg-[#111827]/70 backdrop-blur-sm border border-gray-700/40 
+           rounded-xl shadow-md flex gap-2 flex-col p-6"
+            >
               <h2 className="block text-gray-400 font-medium mb-2">
                 {" "}
                 Job Type
@@ -373,11 +390,11 @@ export default function ProfileForm() {
             </div>
           </div>
 
-          <div className="bg-[#3C2A21] p-4 rounded-lg w-full flex flex-col">
+          <div className="bg-[#3c2a216c] p-4 rounded-lg w-full flex flex-col">
             <h1 className="text-2xl mb-4">Projects</h1>
-            <div className="flex justify-around">
-              <div className="flex flex-col gap-3 w-[45%]">
-                <label className="block text-gray-400 font-medium mb-2">
+            <div className="flex justify-around flex-col sm:flex-row">
+              <div className="flex flex-col gap-3 w-full sm:w-[45%]">
+                <label className="block text-gray-400 font-medium mt-3">
                   Title:
                 </label>
                 <input
@@ -390,7 +407,7 @@ export default function ProfileForm() {
                   }
                   value={project.title}
                 />
-                <label className="block text-gray-400 font-medium mb-2">
+                <label className="block text-gray-400 font-medium mt-3">
                   Description:
                 </label>
                 <input
@@ -403,7 +420,7 @@ export default function ProfileForm() {
                   }
                   value={project.description}
                 />
-                <label className="block text-gray-400 font-medium mb-2">
+                <label className="block text-gray-400 font-medium mt-3">
                   Link:
                 </label>
                 <input
@@ -417,7 +434,7 @@ export default function ProfileForm() {
                   value={project.link}
                 />
               </div>
-              <div className="flex flex-col gap-8 w-[45%] border-2 border-white rounded-lg h-fit">
+              <div className="flex flex-col gap-8 w-full sm:w-[45%] border-2 border-white rounded-lg h-fit mt-8 sm:mt-0">
                 <div className="flex flex-col  p-8 w-full">
                   <input
                     type="text"
@@ -474,7 +491,7 @@ export default function ProfileForm() {
             <div className="w-full flex flex-col items-center gap-8 mt-12 flex-wrap">
               {formData.profileProjects.map((pro) => {
                 return (
-                  <div className="bg-cyan-950 flex flex-col rounded-lg w-[80%] p-4">
+                  <div className="bg-cyan-950 flex flex-col rounded-lg w-full sm:w-[80%] p-4">
                     <div className="flex flex-col gap-3">
                       <div className="flex gap-3">
                         <label className="block text-gray-400 text-md ">
@@ -523,13 +540,13 @@ export default function ProfileForm() {
           </div>
 
           {/* Percentage fields with slider */}
-          <div className="w-full justify-around flex">
+          <div className="w-[90%] sm:w-full justify-around flex flex-col sm:flex-row mt-8">
             {[
               ["10th (%)", "profileTenth"],
               ["12th (%)", "profileTwelth"],
               ["Graduation (%)", "profileGraduation"],
             ].map(([label, name]) => (
-              <div key={name} className="w-[30%] flex flex-col gap-6">
+              <div key={name} className="w-full sm:w-[30%] flex flex-col gap-6">
                 <label className="block text-gray-400 font-medium mb-2">
                   {label}
                 </label>
