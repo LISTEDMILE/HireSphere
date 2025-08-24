@@ -63,13 +63,17 @@ export default function StoreProfilesDetails() {
   };
 
   return (
-    <div className="w-full min-h-[100vh] text-white bg-black flex flex-col items-center">
-      <NavHome />
-
-      <h1 className="text-3xl font-bold text-center my-4">Detailed Resume</h1>
+    <div className="w-full min-h-[100vh] flex flex-col items-center h-fit overflow-hidden">
+    <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
+    <NavHome />
+    <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center mb-8">
+      <span className="relative z-10 ">Detailed Resume</span>
+        <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
+      </h1>
       {!fetching && (
-        <div className="w-[70%] p-12  bg-[#0d212e80] rounden-lg">
-          <div className="flex justify-end items-center text-2xl gap-12 pr-8">
+        <div 
+          className="flex w-full sm:w-[80%] flex-col items-center p-4 gap-6"> 
+           <div className="flex justify-end items-center border-b pb-3 gap-6 w-full border-white text-3xl pr-4">
             <Link
               to={`/store/addProfile/${profile._id}?editing=true`}
               className="text-gray-400 hover:text-gray-600"
@@ -92,8 +96,10 @@ export default function StoreProfilesDetails() {
               </button>
             </form>
           </div>
-       <div className="w-full flex flex-col gap-4 pl-16">
-              <h2 className="text-3xl text-cyan-400 font-semibold">
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-6 flex-col wrap-break-word p-6 w-full  ">
+          <div className="w-full flex flex-col gap-4">
+          <h2 className="text-3xl self-center text-cyan-400 font-semibold">
                 {profile.profilePost}
               </h2>
               <div className="mt-2 flex gap-3">
@@ -156,14 +162,18 @@ export default function StoreProfilesDetails() {
                 </p>
               </div>
             </div>
+            </div>
           
-          <div className="w-full mt-12 flex flex-col items-center">
-            <div className=" flex gap-6 w-[80%] flex-col ">
+          <div className="w-full mt-4 flex flex-col sm:items-center ">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg p-6 hover:shadow-cyan-500/20 w-full
+           transition transform hover:scale-[1.02]">
+            <div className="text-white flex gap-6 w-full flex-col ">
               <label className=" text-gray-400 font-medium">Skills:</label>
-              <div className="flex flex-wrap gap-3 items-center">
+              <div className="flex flex-wrap gap-3 items-center text-md">
                 {profile.profileSkills.map((skill) => {
                   return (
-                    <span className="px-8 py-2 bg-cyan-950 rounded-lg">
+                    <span className="px-4 py-2 bg-cyan-950 rounded-lg">
                       {skill}
                     </span>
                   );
@@ -171,12 +181,12 @@ export default function StoreProfilesDetails() {
               </div>
             </div>
 
-            <div className=" flex gap-6 mt-12 w-[80%] flex-col ">
+            <div className="text-white flex gap-6 mt-12 w-full flex-col ">
               <label className=" text-gray-400 font-medium">Job Type:</label>
-              <div className="flex flex-wrap gap-3 items-center">
+              <div className="flex flex-wrap gap-3 items-center text-md">
                 {profile.profileJobType.map((jType) => {
                   return (
-                    <span className="px-8 py-2 bg-cyan-950 rounded-lg">
+                    <span className="px-4 py-2 bg-cyan-950 rounded-lg">
                       {jType}
                     </span>
                   );
@@ -184,14 +194,14 @@ export default function StoreProfilesDetails() {
               </div>
             </div>
 
-            <div className=" flex gap-6 mt-12 w-[80%] flex-col ">
+            <div className=" flex gap-6 mt-12 w-full flex-col ">
               <label className=" text-gray-400 font-medium">
                 Preferred Locations:
               </label>
-              <div className="flex flex-wrap gap-3 items-center">
+              <div className=" text-white flex flex-wrap gap-3 items-center text-md">
                 {profile.profilePreferredLocations.map((loc) => {
                   return (
-                    <span className="px-8 py-2 bg-cyan-950 rounded-lg">
+                    <span className="px-4 py-2 bg-cyan-950 rounded-lg">
                       {loc}
                     </span>
                   );
@@ -199,12 +209,16 @@ export default function StoreProfilesDetails() {
               </div>
             </div>
 
-            <div className=" flex gap-6 mt-12 border-2 border-white p-8 rounded-lg w-[80%] flex-col ">
+           
+            </div>
+            
+
+            <div className=" flex gap-6 mt-12 border-2 border-white p-4 sm:p-8 rounded-lg w-full flex-col ">
               <label className=" text-gray-400 font-medium">Projects:</label>
               <div className="flex flex-col gap-8  w-full">
                 {profile.profileProjects.map((proj) => {
                   return (
-                    <div className="w-full bg-amber-950 flex flex-col gap-4 p-8 rounded-lg">
+                    <div className="w-full bg-gray-800 flex flex-col gap-4 p-8 rounded-lg">
                       <div className=" flex gap-3">
                         <label className=" text-gray-400 font-medium">
                           Title:
@@ -230,10 +244,10 @@ export default function StoreProfilesDetails() {
                         <label className=" text-gray-400 font-medium">
                           Technologies Used:
                         </label>
-                        <div className="flex flex-wrap w-full gap-3 items-center">
+                        <div className="text-white flex flex-wrap gap-3 items-center text-md">
                           {proj.technologies.map((tech) => {
                             return (
-                              <span className="px-8 py-2 bg-cyan-950 rounded-lg">
+                              <span className="px-4 sm:px-8 py-2 bg-cyan-950 rounded-lg">
                                 {tech}
                               </span>
                             );
@@ -244,12 +258,14 @@ export default function StoreProfilesDetails() {
                   );
                 })}
               </div>
-            </div>
+              </div>
 
-            <div className=" flex gap-6 mt-12 w-[80%] flex-col ">
+            <div className=" flex gap-6 mt-18 w-full flex-col ">
               <label className=" text-gray-400 text-xl">About You:</label>
 
-              <p className=" bg-cyan-950 rounded-lg px-12 py-4 text-white text-wrap">
+              <p className=" bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg hover:shadow-cyan-500/20 
+           transition transform hover:scale-[1.02] w-full px-6 sm:px-12 py-8 text-white text-wrap">
                 {profile.profileDescription}
               </p>
 
@@ -257,13 +273,17 @@ export default function StoreProfilesDetails() {
                 Describe Post:
               </label>
 
-              <p className=" bg-cyan-950 rounded-lg px-12 py-4 text-white text-wrap">
+              <p className=" bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg hover:shadow-cyan-500/20 
+           transition transform hover:scale-[1.02]  px-6 sm:px-12 py-8 text-white text-wrap">
                 {profile.profilePostDescription}
               </p>
             </div>
           </div>
 
-          <div className="flex justify-around items-center mt-12 mb-12">
+          <div className="flex sm:justify-around flex-col sm:flex-row gap-6 sm:gap-0 sm:items-center w-full  mt-12 mb-12 bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg hover:shadow-cyan-500/20 
+           transition transform hover:scale-[1.02] p-6">
             <div className="flex gap-3 items-center">
               <label className=" text-gray-400 text-xl">Mobile NO:</label>
               <p className="text-white">{profile.profileMobile}</p>
@@ -273,7 +293,8 @@ export default function StoreProfilesDetails() {
               <label className=" text-gray-400 text-xl">Email:</label>
               <p className="text-white">{profile.profileEmail}</p>
             </div>
-          </div>
+            </div>
+           
         </div>
       )}
       <Footer />
