@@ -144,18 +144,19 @@ export default function StoreJobList() {
   };
 
   return (
-    <div className="w-full min-h-[100vh] bg-black flex flex-col items-center">
+    <div className="w-full min-h-[100vh] flex flex-col items-center z-[">
+      <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
       <NavHome />
       <h1 className="text-3xl font-bold my-6 text-white text-center">
         Vacancies
       </h1>
       {jobs.length === 0 && <Empty />}
-      <div className="w-full ">
+      <div className=" w-full sm:w-[80%] ">
         <ul className="gap-8 mt-12 flex flex-col items-center w-full ">
           {jobs.map((job) => (
             <li
               key={job._id}
-              className="bg-[#0d212e80] flex gap-12 flex-col  border-white shadow-md  wrap-break-word rounded-lg p-6 w-[70%]"
+              className="bg-[rgb(0,16,19)] flex gap-12 flex-col  border-white shadow-md  wrap-break-word rounded-lg p-6 w-[70%]"
             >
               <div className="flex justify-between items-center text-3xl pr-8">
                 <span></span>
