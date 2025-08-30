@@ -675,8 +675,6 @@ exports.postHireProfile = async (req, res, next) => {
         (pro) => pro.Ids.toString() !== profileId.toString()
       );
       userEmployee.offers.pull({ profile: profileId, offeredBy: user._id });
-      userEmployee.acceptedOffers.pull(profileId);
-      userEmployee.rejectedOffers.pull(profileId);
       await userEmployee.save();
       await user.save();
       return res

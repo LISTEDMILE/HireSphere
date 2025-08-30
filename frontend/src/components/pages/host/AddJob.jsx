@@ -121,14 +121,18 @@ export default function AddJob() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center bg-black">
-      <NavHome active="addJob" />
-      <div className="w-[80%] p-6 flex flex-col items-center shadow-md rounded-lg bg-[#0a1f1d] text-white">
-        <h1 className="text-4xl font-bold mb-6 text-center">
+    <div className="w-full min-h-[100vh] flex flex-col items-center z-[">
+      <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
+      <NavHome />
+      <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
+        <span className="relative z-10">
           {editing ? "Edit" : "Add"} Job Post
-        </h1>
+        </span>
+        <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
+      </h1>
+       <div className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white">
         {errors && (
-          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+         <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
             <ul className="list-disc list-inside">
               {errors.map((err, i) => (
                 <li key={i}>{err}</li>
@@ -139,12 +143,15 @@ export default function AddJob() {
 
         <form
           onSubmit={handleSubmit}
-          className="space-y-8 p-6 flex flex-col items-center w-full"
+          className="space-y-8 py-6 sm:px-6 flex flex-col items-center w-full"
         >
           {editing && <input type="hidden" name="_id" value={formData._id} />}
 
           {/* Organization Name */}
-          <div className="w-full">
+           <div
+            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+          >
             <label className="block text-gray-400 font-medium mb-2">
               Organization Name
             </label>
@@ -156,7 +163,7 @@ export default function AddJob() {
               placeholder="Organization or Company"
               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-          </div>
+         
 
           {/* Post to Seek */}
           <div className="w-full">
@@ -188,84 +195,11 @@ export default function AddJob() {
               placeholder="Location"
               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-          </div>
-
-          {/* Skills */}
-          <div className="w-full flex justify-between">
-            <div className="w-[55%] bg-[#3C2A21] p-4 rounded-lg">
-              <div className="w-full flex space-y-2 flex-col">
-                <div>
-                  <label className="block text-gray-400 font-medium mb-2">
-                    Skills Required
-                  </label>
-                  <div className="flex space-x-4 w-full">
-                    <input
-                      type="text"
-                      placeholder="Skills"
-                      name="skill"
-                      onChange={(e) => setSkill(e.target.value)}
-                      value={skill}
-                      className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    />
-                    <button
-                      onClick={(e) => {
-                        handleArrayAdd(e, "jobSkills", skill);
-                        setSkill("");
-                      }}
-                      className="bg-amber-800 px-6 py-2 rounded-lg"
-                    >
-                      add
-                    </button>
-                  </div>
-                </div>
-                <div className="flex justify-start items-center gap-3 w-full flex-wrap"></div>
-                {formData.jobSkills.map((skill) => {
-                  return (
-                    <div className="bg-cyan-950 px-4 py-3 rounded-lg flex items-center justify-between border-white border-1">
-                      <span>{skill}</span>
-                      <button
-                        onClick={(e) =>
-                          handleArrayRemove(e, "jobSkills", skill)
-                        }
-                      >
-                        <MdOutlineCancel className=" h-full ml-2" />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
             </div>
-            <div className="w-[40%] bg-[#3C2A21] p-4 rounded-lg flex flex-col text-lg gap-4">
-              <h2 className="block text-gray-400 font-medium mb-2">
-                Enter Employement Type
-              </h2>
-              {employmentTypes.map((emType) => {
-                return (
-                  <label
-                    className={`bg-cyan-950 px-4 py-3 rounded-lg flex justify-between items-center ${
-                      formData.jobEmploymentType.includes(emType)
-                        ? "border-green-700  border-2 "
-                        : "border-1 border-white"
-                    }`}
-                  >
-                    {emType}
-                    <input
-                      type="checkbox"
-                      value={emType}
-                      onChange={() => handleEmploymentType(emType)}
-                      className="hidden"
-                    />
 
-                    {formData.jobEmploymentType.includes(emType) && (
-                      <GrRadialSelected className="text-green-300" />
-                    )}
-                  </label>
-                );
-              })}
-            </div>
-          </div>
 
-          {/* Contact Email */}
+
+             {/* Contact Email */}
           <div className="w-full">
             <label className="block text-gray-400 font-medium mb-2">
               Enter your Contact Email
@@ -307,37 +241,7 @@ export default function AddJob() {
             />
           </div>
 
-          <div className="w-full bg-[#3C2A21] p-4 rounded-lg flex flex-col text-lg gap-4">
-            <h2 className="block text-gray-400 font-medium mb-2">
-              Enter Job Type
-            </h2>
-
-            <div className="flex space-x-4">
-              {jobTypes.map((emType) => {
-                return (
-                  <label
-                    className={`bg-cyan-950 px-4 py-3 rounded-lg flex w-fit gap-4 justify-between items-center ${
-                      formData.jobType.includes(emType)
-                        ? "border-green-700  border-2 "
-                        : "border-1 border-white"
-                    }`}
-                  >
-                    {emType}
-                    <input
-                      type="checkbox"
-                      value={emType}
-                      checked={formData.jobType.includes(emType)}
-                      onChange={() => handleJobType(emType)}
-                    />
-                  </label>
-                );
-              })}
-            </div>
-          </div>
-
-        
-
-          <div className="w-full">
+            <div className="w-full">
             <label className="block text-gray-400 font-medium mb-2">
               Enter Job Industry
             </label>
@@ -365,6 +269,125 @@ export default function AddJob() {
               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
+            
+
+          </div>
+          
+
+
+          {/* Skills */}
+          <div className="w-full flex justify-between gap-y-6 flex-col sm:flex-row">
+            <div
+              className="w-full sm:w-[55%] bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+            >
+              <div className="w-full flex space-y-2 flex-col">
+                <div>
+                  <label className="block text-gray-400 font-medium mb-2">
+                    Skills Required
+                   </label>
+                  <div className="flex space-x-4 w-full">
+                    <input
+                      type="text"
+                      placeholder="Skills"
+                      name="skill"
+                      onChange={(e) => setSkill(e.target.value)}
+                      value={skill}
+                      className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    />
+                    <button
+                      onClick={(e) => {
+                        handleArrayAdd(e, "jobSkills", skill);
+                        setSkill("");
+                      }}
+                       className="bg-amber-800 px-6 py-2 rounded-lg"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+                <div className="flex justify-start items-center gap-3 w-full flex-wrap"></div>
+                {formData.jobSkills.map((skill) => {
+                  return (
+                    <div className="bg-cyan-950 px-4 py-3 rounded-lg flex items-center justify-between border-white border-1">
+                      <span>{skill}</span>
+                      <button
+                        onClick={(e) =>
+                          handleArrayRemove(e, "jobSkills", skill)
+                        }
+                      >
+                        <MdOutlineCancel className=" h-full ml-2" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          <div
+              className="w-full sm:w-[40%] bg-[#111827]/70 backdrop-blur-sm border border-gray-700/40 
+           rounded-xl shadow-md flex gap-2 flex-col p-6"
+            >
+              <h2 className="block text-gray-400 font-medium mb-2">
+                Enter Employement Type
+              </h2>
+              {employmentTypes.map((emType) => {
+                return (
+                  <label
+                    className={`bg-cyan-950 px-4 py-3 rounded-lg flex justify-between items-center ${
+                      formData.jobEmploymentType.includes(emType)
+                        ? "border-green-700  border-2 "
+                        : "border-1 border-white"
+                    }`}
+                  >
+                    {emType}
+                    <input
+                      type="checkbox"
+                      value={emType}
+                      onChange={() => handleEmploymentType(emType)}
+                      className="hidden"
+                    />
+
+                    {formData.jobEmploymentType.includes(emType) && (
+                      <GrRadialSelected className="text-green-300" />
+                    )}
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+
+         
+          <div className="w-full bg-[#3C2A21] p-4 rounded-lg flex flex-col text-lg gap-4">
+            <h2 className="block text-gray-400 font-medium mb-2">
+              Enter Job Type
+            </h2>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              {jobTypes.map((emType) => {
+                return (
+                  <label
+                    className={`bg-cyan-950 px-4 py-3 rounded-lg flex w-full sm:w-fit gap-4 justify-between items-center ${
+                      formData.jobType.includes(emType)
+                        ? "border-green-700  border-2 "
+                        : "border-1 border-white"
+                    }`}
+                  >
+                    {emType}
+                    <input
+                      type="checkbox"
+                      value={emType}
+                      checked={formData.jobType.includes(emType)}
+                      onChange={() => handleJobType(emType)}
+                    />
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+
+        
+
+          
 
           {/* Description */}
           <div className="w-full">
