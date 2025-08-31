@@ -421,8 +421,6 @@ exports.postApply = async (req, res, next) => {
         (app) => app.Ids.toString() !== jobId.toString()
       );
       userhost.applications.pull({ job: jobId, applierProfile: user._id });
-      userhost.acceptedJobs.pull(jobId);
-      userhost.rejectedJobs.pull(jobId);
       await userhost.save();
       await user.save();
       return res.status(200).json({ message: "Job application cancelled" });
@@ -575,6 +573,18 @@ exports.postAddAboutEmployee = [
 
   async (req, res) => {
     const errors = validationResult(req);
+      Object.keys(req.body).forEach((key) => {
+      try {
+        const value = req.body[key];
+        if (typeof value === "string" && (value.startsWith("[") || value.startsWith("{"))) {
+          req.body[key] = JSON.parse(value);
+        }
+      } catch (e) {
+        console.warn(`Could not parse ${key}, setting to empty`, e);
+        req.body[key] = [];
+      }
+    });
+
     const data = req.body;
 
     if (!req.session || !req.session.user || !req.session.user._id) {
