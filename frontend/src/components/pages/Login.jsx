@@ -24,6 +24,7 @@ export default function LoginPage() {
       ...formData,
       [name]: value,
     });
+    setErrors(null);
   };
 
   const handleSubmit = async (e) => {
