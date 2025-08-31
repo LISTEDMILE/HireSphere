@@ -107,10 +107,14 @@ export default function AddAboutRecruiter() {
   };
   
   return (
-    <div className=" flex flex-col bg-black text-white items-center ">
+     <div className="w-full min-h-[100vh] flex flex-col items-center ">
+      <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
       <NavHome />
-      <h1 className="text-4xl font-bold mb-6 text-center">Your Profile</h1>
-      <div className="w-[80%] bg-[#0a1f1d] rounded-lg p-12">
+      <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
+        <span className="relative z-10">Your Profile</span>
+        <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
+      </h1>
+       <div className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white ">
         {message && (
           <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-center">
             {message}
@@ -127,10 +131,15 @@ export default function AddAboutRecruiter() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} enctype="multipart/form-data" className="flex flex-col gap-12 ">
+        <form onSubmit={handleSubmit} enctype="multipart/form-data" className="w-full flex flex-col gap-12 ">
            <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
                  
-                    className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+            className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+          
+          <div
+            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+          >
           <div className="flex flex-col gap-5 ">
             {[
               { field: "fullName", placeholder: "Full Name" },
@@ -168,13 +177,14 @@ export default function AddAboutRecruiter() {
                   />
             </div> 
             
-          </div>
+            </div>
+            </div>
 
           <input type="hidden" name="_id" value={formData._id} />
 
-          <div className="w-full flex p-6 border-2 border-white rounded-lg gap-6 flex-col">
+          <div className="w-full flex p-4 sm:p-6 border-2 border-white rounded-lg gap-6 flex-col">
             <div>
-              <label className="block text-gray-400 font-medium mb-2">
+              <label className="block text-gray-400 font-medium mb-4">
                 Roles Hiring:
               </label>
               <div className=" space-x-8">
@@ -226,7 +236,7 @@ export default function AddAboutRecruiter() {
           </div>
 
           <button
-            className="w-fit self-center mt-12  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+            className="w-fit self-center mt-6  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
             type="submit"
           >
             Update
