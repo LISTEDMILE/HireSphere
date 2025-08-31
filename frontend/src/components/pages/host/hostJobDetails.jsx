@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
-import { IoArrowBackSharp } from "react-icons/io5";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
 
@@ -60,24 +59,23 @@ export default function HostJobDetails() {
   };
 
   return (
-    <div className="w-full min-h-[100vh] bg-black flex flex-col items-center">
-      <NavHome />
-
-      <h1 className="text-3xl font-bold text-center my-4">Detailed Job</h1>
+    <div className="w-full min-h-[100vh] flex flex-col items-center h-fit overflow-hidden">
+    <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
+    <NavHome />
+    <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center mb-8">
+      <span className="relative z-10 ">Detailed Job</span>
+        <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
+      </h1>
 
       {!fetching && (
-        <div
-          key={job._id}
-          className="bg-[#0d212e80] flex gap-12 flex-col  border-white shadow-md  wrap-break-word rounded-lg p-6 w-[90%] mb-12"
-        >
-          <div className="flex justify-between items-center text-2xl  px-8">
-            <Link
-              to={`/host/hostJobList`}
-              className=" text-white  hover:text-gray-400  rounded-lg text-3xl "
-            >
-              <IoArrowBackSharp />
-            </Link>
-            <div className="flex gap-12 items-center">
+       
+        
+        
+            <div 
+          className="flex w-full sm:w-[80%] flex-col items-center p-4 gap-6"> 
+             <div className="flex justify-end items-center border-b pb-3 gap-6 w-full border-white text-3xl pr-4">
+            
+          
               <Link
                 to={`/host/addJob/${job._id}?editing=true`}
                 className="text-gray-400 hover:text-gray-600"
@@ -91,12 +89,14 @@ export default function HostJobDetails() {
               >
                 <MdDeleteSweep />
               </button>
-            </div>
+           
           </div>
 
            
-            <div className="w-full flex flex-col gap-4 pl-16">
-              <h2 className="text-3xl text-cyan-400 font-semibold">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-6 flex-col wrap-break-word p-6 w-full  ">
+          <div className="w-full flex flex-col gap-4">
+          <h2 className="text-3xl self-center text-cyan-400 font-semibold">
                 {job.jobPost}
               </h2>
 
@@ -129,63 +129,67 @@ export default function HostJobDetails() {
                 <p className="text-white">{job.jobExperienceRequired}</p>
               </div>
             </div>
- 
+            </div>
 
-          <div className="flex justify-center w-full">
-            <div className="flex flex-col mt-4 w-[80%]">
-              <label className=" text-gray-400 mb-4 text-xl">
+
+         
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg p-6 hover:shadow-cyan-500/20 w-full
+           transition transform hover:scale-[1.02]">
+            <div className="text-white flex gap-6 w-full flex-col ">
+              <label className=" text-gray-400 font-medium">
                 Skills Required:
               </label>
-
-              <div className="flex text-white justify-start items-center gap-3 w-full flex-wrap">
+              <div className="flex flex-wrap gap-3 items-center text-md">
                 {job.jobSkills.map((skill) => {
                   return (
-                    <div className="bg-cyan-950 px-3 py-1 rounded-lg ">
-                      <span>{skill}</span>
-                    </div>
+                    <span className="px-4 py-2 bg-cyan-950 rounded-lg">{skill}  </span>
                   );
                 })}
-              </div>
+              </div></div>
 
-              <label className=" text-gray-400 mt-12 mb-4 text-xl">
+              <div className="text-white flex gap-6 mt-12 w-full flex-col ">
+              <label className=" text-gray-400 font-medium">
                 Employement Type:
-              </label>
-
-              <div className="flex text-white justify-start items-center gap-3 w-full flex-wrap">
+             </label>
+              <div className="flex flex-wrap gap-3 items-center text-md">
                 {job.jobEmploymentType.map((empType) => {
                   return (
-                    <div className="bg-cyan-950 px-3 py-1 rounded-lg ">
-                      <span>{empType}</span>
-                    </div>
+                   <span className="px-4 py-2 bg-cyan-950 rounded-lg">{empType}  </span>
                   );
                 })}
-              </div>
+              </div>            </div>
 
-              <label className=" text-gray-400 mt-12 mb-4 text-xl">
-                Job Options:
-              </label>
-
-              <div className="flex text-white justify-start items-center gap-3 w-full flex-wrap">
+                <div className="text-white flex gap-6 mt-12 w-full flex-col ">
+              <label className=" text-gray-400 font-medium">
+                Job Options:</label>
+              <div className="flex flex-wrap gap-3 items-center text-md">
                 {job.jobType.map((jobType) => {
                   return (
-                    <div className="bg-cyan-950 px-3 py-1 rounded-lg ">
-                      <span>{jobType}</span>
-                    </div>
+                     <span className="px-4 py-2 bg-cyan-950 rounded-lg">{jobType} </span>
                   );
                 })}
               </div>
+              </div>   </div>
+            
 
-              <label className=" text-gray-400 mt-12 mb-4 text-xl">
+             <div className="bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-6 flex-col wrap-break-word p-6 w-full  ">
+
+              <label className=" text-gray-400  text-xl">
                 Description:
               </label>
 
-              <p className=" bg-cyan-950 rounded-lg px-12 py-4 text-white text-wrap">
+              <p className=" bg-cyan-950 rounded-lg  p-4 text-white text-wrap">
                 {job.description}
               </p>
+             
 
-              <label className=" text-gray-400 mt-12 mb-4 text-xl">tags:</label>
+             
+          
+              <label className=" text-gray-400 text-xl">tags:</label>
 
-              <div className="flex text-white justify-start items-center gap-3 w-full flex-wrap">
+              <div className="flex text-white justify-start items-center gap-3 w-full flex-wrap mb-8">
                 {job.jobTags.map((tag) => {
                   return (
                     <div className="bg-cyan-950 px-3 py-1 rounded-lg ">
@@ -193,9 +197,14 @@ export default function HostJobDetails() {
                     </div>
                   );
                 })}
-              </div>
+          </div> </div>
+          
 
-              <div className="flex justify-around items-center mt-12 mb-12">
+
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-6 flex-col wrap-break-word p-6 w-full  ">
+
+              <div className="flex flex-col sm:flex-row justify-around items-start sm:items-center gap-4 sm:gap-0">
                 <div className="flex gap-3 items-center">
                   <label className=" text-gray-400 text-xl">Mobile NO:</label>
                   <p className="text-white">{job.jobOwnerMobile}</p>
@@ -205,10 +214,11 @@ export default function HostJobDetails() {
                   <label className=" text-gray-400 text-xl">Email:</label>
                   <p className="text-white">{job.jobOwnerEmail}</p>
                 </div>
-              </div>
+             
             </div>
-          </div>
-        </div>
+          </div></div>
+         
+        
       )}
 
       <Footer />
