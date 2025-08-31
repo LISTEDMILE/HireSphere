@@ -268,48 +268,59 @@ export default function AddAboutEmployee() {
     setFormData({ ...formData, ["experience"]: elementsArray });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    const fd = new FormData();
-    
-    // Add normal fields
-    for (let key in formData) {
-      if (Array.isArray(formData[key])) {
-        formData[key].forEach((item) => fd.append(key, item)); // arrays
-      } else {
-        fd.append(key, formData[key]);
-      }
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const res = await fetch(`${apiURL}/store/addAboutEmployee`, {
-        method: "POST",
-        credentials: "include",
-        body: fd, // No JSON.stringify, no headers
-      });
-      
-      const data = await res.json();
-      setErrors(data.errors ? data.errors : null);
-      if (!data.errors) {
-        setMessage("Profile Updated Successfully");
-      }
-    } catch (error) {
-      console.error("Error submitting:", error);
+  const fd = new FormData();
+
+  for (let key in formData) {
+    if (Array.isArray(formData[key])) {
+      fd.append(key, JSON.stringify(formData[key])); 
+    } else {
+      fd.append(key, formData[key]);
     }
-  };
+  }
+
+  try {
+    const res = await fetch(`${apiURL}/store/addAboutEmployee`, {
+      method: "POST",
+      credentials: "include",
+      body: fd, // Keep FormData as-is
+    });
+
+    const data = await res.json();
+    setErrors(data.errors ? data.errors : null);
+    if (!data.errors) {
+      setMessage("Profile Updated Successfully");
+    }
+  } catch (error) {
+    console.error("Error submitting:", error);
+  }
+};
+
 
   return (
-    <div className="flex flex-col items-center w-full bg-black text-white">
+    <div className="w-full min-h-[100vh] flex flex-col items-center ">
+      <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
       <NavHome />
-      <h1 className="text-3xl font-bold my-6 text-center">Your Profile</h1>
+      <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
+        <span className="relative z-10">Your Profile</span>
+        <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
+      </h1>
       <form enctype="multipart/form-data"
         onSubmit={handleSubmit}
-        className="w-[80%] p-8 bg-emerald-950 rounded-lg flex flex-col gap-8"
+        className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white gap-12"
       >
-         <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
+         <div
+            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl text-wrap shadow-lg flex gap-2 flex-col p-6"
+          >
+          
+         <img src={(formData.profilePicture && formData.profilePicture!==null && formData.profilePicture!== "") ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
                
-                  className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+          className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+        
+       
         <div className="flex flex-col gap-5 ">
           {[
             { field: "fullName", placeholder: "Full Name" },
@@ -333,6 +344,7 @@ export default function AddAboutEmployee() {
               </div>
             );
           })}
+            </div>
 
 <div className="flex flex-col gap-2">
                   <label className="text-gray-400 text-lg">Profile Picture</label>
@@ -348,7 +360,7 @@ export default function AddAboutEmployee() {
             </div> 
         </div>
 
-        <div className="flex flex-col gap-3">
+         <div className="flex w-full flex-col gap-3">
           <label className="text-gray-400 text-lg">About Yourself</label>
           <textarea
             name="bio"
@@ -359,10 +371,13 @@ export default function AddAboutEmployee() {
           />
         </div>
 
-        <div className="flex flex-col p-6 gap-6 w-full rounded-lg bg-amber-950">
-          <h2 className="pl-8 text-lg">Experience:</h2>
-          <div className="flex p-8 w-full justify-between">
-            <div className=" flex flex-col gap-3 w-[45%]">
+ <div
+            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+          >
+          <h2 className=" text-lg mb-8">Experience:</h2>
+          <div className="flex flex-col sm:flex-row  sm:p-8 w-full justify-between">
+            <div className=" flex flex-col gap-3 w-full sm:w-[45%]">
               <label className="text-gray-400 text-lg">Company:</label>
               <input
                 type="text"
@@ -403,13 +418,13 @@ export default function AddAboutEmployee() {
                 onClick={(e) => {
                   handleAddExperience(e, experience);
                 }}
-                className="w-[fit] mt-6 px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+                className="w-[fit] mt-6 px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition hidden sm:inline"
               >
                 Add Experience
               </button>
             </div>
 
-            <div className="flex flex-col gap-3 w-[45%]">
+            <div className="flex flex-col gap-3 w-full sm:w-[45%] mt-8 sm:mt-0">
               <label className="text-gray-400 text-lg">Description:</label>
               <textarea
                 name="experienceDescriptionWork"
@@ -423,13 +438,23 @@ export default function AddAboutEmployee() {
                 }
                 value={experience.descriptionWork}
               />
+
+               <button
+                onClick={(e) => {
+                  handleAddExperience(e, experience);
+                }}
+                className="w-[fit] mt-6 px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition inline sm:hidden"
+              >
+                Add Experience
+              </button>
+
             </div>
           </div>
 
           <div className="w-full flex flex-col items-center gap-8 mt-12 flex-wrap">
             {formData.experience.map((exp) => {
               return (
-                <div className="bg-cyan-950 flex flex-col p-12 rounded-lg w-[80%] ">
+                <div className="bg-cyan-950 flex flex-col p-4 sm:p-12 rounded-lg w-full sm:w-[80%] ">
                   <div className="flex flex-col gap-3">
                     <div className="flex  gap-3 ">
                       <label className="block text-gray-400 text-md ">
@@ -471,11 +496,14 @@ export default function AddAboutEmployee() {
           </div>
         </div>
 
-        <div className="flex flex-col p-6 gap-6 w-full rounded-lg bg-amber-950">
-          <h2 className="pl-8 text-lg">Education:</h2>
-          <div className="flex p-8 w-full flex-col items-center">
-            <div className=" flex justify-around w-[90%] gap-5 flex-wrap">
-              <div className="flex flex-col gap-3 w-[45%]">
+      <div
+            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+          >
+          <h2 className="text-lg mb-8">Education:</h2>
+          <div className="flex p-0 sm:p-8 w-full flex-col items-center">
+            <div className=" flex flex-col sm:flex-row justify-around w-full sm:w-[90%] gap-5 flex-wrap">
+              <div className="flex flex-col gap-3 w-full sm:w-[45%]">
                 <label className="text-gray-400 text-lg">Degree:</label>
                 <input
                   type="text"
@@ -489,7 +517,7 @@ export default function AddAboutEmployee() {
                 />
               </div>
 
-              <div className="flex flex-col gap-3 w-[45%]">
+              <div className="flex flex-col gap-3 w-full sm:w-[45%]">
                 <label className="text-gray-400 text-lg">College:</label>
                 <input
                   type="text"
@@ -503,7 +531,7 @@ export default function AddAboutEmployee() {
                 />
               </div>
 
-              <div className="flex flex-col gap-3 w-[45%]">
+              <div className="flex flex-col gap-3 w-full sm:w-[45%]">
                 <label className="text-gray-400 text-lg">Passing Year:</label>
                 <input
                   type="text"
@@ -517,7 +545,7 @@ export default function AddAboutEmployee() {
                 />
               </div>
 
-              <div className="flex flex-col gap-3 w-[45%]">
+              <div className="flex flex-col gap-3 w-full sm:w-[45%]">
                 <label className="text-gray-400 text-lg">CGPA:</label>
                 <input
                   type="text"
@@ -542,10 +570,10 @@ export default function AddAboutEmployee() {
             </button>
           </div>
 
-          <div className="w-full flex justify-around gap-8 mt-12 flex-wrap">
+          <div className="w-full flex flex-col sm:flex-row justify-around gap-8 mt-12 flex-wrap">
             {formData.education.map((edu) => {
               return (
-                <div className="bg-cyan-950 flex flex-col p-12 rounded-lg w-[40%] ">
+                <div className="bg-cyan-950 flex flex-col p-4 sm:p-12 rounded-lg w-full sm:w-[40%] ">
                   <div className="flex flex-col gap-3">
                     <div className="flex  gap-3 ">
                       <label className="block text-gray-400 text-md ">
@@ -587,11 +615,14 @@ export default function AddAboutEmployee() {
           </div>
         </div>
 
-        <div className="bg-[#3C2A21] p-4 rounded-lg w-full flex flex-col">
-          <h1 className="text-2xl mb-4">Projects</h1>
-          <div className="flex justify-around">
-            <div className="flex flex-col gap-3 w-[45%]">
-              <label className="block text-gray-400 font-medium mb-2">
+        <div
+            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+          >
+          <h1 className="text-2xl mb-8">Projects</h1>
+         <div className="flex flex-col sm:flex-row  sm:p-8 w-full justify-between">
+            <div className=" flex flex-col gap-3 w-full sm:w-[45%]">
+              <label className="text-gray-400 text-lg">
                 Title:
               </label>
               <input
@@ -631,8 +662,8 @@ export default function AddAboutEmployee() {
                 value={project.link}
               />
             </div>
-            <div className="flex flex-col gap-8 w-[45%] border-2 border-white rounded-lg h-fit">
-              <div className="flex flex-col  p-8 w-full">
+            <div className="flex flex-col gap-8 w-full sm:w-[45%] border-2 border-white rounded-lg h-fit mt-8 sm:mt-0">
+              <div className="flex flex-col  p-4 w-full">
                 <input
                   type="text"
                   placeholder="Project Technologies Used"
@@ -683,7 +714,7 @@ export default function AddAboutEmployee() {
           <div className="w-full flex flex-col items-center gap-8 mt-12 flex-wrap">
             {formData.projects.map((pro) => {
               return (
-                <div className="bg-cyan-950 flex flex-col rounded-lg w-[80%] p-4">
+                <div className="bg-cyan-950 flex flex-col rounded-lg w-full sm:w-[80%] p-4">
                   <div className="flex flex-col gap-3">
                     <div className="flex gap-3">
                       <label className="block text-gray-400 text-md ">
@@ -701,7 +732,7 @@ export default function AddAboutEmployee() {
                       <label className="block text-gray-400 text-md ">
                         Link:
                       </label>
-                      <p className="text-md">{pro.link}</p>
+                      <p className="text-md overflow-x-scroll sm:overflow-x-hidden text-wrap">{pro.link}</p>
                     </div>
 
                     <label className="block text-gray-400 text-md ">
@@ -732,7 +763,10 @@ export default function AddAboutEmployee() {
         </div>
 
         <div className="w-full flex flex-wrap gap-8 justify-around">
-          <div className="w-[45%] bg-[#3C2A21] p-4 rounded-lg h-fit">
+           <div
+            className="w-full sm:w-[45%] bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+          >
             <div className="w-full flex space-y-2 flex-col">
               <div>
                 <label className="block text-gray-400 font-medium mb-2">
@@ -774,7 +808,10 @@ export default function AddAboutEmployee() {
             </div>
           </div>
 
-          <div className="w-[45%] h-fit bg-[#3C2A21] p-4 rounded-lg">
+         <div
+            className="w-full sm:w-[45%] bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+          >
             <div className="w-full flex space-y-2 flex-col">
               <div>
                 <label className="block text-gray-400 font-medium mb-2">
@@ -818,7 +855,10 @@ export default function AddAboutEmployee() {
             </div>
           </div>
 
-          <div className="w-[45%] bg-[#3C2A21] p-4 rounded-lg h-fit">
+       <div
+            className="w-full sm:w-[45%] bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+          >
             <div className="w-full flex space-y-2 flex-col">
               <div>
                 <label className="block text-gray-400 font-medium mb-2">
@@ -861,7 +901,10 @@ export default function AddAboutEmployee() {
               })}
             </div>
           </div>
-          <div className="w-[45%] h-fit bg-[#3C2A21] p-4 rounded-lg">
+          <div
+            className="w-full sm:w-[45%] bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-2 flex-col p-6"
+          >
             <div className="w-full flex space-y-2 flex-col">
               <div>
                 <label className="block text-gray-400 font-medium mb-2">
@@ -894,7 +937,7 @@ export default function AddAboutEmployee() {
                     <span>{lang}</span>
                     <button
                       onClick={(e) =>
-                        handleArrayRemove(e, "languageKnown", language)
+                        handleArrayRemove(e, "languageKnown", lang)
                       }
                     >
                       <MdOutlineCancel className=" h-full ml-2" />
