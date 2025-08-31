@@ -56,9 +56,17 @@ export default function AboutRecruiter() {
             className="w-full bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg flex gap-2 flex-col p-6"
           >
-           <div className="flex flex-col sm:flex-row justify-around w-full gap-8 mb-6 pb-6 border-b">
-                  <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
-                      className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+          <div className="flex flex-col sm:flex-row justify-around w-full gap-8 mb-6 pb-6 border-b">
+            
+            {/* no database */}
+
+                  {/* <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
+                      className="w-[250px] h-[250px] self-center rounded-full mb-6" /> */}
+            
+             <img src="/AlternateProfilePic.png"
+              className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+            
+            
                     <div className='flex flex-col justify-center gap-8 items-start'>
                       <a className="flex gap-4 items-center hover:underline hover:text-red-100 bg-blue-900
                     hover:bg-[#183b34ab] px-6 py-3 rounded transition-all duration-300 ease-in-out" target={formData.linkedIn ? "_blank" : "_self"} href={formData.linkedIn ? formData.linkedIn.startsWith("http") ? `${formData.linkedIn}`: "#" :"#"}><span className="text-3xl"> <FaLinkedin/> </span>Linked In  </a>

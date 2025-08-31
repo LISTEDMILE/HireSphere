@@ -316,9 +316,16 @@ const handleSubmit = async (e) => {
            rounded-2xl text-wrap shadow-lg flex gap-2 flex-col p-6"
           >
           
-         <img src={(formData.profilePicture && formData.profilePicture!==null && formData.profilePicture!== "") ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
+          {/* no database */}
+
+          {/* <img src={(formData.profilePicture && formData.profilePicture!==null && formData.profilePicture!== "") ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"} 
+                    className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+                    */}
+          
+           <img src="/AlternateProfilePic.png"
+              className="w-[250px] h-[250px] self-center rounded-full mb-6" />
                
-          className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+
         
        
         <div className="flex flex-col gap-5 ">

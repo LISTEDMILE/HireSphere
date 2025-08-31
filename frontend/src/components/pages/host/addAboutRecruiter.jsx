@@ -132,9 +132,17 @@ export default function AddAboutRecruiter() {
         )}
 
         <form onSubmit={handleSubmit} enctype="multipart/form-data" className="w-full flex flex-col gap-12 ">
-           <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
+          
+          {/* no database */}
+        
+           {/* <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
                  
-            className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+            className="w-[250px] h-[250px] self-center rounded-full mb-6" /> */}
+          
+           <img src="/AlternateProfilePic.png"
+              className="w-[250px] h-[250px] self-center rounded-full mb-6" />
+
+          
           
           <div
             className="w-full bg-white/5 backdrop-blur-md border border-white/10 
