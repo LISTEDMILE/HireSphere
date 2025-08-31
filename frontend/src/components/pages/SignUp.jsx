@@ -27,6 +27,7 @@ const SignUpPage = () => {
       ...formData,
       [name]: value,
     });
+    setErrors(null);
   };
 
   const handleSubmit = async (e) => {
