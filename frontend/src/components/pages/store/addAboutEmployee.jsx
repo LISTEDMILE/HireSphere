@@ -268,36 +268,35 @@ export default function AddAboutEmployee() {
     setFormData({ ...formData, ["experience"]: elementsArray });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const fd = new FormData();
+    const fd = new FormData();
 
-  for (let key in formData) {
-    if (Array.isArray(formData[key])) {
-      fd.append(key, JSON.stringify(formData[key])); 
-    } else {
-      fd.append(key, formData[key]);
+    for (let key in formData) {
+      if (Array.isArray(formData[key])) {
+        fd.append(key, JSON.stringify(formData[key]));
+      } else {
+        fd.append(key, formData[key]);
+      }
     }
-  }
 
-  try {
-    const res = await fetch(`${apiURL}/store/addAboutEmployee`, {
-      method: "POST",
-      credentials: "include",
-      body: fd, // Keep FormData as-is
-    });
+    try {
+      const res = await fetch(`${apiURL}/store/addAboutEmployee`, {
+        method: "POST",
+        credentials: "include",
+        body: fd, // Keep FormData as-is
+      });
 
-    const data = await res.json();
-    setErrors(data.errors ? data.errors : null);
-    if (!data.errors) {
-      setMessage("Profile Updated Successfully");
+      const data = await res.json();
+      setErrors(data.errors ? data.errors : null);
+      if (!data.errors) {
+        setMessage("Profile Updated Successfully");
+      }
+    } catch (error) {
+      console.error("Error submitting:", error);
     }
-  } catch (error) {
-    console.error("Error submitting:", error);
-  }
-};
-
+  };
 
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center ">
@@ -307,67 +306,66 @@ const handleSubmit = async (e) => {
         <span className="relative z-10">Your Profile</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
-      <form enctype="multipart/form-data"
+      <form
+        enctype="multipart/form-data"
         onSubmit={handleSubmit}
         className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white gap-12"
       >
-         <div
-            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+        <div
+          className="w-full bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl text-wrap shadow-lg flex gap-2 flex-col p-6"
-          >
-          
+        >
           {/* no database */}
 
           {/* <img src={(formData.profilePicture && formData.profilePicture!==null && formData.profilePicture!== "") ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"} 
                     className="w-[250px] h-[250px] self-center rounded-full mb-6" />
                     */}
-          
-           <img src="/AlternateProfilePic.png"
-              className="w-[250px] h-[250px] self-center rounded-full mb-6" />
-               
 
-        
-       
-        <div className="flex flex-col gap-5 ">
-          {[
-            { field: "fullName", placeholder: "Full Name" },
-            { field: "profession", placeholder: "Profession" },
-            { field: "location", placeholder: "Location" },
-            { field: "email", placeholder: "Email" },
-            { field: "linkedIn", placeholder: "LinkedIn" },
-            { field: "gitHub", placeholder: "GitHub" },
-            { field: "mobile", placeholder: "Mobile" },
-          ].map(({ field, placeholder }) => {
-            return (
-              <div className="flex flex-col gap-2">
-                <label className="text-gray-400 text-lg">{placeholder}</label>
-                <input
-                  name={field}
-                  value={formData[field]}
-                  onChange={handleChange}
-                  placeholder={placeholder}
-                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                />
-              </div>
-            );
-          })}
-            </div>
+          <img
+            src="/AlternateProfilePic.png"
+            className="w-[250px] h-[250px] self-center rounded-full mb-6"
+          />
 
-<div className="flex flex-col gap-2">
-                  <label className="text-gray-400 text-lg">Profile Picture</label>
-              <input
-                type="file"
-                    name="profilePicture"
-                    onChange={(e) =>
-                      setFormData({ ...formData, profilePicture: e.target.files[0] })
-                    }
-                accept="image/*"
+          <div className="flex flex-col gap-5 ">
+            {[
+              { field: "fullName", placeholder: "Full Name" },
+              { field: "profession", placeholder: "Profession" },
+              { field: "location", placeholder: "Location" },
+              { field: "email", placeholder: "Email" },
+              { field: "linkedIn", placeholder: "LinkedIn" },
+              { field: "gitHub", placeholder: "GitHub" },
+              { field: "mobile", placeholder: "Mobile" },
+            ].map(({ field, placeholder }) => {
+              return (
+                <div className="flex flex-col gap-2">
+                  <label className="text-gray-400 text-lg">{placeholder}</label>
+                  <input
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleChange}
+                    placeholder={placeholder}
                     className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
                   />
-            </div> 
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-gray-400 text-lg">Profile Picture</label>
+            <input
+              type="file"
+              name="profilePicture"
+              onChange={(e) =>
+                setFormData({ ...formData, profilePicture: e.target.files[0] })
+              }
+              accept="image/*"
+              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+            />
+          </div>
         </div>
 
-         <div className="flex w-full flex-col gap-3">
+        <div className="flex w-full flex-col gap-3">
           <label className="text-gray-400 text-lg">About Yourself</label>
           <textarea
             name="bio"
@@ -378,10 +376,10 @@ const handleSubmit = async (e) => {
           />
         </div>
 
- <div
-            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+        <div
+          className="w-full bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg flex gap-2 flex-col p-6"
-          >
+        >
           <h2 className=" text-lg mb-8">Experience:</h2>
           <div className="flex flex-col sm:flex-row  sm:p-8 w-full justify-between">
             <div className=" flex flex-col gap-3 w-full sm:w-[45%]">
@@ -446,7 +444,7 @@ const handleSubmit = async (e) => {
                 value={experience.descriptionWork}
               />
 
-               <button
+              <button
                 onClick={(e) => {
                   handleAddExperience(e, experience);
                 }}
@@ -454,7 +452,6 @@ const handleSubmit = async (e) => {
               >
                 Add Experience
               </button>
-
             </div>
           </div>
 
@@ -503,10 +500,10 @@ const handleSubmit = async (e) => {
           </div>
         </div>
 
-      <div
-            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+        <div
+          className="w-full bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg flex gap-2 flex-col p-6"
-          >
+        >
           <h2 className="text-lg mb-8">Education:</h2>
           <div className="flex p-0 sm:p-8 w-full flex-col items-center">
             <div className=" flex flex-col sm:flex-row justify-around w-full sm:w-[90%] gap-5 flex-wrap">
@@ -623,15 +620,13 @@ const handleSubmit = async (e) => {
         </div>
 
         <div
-            className="w-full bg-white/5 backdrop-blur-md border border-white/10 
+          className="w-full bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg flex gap-2 flex-col p-6"
-          >
+        >
           <h1 className="text-2xl mb-8">Projects</h1>
-         <div className="flex flex-col sm:flex-row  sm:p-8 w-full justify-between">
+          <div className="flex flex-col sm:flex-row  sm:p-8 w-full justify-between">
             <div className=" flex flex-col gap-3 w-full sm:w-[45%]">
-              <label className="text-gray-400 text-lg">
-                Title:
-              </label>
+              <label className="text-gray-400 text-lg">Title:</label>
               <input
                 type="text"
                 placeholder="Title"
@@ -739,7 +734,9 @@ const handleSubmit = async (e) => {
                       <label className="block text-gray-400 text-md ">
                         Link:
                       </label>
-                      <p className="text-md overflow-x-scroll sm:overflow-x-hidden text-wrap">{pro.link}</p>
+                      <p className="text-md overflow-x-scroll sm:overflow-x-hidden text-wrap">
+                        {pro.link}
+                      </p>
                     </div>
 
                     <label className="block text-gray-400 text-md ">
@@ -770,7 +767,7 @@ const handleSubmit = async (e) => {
         </div>
 
         <div className="w-full flex flex-wrap gap-8 justify-around">
-           <div
+          <div
             className="w-full sm:w-[45%] bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg flex gap-2 flex-col p-6"
           >
@@ -815,7 +812,7 @@ const handleSubmit = async (e) => {
             </div>
           </div>
 
-         <div
+          <div
             className="w-full sm:w-[45%] bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg flex gap-2 flex-col p-6"
           >
@@ -862,7 +859,7 @@ const handleSubmit = async (e) => {
             </div>
           </div>
 
-       <div
+          <div
             className="w-full sm:w-[45%] bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg flex gap-2 flex-col p-6"
           >

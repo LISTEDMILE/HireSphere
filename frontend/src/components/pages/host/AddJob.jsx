@@ -130,9 +130,9 @@ export default function AddJob() {
         </span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
-       <div className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white">
+      <div className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white">
         {errors && (
-         <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
             <ul className="list-disc list-inside">
               {errors.map((err, i) => (
                 <li key={i}>{err}</li>
@@ -148,7 +148,7 @@ export default function AddJob() {
           {editing && <input type="hidden" name="_id" value={formData._id} />}
 
           {/* Organization Name */}
-           <div
+          <div
             className="w-full bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg flex gap-2 flex-col p-6"
           >
@@ -163,117 +163,110 @@ export default function AddJob() {
               placeholder="Organization or Company"
               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-         
 
-          {/* Post to Seek */}
-          <div className="w-full">
-            <label className="block text-gray-400 font-medium mb-2">
-              Post to Seek for
-            </label>
-            <input
-              required
-              type="text"
-              name="jobPost"
-              value={formData.jobPost}
-              onChange={handleChange}
-              placeholder="Required Post"
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
-
-          {/* Location */}
-          <div className="w-full">
-            <label className="block text-gray-400 font-medium mb-2">
-              Location
-            </label>
-            <input
-              required
-              type="text"
-              name="jobLocation"
-              value={formData.jobLocation}
-              onChange={handleChange}
-              placeholder="Location"
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
+            {/* Post to Seek */}
+            <div className="w-full">
+              <label className="block text-gray-400 font-medium mb-2">
+                Post to Seek for
+              </label>
+              <input
+                required
+                type="text"
+                name="jobPost"
+                value={formData.jobPost}
+                onChange={handleChange}
+                placeholder="Required Post"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
             </div>
 
+            {/* Location */}
+            <div className="w-full">
+              <label className="block text-gray-400 font-medium mb-2">
+                Location
+              </label>
+              <input
+                required
+                type="text"
+                name="jobLocation"
+                value={formData.jobLocation}
+                onChange={handleChange}
+                placeholder="Location"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
 
-
-             {/* Contact Email */}
-          <div className="w-full">
-            <label className="block text-gray-400 font-medium mb-2">
-              Enter your Contact Email
-            </label>
-            <input
-              required
-              type="email"
-              name="jobOwnerEmail"
-              value={formData.jobOwnerEmail}
-              onChange={handleChange}
-              placeholder="Contact Email"
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
-
-          <div className="w-full">
-            <label className="block text-gray-400 font-medium mb-2">
-              Salary Offered
-            </label>
-            <input
-              name="jobSalaryOffered"
-              value={formData.jobSalaryOffered}
-              onChange={handleChange}
-              placeholder="Salary Offered"
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
-
-          <div className="w-full">
-            <label className="block text-gray-400 font-medium mb-2">
-              Enter Experience Required
-            </label>
-            <input
-              name="jobExperienceRequired"
-              value={formData.jobExperienceRequired}
-              onChange={handleChange}
-              placeholder="Experience Required"
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
+            {/* Contact Email */}
+            <div className="w-full">
+              <label className="block text-gray-400 font-medium mb-2">
+                Enter your Contact Email
+              </label>
+              <input
+                required
+                type="email"
+                name="jobOwnerEmail"
+                value={formData.jobOwnerEmail}
+                onChange={handleChange}
+                placeholder="Contact Email"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
 
             <div className="w-full">
-            <label className="block text-gray-400 font-medium mb-2">
-              Enter Job Industry
-            </label>
-            <input
-              name="jobIndustry"
-              value={formData.jobIndustry}
-              onChange={handleChange}
-              placeholder="Enter Industry"
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
+              <label className="block text-gray-400 font-medium mb-2">
+                Salary Offered
+              </label>
+              <input
+                name="jobSalaryOffered"
+                value={formData.jobSalaryOffered}
+                onChange={handleChange}
+                placeholder="Salary Offered"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
 
-          {/* Contact Mobile */}
-          <div className="w-full">
-            <label className="block text-gray-400 font-medium mb-2">
-              Contact Mobile
-            </label>
-            <input
-              required
-              type="text"
-              name="jobOwnerMobile"
-              value={formData.jobOwnerMobile}
-              onChange={handleChange}
-              placeholder="Mobile No."
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
-            
+            <div className="w-full">
+              <label className="block text-gray-400 font-medium mb-2">
+                Enter Experience Required
+              </label>
+              <input
+                name="jobExperienceRequired"
+                value={formData.jobExperienceRequired}
+                onChange={handleChange}
+                placeholder="Experience Required"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
 
-          </div>
-          
+            <div className="w-full">
+              <label className="block text-gray-400 font-medium mb-2">
+                Enter Job Industry
+              </label>
+              <input
+                name="jobIndustry"
+                value={formData.jobIndustry}
+                onChange={handleChange}
+                placeholder="Enter Industry"
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
 
+            {/* Contact Mobile */}
+            <div className="w-full">
+              <label className="block text-gray-400 font-medium mb-2">
+                Contact Mobile
+              </label>
+              <input
+                required
+                type="text"
+                name="jobOwnerMobile"
+                value={formData.jobOwnerMobile}
+                onChange={handleChange}
+                placeholder="Mobile No."
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
+          </div>
 
           {/* Skills */}
           <div className="w-full flex justify-between gap-y-6 flex-col sm:flex-row">
@@ -285,7 +278,7 @@ export default function AddJob() {
                 <div>
                   <label className="block text-gray-400 font-medium mb-2">
                     Skills Required
-                   </label>
+                  </label>
                   <div className="flex space-x-4 w-full">
                     <input
                       type="text"
@@ -300,7 +293,7 @@ export default function AddJob() {
                         handleArrayAdd(e, "jobSkills", skill);
                         setSkill("");
                       }}
-                       className="bg-amber-800 px-6 py-2 rounded-lg"
+                      className="bg-amber-800 px-6 py-2 rounded-lg"
                     >
                       Add
                     </button>
@@ -323,7 +316,7 @@ export default function AddJob() {
                 })}
               </div>
             </div>
-          <div
+            <div
               className="w-full sm:w-[40%] bg-[#111827]/70 backdrop-blur-sm border border-gray-700/40 
            rounded-xl shadow-md flex gap-2 flex-col p-6"
             >
@@ -356,7 +349,6 @@ export default function AddJob() {
             </div>
           </div>
 
-         
           <div className="w-full bg-[#3C2A21] p-4 rounded-lg flex flex-col text-lg gap-4">
             <h2 className="block text-gray-400 font-medium mb-2">
               Enter Job Type
@@ -384,10 +376,6 @@ export default function AddJob() {
               })}
             </div>
           </div>
-
-        
-
-          
 
           {/* Description */}
           <div className="w-full">

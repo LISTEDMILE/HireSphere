@@ -139,12 +139,10 @@ export default function StoreJobDetails() {
 
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center h-fit overflow-hidden">
-    <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
-    <NavHome />
-    <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center mb-8">
-      <span className="relative z-10 ">
-        Detailed Post
-      </span>
+      <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
+      <NavHome />
+      <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center mb-8">
+        <span className="relative z-10 ">Detailed Post</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
       {!fetching && (
@@ -153,28 +151,29 @@ export default function StoreJobDetails() {
           className=" flex gap-8 flex-col  border-white shadow-md  wrap-break-word rounded-lg w-[90%] mb-24"
         >
           <div className="flex justify-between items-center text-3xl pr-8 border-b border-white pb-4">
-                <span></span>
+            <span></span>
 
-                {job.applied == true && (
-                  <div className="mt-2 flex gap-3">
-                    <label className=" text-gray-400 text-xl">Status:</label>
-                    <p className="text-white text-xl">{job.status}</p>
-                  </div>
-                )}
-              <button
-                onClick={() => handleFavourite(job._id)}
-                className={`${
-                  job.fav ? "text-yellow-500" : "text-gray-500"
-                } hover:underline`}
-              >
-                {job.fav ? "★" : "☆"}
-              </button>
-          
+            {job.applied == true && (
+              <div className="mt-2 flex gap-3">
+                <label className=" text-gray-400 text-xl">Status:</label>
+                <p className="text-white text-xl">{job.status}</p>
+              </div>
+            )}
+            <button
+              onClick={() => handleFavourite(job._id)}
+              className={`${
+                job.fav ? "text-yellow-500" : "text-gray-500"
+              } hover:underline`}
+            >
+              {job.fav ? "★" : "☆"}
+            </button>
           </div>
-         <div className="bg-white/5 backdrop-blur-md border border-white/10 
-           rounded-2xl shadow-lg flex gap-6 flex-col wrap-break-word p-6 w-full  ">
-          <div className="w-full flex flex-col gap-4">
-          <h2 className="text-3xl self-center text-cyan-400 font-semibold">
+          <div
+            className="bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-6 flex-col wrap-break-word p-6 w-full  "
+          >
+            <div className="w-full flex flex-col gap-4">
+              <h2 className="text-3xl self-center text-cyan-400 font-semibold">
                 {job.jobPost}
               </h2>
 
@@ -207,13 +206,13 @@ export default function StoreJobDetails() {
                 <p className="text-white">{job.jobExperienceRequired}</p>
               </div>
             </div>
-            </div>
+          </div>
 
-
-         
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 
+          <div
+            className="bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg p-6 hover:shadow-cyan-500/20 w-full
-           transition transform hover:scale-[1.02]">
+           transition transform hover:scale-[1.02]"
+          >
             <div className="text-white flex gap-6 w-full flex-col ">
               <label className=" text-gray-400 font-medium">
                 Skills Required:
@@ -221,114 +220,109 @@ export default function StoreJobDetails() {
               <div className="flex flex-wrap gap-3 items-center text-md">
                 {job.jobSkills.map((skill) => {
                   return (
-                    <span className="px-4 py-2 bg-cyan-950 rounded-lg">{skill}  </span>
+                    <span className="px-4 py-2 bg-cyan-950 rounded-lg">
+                      {skill}{" "}
+                    </span>
                   );
                 })}
-              </div></div>
-
-              <div className="text-white flex gap-6 mt-12 w-full flex-col ">
+              </div>
+            </div>
+            <div className="text-white flex gap-6 mt-12 w-full flex-col ">
               <label className=" text-gray-400 font-medium">
                 Employement Type:
-             </label>
+              </label>
               <div className="flex flex-wrap gap-3 items-center text-md">
                 {job.jobEmploymentType.map((empType) => {
                   return (
-                   <span className="px-4 py-2 bg-cyan-950 rounded-lg">{empType}  </span>
+                    <span className="px-4 py-2 bg-cyan-950 rounded-lg">
+                      {empType}{" "}
+                    </span>
                   );
                 })}
-              </div>            </div>
-
-                <div className="text-white flex gap-6 mt-12 w-full flex-col ">
-              <label className=" text-gray-400 font-medium">
-                Job Options:</label>
+              </div>{" "}
+            </div>
+            <div className="text-white flex gap-6 mt-12 w-full flex-col ">
+              <label className=" text-gray-400 font-medium">Job Options:</label>
               <div className="flex flex-wrap gap-3 items-center text-md">
                 {job.jobType.map((jobType) => {
                   return (
-                     <span className="px-4 py-2 bg-cyan-950 rounded-lg">{jobType} </span>
+                    <span className="px-4 py-2 bg-cyan-950 rounded-lg">
+                      {jobType}{" "}
+                    </span>
                   );
                 })}
               </div>
-              </div>   </div>
-            
+            </div>{" "}
+          </div>
 
-             <div className="bg-white/5 backdrop-blur-md border border-white/10 
-           rounded-2xl shadow-lg flex gap-6 flex-col wrap-break-word p-6 w-full  ">
+          <div
+            className="bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-6 flex-col wrap-break-word p-6 w-full  "
+          >
+            <label className=" text-gray-400  text-xl">Description:</label>
 
-              <label className=" text-gray-400  text-xl">
-                Description:
-              </label>
+            <p className=" bg-cyan-950 rounded-lg  p-4 text-white text-wrap">
+              {job.description}
+            </p>
+          </div>
 
-              <p className=" bg-cyan-950 rounded-lg  p-4 text-white text-wrap">
-                {job.description}
-              </p>
-              </div>
+          <div
+            className="bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex gap-6 flex-col wrap-break-word p-6 w-full  "
+          >
+            <label className=" text-gray-400 text-xl">tags:</label>
 
-             <div className="bg-white/5 backdrop-blur-md border border-white/10 
-           rounded-2xl shadow-lg flex gap-6 flex-col wrap-break-word p-6 w-full  ">
-          
-              <label className=" text-gray-400 text-xl">tags:</label>
-
-              <div className="flex text-white justify-start items-center gap-3 w-full flex-wrap mb-8">
-                {job.jobTags.map((tag) => {
-                  return (
-                    <div className="bg-cyan-950 px-3 py-1 rounded-lg ">
-                      <span>{tag}</span>
-                    </div>
-                  );
-                })}
+            <div className="flex text-white justify-start items-center gap-3 w-full flex-wrap mb-8">
+              {job.jobTags.map((tag) => {
+                return (
+                  <div className="bg-cyan-950 px-3 py-1 rounded-lg ">
+                    <span>{tag}</span>
+                  </div>
+                );
+              })}
             </div>
 
-
-              <div className="flex justify-end mt-4 items-center gap-3">
-                <Link
-                  to={`/store/aboutRecruiter/${job.jobUploader}`}
-                  className="bg-cyan-600 text-white hover:bg-cyan-800 px-4 py-2  rounded-lg  "
-                >
-                  Uploader Profile
-                </Link>
-
-                <Link
-                  to={`/store/storeOffererJobs/${job.jobUploader}`}
-                  className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg  "
-                >
-                  Get Uploaded Jobs
-                </Link>
-            </div>
-            </div>
-            
-           
-
-               <div className="bg-white/5 backdrop-blur-md border border-white/10 
-           rounded-2xl shadow-lg flex flex-col sm:flex-row gap-6 justify-around wrap-break-word p-6 w-full  ">
-                <div className="flex gap-3 items-center">
-                  <label className=" text-gray-400 text-xl">Mobile NO:</label>
-                  <p className="text-white">{job.jobOwnerMobile}</p>
-                </div>
-
-                <div className="flex gap-3 items-center">
-                  <label className=" text-gray-400 text-xl">Email:</label>
-                  <p className="text-white">{job.jobOwnerEmail}</p>
-                </div>
-             
-            </div>
-             <button
-                onClick={() => handleApply(job._id)}
-                className="mt-4 bg-teal-600 text-white w-fit self-center py-2 px-24 rounded hover:bg-teal-700 transition"
+            <div className="flex justify-end mt-4 items-center gap-3">
+              <Link
+                to={`/store/aboutRecruiter/${job.jobUploader}`}
+                className="bg-cyan-600 text-white hover:bg-cyan-800 px-4 py-2  rounded-lg  "
               >
-                {job.applied ? "Cancel Apply" : "Apply"}
-      </button>
-        
+                Uploader Profile
+              </Link>
+
+              <Link
+                to={`/store/storeOffererJobs/${job.jobUploader}`}
+                className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg  "
+              >
+                Get Uploaded Jobs
+              </Link>
+            </div>
+          </div>
+
+          <div
+            className="bg-white/5 backdrop-blur-md border border-white/10 
+           rounded-2xl shadow-lg flex flex-col sm:flex-row gap-6 justify-around wrap-break-word p-6 w-full  "
+          >
+            <div className="flex gap-3 items-center">
+              <label className=" text-gray-400 text-xl">Mobile NO:</label>
+              <p className="text-white">{job.jobOwnerMobile}</p>
+            </div>
+
+            <div className="flex gap-3 items-center">
+              <label className=" text-gray-400 text-xl">Email:</label>
+              <p className="text-white">{job.jobOwnerEmail}</p>
+            </div>
+          </div>
+          <button
+            onClick={() => handleApply(job._id)}
+            className="mt-4 bg-teal-600 text-white w-fit self-center py-2 px-24 rounded hover:bg-teal-700 transition"
+          >
+            {job.applied ? "Cancel Apply" : "Apply"}
+          </button>
         </div>
       )}
 
       <Footer />
-       
-      
-
-
-      
     </div>
-
-    
   );
 }

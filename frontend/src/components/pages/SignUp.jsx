@@ -129,40 +129,49 @@ const SignUpPage = () => {
         <div className="mb-4">
           <label className="block  font-medium mb-2">Password</label>
           <div className="w-full focus-within:ring-2 focus-within:ring-cyan-500 flex items-center justify-between rounded border">
-          <input
-            type={`${display?"text":"password"}`}
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            className="w-full p-2 outline-none"
-            required
+            <input
+              type={`${display ? "text" : "password"}`}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              className="w-full p-2 outline-none"
+              required
             />
-            <button onClick={(e) => {
-              e.preventDefault();
-              setDisplay(!display);
-            }}
-            className="mr-2"> {display ? "👁️": "🙈" }</button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setDisplay(!display);
+              }}
+              className="mr-2"
+            >
+              {" "}
+              {display ? "👁️" : "🙈"}
+            </button>
           </div>
-          
         </div>
         <div className="mb-4">
           <label className="block  font-medium mb-2">Confirm Password</label>
           <div className="w-full focus-within:ring-2 focus-within:ring-cyan-500 flex items-center justify-between rounded border">
-          <input
-            type={`${display?"text":"password"}`}
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            placeholder="Confirm your password"
-            className="w-full p-2 outline-none"
-            required
+            <input
+              type={`${display ? "text" : "password"}`}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm your password"
+              className="w-full p-2 outline-none"
+              required
             />
-            <button onClick={(e) => {
-              e.preventDefault();
-              setDisplay(!display);
-            }}
-            className="mr-2"> {display ? "👁️": "🙈" }</button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setDisplay(!display);
+              }}
+              className="mr-2"
+            >
+              {" "}
+              {display ? "👁️" : "🙈"}
+            </button>
           </div>
         </div>
         <div className="mb-4">

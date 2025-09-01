@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 
 const jobSchema = new mongoose.Schema({
@@ -67,7 +66,7 @@ const jobSchema = new mongoose.Schema({
 
 jobSchema.pre("findOneAndDelete", async function (next) {
   const UserEmployee = require("../models/userEmployee");
-const UserRecruiter = require("../models/userRecruiter");
+  const UserRecruiter = require("../models/userRecruiter");
   const jobId = new mongoose.Types.ObjectId(this.getQuery()["_id"]);
   await UserRecruiter.findOneAndUpdate(
     { jobsPosted: jobId },

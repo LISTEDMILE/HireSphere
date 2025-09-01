@@ -144,7 +144,7 @@ export default function FavouriteProfileList() {
       </h1>
 
       {favouriteProfiles.length === 0 && <Empty />}
-     <div className=" w-full sm:w-[80%] ">
+      <div className=" w-full sm:w-[80%] ">
         <ul className="gap-8 mt-12 flex flex-col sm:flex-row flex-wrap justify-around items-center w-full ">
           {favouriteProfiles.map((detail) => (
             <li
@@ -172,65 +172,58 @@ export default function FavouriteProfileList() {
                   {detail.fav ? "★" : "☆"}
                 </button>
               </div>
-         
-              
-               <div className="w-full flex flex-col gap-4">
-                <h2 className="text-3xl self-center text-cyan-400 font-semibold">
-                    {detail.profilePost}
-                  </h2>
-                  <div className="mt-2 flex gap-3">
-                  <label className=" text-gray-400 text-xl">Name:</label>
-                    <p className="text-white text-xl">{detail.profileName}</p>
-                  </div>
 
-                  <div className="mt-2 flex gap-3">
-                    <label className=" text-gray-400 font-medium">Tenth</label>
-                    <p className="text-white">
-                      {" "}
-                      <span className="font-semibold">10th (%):</span>{" "}
-                      {detail.profileTenth}
-                    </p>
-                  </div>
-                  <div className="mt-2 flex gap-3">
+              <div className="w-full flex flex-col gap-4">
+                <h2 className="text-3xl self-center text-cyan-400 font-semibold">
+                  {detail.profilePost}
+                </h2>
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 text-xl">Name:</label>
+                  <p className="text-white text-xl">{detail.profileName}</p>
+                </div>
+
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 font-medium">Tenth</label>
+                  <p className="text-white">
+                    {" "}
+                    <span className="font-semibold">10th (%):</span>{" "}
+                    {detail.profileTenth}
+                  </p>
+                </div>
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 font-medium">Twelth:</label>
+                  <p className="text-white">
+                    {" "}
+                    <span className="font-semibold">12th (%):</span>{" "}
+                    {detail.profileTwelth}
+                  </p>
+                </div>
+
+                <div className="w-full text-white  flex justify-center">
+                  <div className=" flex gap-6 w-full flex-col ">
                     <label className=" text-gray-400 font-medium">
-                      Twelth:
+                      Skills:
                     </label>
-                    <p className="text-white">
-                      {" "}
-                      <span className="font-semibold">12th (%):</span>{" "}
-                      {detail.profileTwelth}
-                    </p>
-                  </div>
-           
-       
-            <div className="w-full text-white  flex justify-center">
-                <div className=" flex gap-6 w-full flex-col ">
-                  <label className=" text-gray-400 font-medium">Skills:</label>
-                  <div className="flex flex-wrap gap-3 items-center text-md">
-                    {detail.profileSkills.map((skill) => {
-                      return (
-                        <span className="px-6 py-1.5 bg-cyan-950 rounded-lg">
-                          {skill}
-                        </span>
-                      );
-                    })}
+                    <div className="flex flex-wrap gap-3 items-center text-md">
+                      {detail.profileSkills.map((skill) => {
+                        return (
+                          <span className="px-6 py-1.5 bg-cyan-950 rounded-lg">
+                            {skill}
+                          </span>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
-              
-             </div>
 
-                
                 <Link
-                    to={`/host/hostProfileDetails/${detail._id}`}
-                    className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg "
-                  >
-                    Details
+                  to={`/host/hostProfileDetails/${detail._id}`}
+                  className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg "
+                >
+                  Details
                 </Link>
-                
-              <div className="mt-2 flex gap-3 justify-start items-center pr-4">
-                
-                  
 
+                <div className="mt-2 flex gap-3 justify-start items-center pr-4">
                   <Link
                     to={`/host/aboutEmployee/${detail.profileUploader}`}
                     className="bg-cyan-600 text-white hover:bg-cyan-800 px-4 py-2  rounded-lg  "
@@ -247,19 +240,17 @@ export default function FavouriteProfileList() {
                 </div>
               </div>
 
-               <div className="mt-4 items-center gap-3 pr-4 flex justify-end">
-                
-                  <button
-                    onClick={() => handleHireProfile(detail._id)}
-                    className={`px-4 py-2 rounded-lg font-semibold text-white ${
-                      detail.choosen
-                        ? "bg-red-500 hover:bg-red-600"
-                        : "bg-green-500 hover:bg-green-600"
-                    }`}
-                  >
-                    {detail.choosen ? "Deselect" : "Select"}
-                  </button>
-         
+              <div className="mt-4 items-center gap-3 pr-4 flex justify-end">
+                <button
+                  onClick={() => handleHireProfile(detail._id)}
+                  className={`px-4 py-2 rounded-lg font-semibold text-white ${
+                    detail.choosen
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-green-500 hover:bg-green-600"
+                  }`}
+                >
+                  {detail.choosen ? "Deselect" : "Select"}
+                </button>
               </div>
             </li>
           ))}

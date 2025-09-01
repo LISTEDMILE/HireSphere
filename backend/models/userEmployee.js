@@ -125,20 +125,18 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-
-   
   },
   { timestamps: true }
 );
 
 userSchema.pre("findOneAndDelete", async function (next) {
-  
   const Profile = require("../models/firstProfilemodel");
   const userId = new mongoose.Types.ObjectId(this.getQuery()["_id"]);
-  const profileIds = await Profile.find({profileUploader:userId});
- await Promise.all(profileIds.map(profileId =>  Profile.findByIdAndDelete(profileId._id)
-  ));
+  const profileIds = await Profile.find({ profileUploader: userId });
+  await Promise.all(
+    profileIds.map((profileId) => Profile.findByIdAndDelete(profileId._id))
+  );
   next();
-})
+});
 
 module.exports = mongoose.model("UserEmployee", userSchema);

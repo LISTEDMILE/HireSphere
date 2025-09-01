@@ -112,9 +112,7 @@ function App() {
     { path: "/host/addAboutRecruiter", element: <AddAboutRecruiter /> },
     { path: "/host/aboutEmployee/:userId", element: <AboutEmployee /> },
 
-
-
-    {path:"*", element:<ErrorPage/>}
+    { path: "*", element: <ErrorPage /> },
   ]);
   return <RouterProvider router={route}></RouterProvider>;
 }

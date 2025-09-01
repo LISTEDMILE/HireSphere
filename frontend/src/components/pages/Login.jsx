@@ -104,20 +104,25 @@ export default function LoginPage() {
         <div className="mb-4">
           <label className="block text-white font-medium mb-2">Password</label>
           <div className="w-full focus-within:ring-2 focus-within:ring-cyan-500 flex items-center justify-between rounded border text-white">
-          <input
-            type={`${display?"text":"password"}`}
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            className="w-full p-2 outline-none"
-            required
+            <input
+              type={`${display ? "text" : "password"}`}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              className="w-full p-2 outline-none"
+              required
             />
-            <button onClick={(e) => {
-              e.preventDefault();
-              setDisplay(!display);
-            }}
-            className="mr-2"> {display ? "👁️": "🙈" }</button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setDisplay(!display);
+              }}
+              className="mr-2"
+            >
+              {" "}
+              {display ? "👁️" : "🙈"}
+            </button>
           </div>
         </div>
         <div className="my-8  text-white">

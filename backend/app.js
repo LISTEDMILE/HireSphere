@@ -45,7 +45,7 @@ app.use(
       secure: process.env.NODE_ENV === "production", // true in prod (HTTPS only)
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 1000 * 60 * 60 * 24,
-    }
+    },
   })
 );
 
@@ -55,7 +55,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/uploads",require("cors")(), express.static(path.join(__dirname, "uploads")));
+app.use(
+  "/uploads",
+  require("cors")(),
+  express.static(path.join(__dirname, "uploads"))
+);
 
 app.use("/", authRouter);
 app.use("/host", hostRouter);
@@ -70,7 +74,7 @@ app.get("*", (req, res) => {
 mongoose
   .connect(DB_path)
   .then(() => {
-    app.listen(PORT,"0.0.0.0", () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server Running at http://localhost:${PORT}`);
     });
   })

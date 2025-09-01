@@ -112,7 +112,7 @@ profileSchema.pre("findOneAndDelete", async function (next) {
     { "offers.profile": profileId },
     { $pull: { offers: { profile: profileId } } }
   );
- 
+
   next();
 });
 

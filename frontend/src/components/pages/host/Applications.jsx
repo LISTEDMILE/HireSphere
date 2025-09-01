@@ -47,7 +47,9 @@ export default function Applications() {
       });
 
       setApplications((prevApplications) =>
-        prevApplications.filter((application) => application._id !== applicationId)
+        prevApplications.filter(
+          (application) => application._id !== applicationId
+        )
       ); // Remove the rejected application from the list
     } catch (error) {
       console.error("Error rejecting application:", error);
@@ -100,78 +102,74 @@ export default function Applications() {
   };
 
   return (
-   <div className="w-full min-h-[100vh] flex flex-col items-center ">
-          <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
-          <NavHome />
-          <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
-            <span className="relative z-10">
-        Applications</span>
+    <div className="w-full min-h-[100vh] flex flex-col items-center ">
+      <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
+      <NavHome />
+      <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
+        <span className="relative z-10">Applications</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
 
       {applications.length === 0 && <Empty />}
-       <div className=" w-full sm:w-[80%] ">
+      <div className=" w-full sm:w-[80%] ">
         <ul className="gap-8 mt-12 flex flex-col sm:flex-row flex-wrap justify-around items-center w-full ">
           {applications.map((application) => (
             <li
               key={application._id}
-             className="bg-white/5 backdrop-blur-md border border-white/10 
+              className="bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg hover:shadow-cyan-500/20 
            transition transform hover:scale-[1.02] flex gap-12 flex-col    wrap-break-word p-6 w-[95%] sm:w-[80%] "
             >
-             <div className="flex justify-end items-center border-b pb-3 border-white text-3xl gap-6 pr-4">
+              <div className="flex justify-end items-center border-b pb-3 border-white text-3xl gap-6 pr-4">
                 <Link
                   to={`/host/addJob/${application.job._id}?editing=true`}
                   className="text-gray-400 hover:text-gray-600"
                 >
                   <FaUserEdit />
                 </Link>
-                
-              </div>
-   
-               
-                <div className="w-full flex flex-col gap-4">
-              <h2 className="text-3xl self-center text-cyan-400 font-semibold">
-                    {application.job.jobPost}
-                  </h2>
-
-                  <div className="mt-2 flex gap-3">
-                    <label className=" text-gray-400 text-xl">
-                      Organization:
-                    </label>
-                    <p className="text-white text-xl">
-                      {application.job.jobCompany}
-                    </p>
-                  </div>
-
-                  <div className="mt-2 flex gap-3">
-                    <label className=" text-gray-400 font-medium">
-                      Location:
-                    </label>
-                    <p className="text-white">{application.job.jobLocation}</p>
-                  </div>
-
-                  <div className="mt-2 flex gap-3">
-                    <label className=" text-gray-400 font-medium">
-                      Salary Offered:
-                    </label>
-                    <p className="text-cyan-300">
-                      {application.job.jobSalaryOffered}
-                    </p>
-                  </div>
-
-                  <div className="mt-2 flex gap-3">
-                    <label className=" text-gray-400 font-medium">
-                      Required Experience:
-                    </label>
-                    <p className="text-white">
-                      {application.job.jobExperienceRequired}
-                    </p>
-                  </div>
-     
               </div>
 
-               <div className="mt-4 flex justify-between">
+              <div className="w-full flex flex-col gap-4">
+                <h2 className="text-3xl self-center text-cyan-400 font-semibold">
+                  {application.job.jobPost}
+                </h2>
+
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 text-xl">
+                    Organization:
+                  </label>
+                  <p className="text-white text-xl">
+                    {application.job.jobCompany}
+                  </p>
+                </div>
+
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 font-medium">
+                    Location:
+                  </label>
+                  <p className="text-white">{application.job.jobLocation}</p>
+                </div>
+
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 font-medium">
+                    Salary Offered:
+                  </label>
+                  <p className="text-cyan-300">
+                    {application.job.jobSalaryOffered}
+                  </p>
+                </div>
+
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 font-medium">
+                    Required Experience:
+                  </label>
+                  <p className="text-white">
+                    {application.job.jobExperienceRequired}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 flex justify-between">
                 <div className="flex gap-3 items-center ml-6">
                   <span className="text-gray-400 text-xl"> Status:</span>
                   <p className="text-cyan-300 text-xl">{application.status}</p>
@@ -232,7 +230,7 @@ export default function Applications() {
                 </div>
               </div>
 
-                <div className="flex mt-6 items-center justify-end pr-6 gap-3">
+              <div className="flex mt-6 items-center justify-end pr-6 gap-3">
                 {application.status !== "rejected" && (
                   <button
                     className="bg-red-600 hover:bg-red-800 text-white px-4 py-2 rounded mt-4"

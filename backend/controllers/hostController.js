@@ -6,7 +6,6 @@ const fs = require("fs");
 const path = require("path");
 const { check, validationResult } = require("express-validator");
 
-
 exports.addJobPost = [
   check("jobCompany").notEmpty().withMessage("Job Company is required").trim(),
   check("jobPost").notEmpty().withMessage("Job Post is required").trim(),
@@ -95,22 +94,11 @@ exports.addJobPost = [
 ];
 
 exports.postAddAboutRecruiter = [
-check("companyWebsite")
-  .trim()
-  .isURL()
-  .withMessage("Invalid Website URL"),
+  check("companyWebsite").trim().isURL().withMessage("Invalid Website URL"),
 
-check("email")
-  .isEmail()
-  .withMessage("Invalid email format")
-  .normalizeEmail(),
+  check("email").isEmail().withMessage("Invalid email format").normalizeEmail(),
 
-check("linkedIn")
-  .trim()
-  .isURL()
-    .withMessage("Invalid LinkedIn URL"),
-  
-
+  check("linkedIn").trim().isURL().withMessage("Invalid LinkedIn URL"),
 
   async (req, res) => {
     const errors = validationResult(req);
@@ -118,9 +106,8 @@ check("linkedIn")
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array().map((err) => err.msg),
-        oldInput: {...data}
+        oldInput: { ...data },
       });
-
     }
 
     try {
@@ -137,24 +124,25 @@ check("linkedIn")
       }
 
       let profilePath;
-      
+
       if (req.file) {
         profilePath = `/uploads/${req.file.filename}`;
-        const oldImagePath = path.join(__dirname, `..${user.aboutRecruiter.profilePicture}`);
+        const oldImagePath = path.join(
+          __dirname,
+          `..${user.aboutRecruiter.profilePicture}`
+        );
         fs.unlink(oldImagePath, (error) => {
           if (error) {
-            console.log("Error uploading image",error);
+            console.log("Error uploading image", error);
           }
-        })
-      }
-      else if(user.aboutRecruiter.profilePicture){
+        });
+      } else if (user.aboutRecruiter.profilePicture) {
         profilePath = user.aboutRecruiter.profilePicture;
-      }
-      else {
+      } else {
         profilePath = null;
       }
 
-      user.aboutRecruiter = {...data, profilePicture:profilePath};
+      user.aboutRecruiter = { ...data, profilePicture: profilePath };
 
       await user.save();
 
@@ -218,11 +206,9 @@ exports.getAddAboutRecruiter = async (req, res, next) => {
   const user = await UserRecruiter.findById(userId);
   if (!user) {
     return res.status(400).json({ error: "Unauthorized access" });
-  }
-  else if (user.userType !== "recruiter") {
+  } else if (user.userType !== "recruiter") {
     return res.status(400).json({ error: "Unauthorized Access" });
-  } 
-  else {
+  } else {
     return res.status(200).json(user.aboutRecruiter);
   }
 };
@@ -273,7 +259,7 @@ exports.getApplications = async (req, res, next) => {
           job: job,
           applierProfile: applier,
           status: detail.status,
-          _id:detail._id
+          _id: detail._id,
         };
       })
     );
@@ -317,7 +303,7 @@ exports.ignoreApplication = async (req, res, next) => {
         return appl;
       }
     });
-  
+
     await userEmployee.save();
     await user.save();
     return res
@@ -339,9 +325,9 @@ exports.acceptApplication = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-   
+
     const application = user.applications.find(
-      (app) => app._id.toString() === applicationId 
+      (app) => app._id.toString() === applicationId
     );
     if (!application) {
       return res.status(404).json({ error: "Application not found" });
@@ -353,7 +339,7 @@ exports.acceptApplication = async (req, res, next) => {
     if (!userEmployee) {
       return res.status(404).json({ error: "Applier not found" });
     }
-    
+
     userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
       if (appl.Ids.toString() == application.job.toString()) {
         return { ...appl, status: "accepted" };
@@ -395,7 +381,7 @@ exports.rejectApplication = async (req, res, next) => {
     if (!userEmployee) {
       return res.status(404).json({ error: "Applier not found" });
     }
-    
+
     userEmployee.appliedJobs = userEmployee.appliedJobs.map((appl) => {
       if (appl.Ids.toString() == application.job.toString()) {
         return { ...appl, status: "rejected" };
@@ -421,13 +407,16 @@ exports.hostJobList = async (req, res, next) => {
         .json({ error: "Unauthorized: Please log in first" });
     }
     if (req.session.user.userType !== "recruiter") {
-      return res.status(401), json({ error: "Only Recruiter can access his added Vacancy Edittable" });
+      return (
+        res.status(401),
+        json({ error: "Only Recruiter can access his added Vacancy Edittable" })
+      );
     }
     const jobProvider = await UserRecruiter.findById(
       req.session.user._id,
       "jobsPosted"
     );
-   let jobList = jobProvider.jobsPosted;
+    let jobList = jobProvider.jobsPosted;
 
     const jobs = await Job.find({
       _id: { $in: jobList },
@@ -446,18 +435,16 @@ exports.getHostJobDetails = async (req, res, next) => {
         .json({ error: "Unauthorized: Please log in first" });
     }
     if (req.session.user.userType !== "recruiter") {
-      return res.status(401).json({error:"Unauthorized:"})
+      return res.status(401).json({ error: "Unauthorized:" });
     }
     const jobProvider = await UserRecruiter.findById(
       req.session.user._id,
       "jobsPosted"
     );
-   let jobList = jobProvider.jobsPosted;
-
+    let jobList = jobProvider.jobsPosted;
 
     const jobId = req.params.jobId;
 
-  
     if (!jobList.includes(jobId)) {
       return res.status(404).json({ error: "Unauthorized Access" });
     }
@@ -473,19 +460,16 @@ exports.postDeleteJob = async (req, res, next) => {
   const jobId = req.params.jobId;
 
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "recruiter") {
-    return res.status(401).json({error:"Unauthorized:"})
+    return res.status(401).json({ error: "Unauthorized:" });
   }
   const jobProvider = await UserRecruiter.findById(
     req.session.user._id,
     "jobsPosted"
   );
- let jobList = jobProvider.jobsPosted;
-
+  let jobList = jobProvider.jobsPosted;
 
   if (!jobList.includes(jobId)) {
     return res.status(404).json({ error: "Unauthorized Access" });
@@ -536,12 +520,10 @@ exports.getHostProfileDetails = (req, res, next) => {
 
 exports.getProfileFavourites = (req, res, next) => {
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "recruiter") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   const favs = UserRecruiter.findById(req.session.user._id)
     .then((user) => {
@@ -567,7 +549,7 @@ exports.getOnlyProfileFavourites = async (req, res, next) => {
         .json({ error: "Unauthorized: Please log in first" });
     }
     if (req.session.user.userType !== "recruiter") {
-      return res.status(401).json({error:"Unauthorized: User"})
+      return res.status(401).json({ error: "Unauthorized: User" });
     }
     const favs = await UserRecruiter.findById(
       req.session.user._id,
@@ -586,18 +568,16 @@ exports.getOnlyProfileFavourites = async (req, res, next) => {
 exports.postAddProfileFavourites = async (req, res, next) => {
   const profileId = req.params.profileId;
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "recruiter") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   try {
     const user = await UserRecruiter.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
-    } 
+    }
 
     if (user.profileFavourites.includes(profileId)) {
       user.profileFavourites.pull(profileId);
@@ -624,7 +604,7 @@ exports.getOnlyChoosenProfiles = async (req, res, next) => {
         .json({ error: "Unauthorized: Please log in first" });
     }
     if (req.session.user.userType !== "recruiter") {
-      return res.status(401).json({error:"Unauthorized: User"})
+      return res.status(401).json({ error: "Unauthorized: User" });
     }
     const user = await UserRecruiter.findById(
       req.session.user._id,
@@ -652,22 +632,20 @@ exports.getOnlyChoosenProfiles = async (req, res, next) => {
 exports.postHireProfile = async (req, res, next) => {
   const profileId = req.params.profileId;
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "recruiter") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   try {
     const user = await UserRecruiter.findById(req.session.user._id);
     const userEmployee = await UserEmployee.findOne({
       profilesPosted: profileId,
     });
-   
+
     if (!userEmployee) {
       return res.status(404).json({ error: "Profile not found" });
-    } 
+    }
 
     let choosenIds = user.choosenProfiles.map((pro) => pro.Ids.toString());
     if (choosenIds.includes(profileId.toString())) {
@@ -700,14 +678,11 @@ exports.postHireProfile = async (req, res, next) => {
 };
 
 exports.getChoosenProfiles = async (req, res, next) => {
-
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "recruiter") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   const user = await UserRecruiter.findById(req.session.user._id)
     .then((user) => {

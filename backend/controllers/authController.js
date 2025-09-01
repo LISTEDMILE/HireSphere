@@ -68,28 +68,24 @@ exports.postSignUp = [
     .withMessage("User Type must be either 'Employee' or 'Recruiter''"),
 
   (req, res, next) => {
-
     const { firstname, lastname, username, password, userType } = req.body;
 
     const errors = validationResult(req);
 
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          errors: errors.array().map((err) => err.msg),
-          oldInput: {
-            firstname,
-            lastname,
-            username,
-            password,
-            userType,
-          },
-        });
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array().map((err) => err.msg),
+        oldInput: {
+          firstname,
+          lastname,
+          username,
+          password,
+          userType,
+        },
+      });
     }
-    
-    if (req.body.userType == "recruiter") {
-      
 
-      
+    if (req.body.userType == "recruiter") {
       bcrypt.hash(password, 12).then((hashedPassword) => {
         const user = new UserRecruiter({
           firstname: firstname,
@@ -121,10 +117,7 @@ exports.postSignUp = [
             });
           });
       });
-    } else if(req.body.userType =="employee") {
-      
-
-      
+    } else if (req.body.userType == "employee") {
       bcrypt.hash(password, 12).then((hashedPassword) => {
         const user = new UserEmployee({
           firstname: firstname,
@@ -133,7 +126,6 @@ exports.postSignUp = [
           password: hashedPassword,
           userType: userType,
         });
-        
 
         user
           .save()
@@ -322,7 +314,7 @@ exports.postMe = (req, res, next) => {
   }
 };
 
-exports.postLogOut = (req,res,next) => {
+exports.postLogOut = (req, res, next) => {
   req.session.destroy((err) => {
     if (err) {
       console.error("Session destroy error:", err);
@@ -332,7 +324,7 @@ exports.postLogOut = (req,res,next) => {
       });
     }
 
-    res.clearCookie("connect.sid"); 
+    res.clearCookie("connect.sid");
 
     return res.status(200).json({
       success: true,
@@ -344,16 +336,22 @@ exports.postLogOut = (req,res,next) => {
 exports.postDeleteAccount = async (req, res, next) => {
   try {
     if (!req.session?.user?._id) {
-      return res.status(401).json({ error: "Unauthorized: Please log in first" });
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: Please log in first" });
     }
 
     const { password } = req.body;
     let user;
 
     if (req.session.user.userType === "recruiter") {
-      user = await UserRecruiter.findOne({ username: req.session.user.username });
+      user = await UserRecruiter.findOne({
+        username: req.session.user.username,
+      });
     } else {
-      user = await UserEmployee.findOne({ username: req.session.user.username });
+      user = await UserEmployee.findOne({
+        username: req.session.user.username,
+      });
     }
 
     if (!user) {
@@ -365,26 +363,36 @@ exports.postDeleteAccount = async (req, res, next) => {
       return res.status(401).json({ password: "Wrong Credentials" });
     }
 
-    
- 
     if (req.session.user.userType === "recruiter") {
-      if (user.aboutRecruiter.profilePicture && user.aboutRecruiter.profilePicture !== null) {
-        const oldImagePath = path.join(__dirname, `..${user.aboutRecruiter.profilePicture}`);
+      if (
+        user.aboutRecruiter.profilePicture &&
+        user.aboutRecruiter.profilePicture !== null
+      ) {
+        const oldImagePath = path.join(
+          __dirname,
+          `..${user.aboutRecruiter.profilePicture}`
+        );
         fs.unlink(oldImagePath, (error) => {
           if (error) {
             console.log("Error uploading image", error);
           }
-        })
+        });
       }
       await UserRecruiter.findByIdAndDelete(req.session.user._id);
     } else {
-      if (user.aboutEmployee.profilePicture && user.aboutEmployee.profilePicture !== null) {
-        const oldImagePath = path.join(__dirname, `..${user.aboutEmployee.profilePicture}`);
+      if (
+        user.aboutEmployee.profilePicture &&
+        user.aboutEmployee.profilePicture !== null
+      ) {
+        const oldImagePath = path.join(
+          __dirname,
+          `..${user.aboutEmployee.profilePicture}`
+        );
         fs.unlink(oldImagePath, (error) => {
           if (error) {
             console.log("Error uploading image", error);
           }
-        })
+        });
       }
       await UserEmployee.findByIdAndDelete(req.session.user._id);
     }
@@ -399,10 +407,8 @@ exports.postDeleteAccount = async (req, res, next) => {
         message: "Account Deleted Successfully.",
       });
     });
-
   } catch (error) {
     console.error("Error deleting account", error);
     res.status(500).json({ error: "Failed to delete account" });
   }
 };
-

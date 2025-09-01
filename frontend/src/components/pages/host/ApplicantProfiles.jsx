@@ -25,130 +25,130 @@ export default function ApplicantProfiles() {
           }
         );
 
-         let data = await response.json();
-                if (data.error) {
-                  console.error("Error fetching profiles:", data.error);
-                  return;
-                }
-                let profileList = data;
-        
-                const favResponse = await fetch(`${apiURL}/host/favouriteProfile`, {
-                  method: "GET",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  credentials: "include",
-                });
-                const favs = await favResponse.json();
-                if (favs.error) {
-                  console.error("Error fetching favourites:", favs.error);
-                  return;
-                }
-                const favIds = favs.favIds;
-        
-                const ProfilesWithFav = profileList.map((profile) =>
-                  favIds.includes(profile._id) ? { ...profile, fav: true } : profile
-                );
-        
-                const choosenResponse = await fetch(
-                  `${apiURL}/host/getChoosenProfiles`,
-                  {
-                    method: "GET",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                  }
-                );
-                const choosenData = await choosenResponse.json();
-                if (choosenData.error) {
-                  console.error("Error fetching choosen profiles:", choosenData.error);
-                  return;
-                }
-        
-                let choosenWhole = choosenData.choosenProfiles;
-                const choosenIds = choosenWhole.map((pro) => pro.Ids);
-        
-                const updatedProfiles = ProfilesWithFav.map((profile) =>
-                  choosenIds.includes(profile._id)
-                    ? { ...profile, choosen: true }
-                    : { ...profile, choosen: false }
-                );
-                let status;
-        
-                const updatedProfilesWithstatus = updatedProfiles.map((e) => {
-                  if (e.choosen == false) {
-                    return e;
-                  } else if (e.choosen == true) {
-                    choosenWhole.forEach((ele) => {
-                      if (ele.Ids == e._id) {
-                        status = ele.status;
-                      }
-                    });
-                    return { ...e, status: status };
-                  }
-                });
-                setProfiles(updatedProfilesWithstatus); // ✅ update once with combined data
-              } catch (error) {
-                console.error("Error fetching profiles:", error);
+        let data = await response.json();
+        if (data.error) {
+          console.error("Error fetching profiles:", data.error);
+          return;
+        }
+        let profileList = data;
+
+        const favResponse = await fetch(`${apiURL}/host/favouriteProfile`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        const favs = await favResponse.json();
+        if (favs.error) {
+          console.error("Error fetching favourites:", favs.error);
+          return;
+        }
+        const favIds = favs.favIds;
+
+        const ProfilesWithFav = profileList.map((profile) =>
+          favIds.includes(profile._id) ? { ...profile, fav: true } : profile
+        );
+
+        const choosenResponse = await fetch(
+          `${apiURL}/host/getChoosenProfiles`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+        const choosenData = await choosenResponse.json();
+        if (choosenData.error) {
+          console.error("Error fetching choosen profiles:", choosenData.error);
+          return;
+        }
+
+        let choosenWhole = choosenData.choosenProfiles;
+        const choosenIds = choosenWhole.map((pro) => pro.Ids);
+
+        const updatedProfiles = ProfilesWithFav.map((profile) =>
+          choosenIds.includes(profile._id)
+            ? { ...profile, choosen: true }
+            : { ...profile, choosen: false }
+        );
+        let status;
+
+        const updatedProfilesWithstatus = updatedProfiles.map((e) => {
+          if (e.choosen == false) {
+            return e;
+          } else if (e.choosen == true) {
+            choosenWhole.forEach((ele) => {
+              if (ele.Ids == e._id) {
+                status = ele.status;
               }
-            };
-            fetchProfiles();
-          }, []);
-        
-          const handleFavourite = async (profileId) => {
-            try {
-              await fetch(`${apiURL}/host/favouriteProfile/${profileId}`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                credentials: "include",
-              });
-        
-              setProfiles(
-                profiles.map((profile) =>
-                  profile._id === profileId
-                    ? { ...profile, fav: !profile.fav }
-                    : profile
-                )
-              );
-            } catch (error) {
-              console.error("Error toggling favourite:", error);
-            }
-          };
-        
-          const handleHireProfile = async (profileId) => {
-            try {
-              const response = await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                credentials: "include",
-              });
-        
-              const data = await response.json();
-              if (data.error) {
-                alert("Error hiring profile: " + data.error);
-                return;
+            });
+            return { ...e, status: status };
+          }
+        });
+        setProfiles(updatedProfilesWithstatus); // ✅ update once with combined data
+      } catch (error) {
+        console.error("Error fetching profiles:", error);
+      }
+    };
+    fetchProfiles();
+  }, []);
+
+  const handleFavourite = async (profileId) => {
+    try {
+      await fetch(`${apiURL}/host/favouriteProfile/${profileId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      setProfiles(
+        profiles.map((profile) =>
+          profile._id === profileId
+            ? { ...profile, fav: !profile.fav }
+            : profile
+        )
+      );
+    } catch (error) {
+      console.error("Error toggling favourite:", error);
+    }
+  };
+
+  const handleHireProfile = async (profileId) => {
+    try {
+      const response = await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const data = await response.json();
+      if (data.error) {
+        alert("Error hiring profile: " + data.error);
+        return;
+      }
+
+      setProfiles(
+        profiles.map((profile) =>
+          profile._id === profileId
+            ? {
+                ...profile,
+                choosen: !profile.choosen,
+                status: profile.choosen == true ? null : "pending",
               }
-        
-              setProfiles(
-                profiles.map((profile) =>
-                  profile._id === profileId
-                    ? {
-                        ...profile,
-                        choosen: !profile.choosen,
-                        status: profile.choosen == true ? null : "pending",
-                      }
-                    : profile
-                )
-              );
-            } catch (error) {
-              console.error("Error hiring profile:", error);
-            }
-          };
+            : profile
+        )
+      );
+    } catch (error) {
+      console.error("Error hiring profile:", error);
+    }
+  };
 
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center ">
@@ -160,7 +160,7 @@ export default function ApplicantProfiles() {
       </h1>
 
       {profiles.length === 0 && <Empty />}
-     <div className=" w-full sm:w-[80%] ">
+      <div className=" w-full sm:w-[80%] ">
         <ul className="gap-8 mt-12 flex flex-col sm:flex-row flex-wrap justify-around items-center w-full ">
           {profiles.map((detail) => (
             <li
@@ -188,65 +188,58 @@ export default function ApplicantProfiles() {
                   {detail.fav ? "★" : "☆"}
                 </button>
               </div>
-         
-              
-               <div className="w-full flex flex-col gap-4">
-                <h2 className="text-3xl self-center text-cyan-400 font-semibold">
-                    {detail.profilePost}
-                  </h2>
-                  <div className="mt-2 flex gap-3">
-                  <label className=" text-gray-400 text-xl">Name:</label>
-                    <p className="text-white text-xl">{detail.profileName}</p>
-                  </div>
 
-                  <div className="mt-2 flex gap-3">
-                    <label className=" text-gray-400 font-medium">Tenth</label>
-                    <p className="text-white">
-                      {" "}
-                      <span className="font-semibold">10th (%):</span>{" "}
-                      {detail.profileTenth}
-                    </p>
-                  </div>
-                  <div className="mt-2 flex gap-3">
+              <div className="w-full flex flex-col gap-4">
+                <h2 className="text-3xl self-center text-cyan-400 font-semibold">
+                  {detail.profilePost}
+                </h2>
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 text-xl">Name:</label>
+                  <p className="text-white text-xl">{detail.profileName}</p>
+                </div>
+
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 font-medium">Tenth</label>
+                  <p className="text-white">
+                    {" "}
+                    <span className="font-semibold">10th (%):</span>{" "}
+                    {detail.profileTenth}
+                  </p>
+                </div>
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 font-medium">Twelth:</label>
+                  <p className="text-white">
+                    {" "}
+                    <span className="font-semibold">12th (%):</span>{" "}
+                    {detail.profileTwelth}
+                  </p>
+                </div>
+
+                <div className="w-full text-white  flex justify-center">
+                  <div className=" flex gap-6 w-full flex-col ">
                     <label className=" text-gray-400 font-medium">
-                      Twelth:
+                      Skills:
                     </label>
-                    <p className="text-white">
-                      {" "}
-                      <span className="font-semibold">12th (%):</span>{" "}
-                      {detail.profileTwelth}
-                    </p>
-                  </div>
-           
-       
-            <div className="w-full text-white  flex justify-center">
-                <div className=" flex gap-6 w-full flex-col ">
-                  <label className=" text-gray-400 font-medium">Skills:</label>
-                  <div className="flex flex-wrap gap-3 items-center text-md">
-                    {detail.profileSkills.map((skill) => {
-                      return (
-                        <span className="px-6 py-1.5 bg-cyan-950 rounded-lg">
-                          {skill}
-                        </span>
-                      );
-                    })}
+                    <div className="flex flex-wrap gap-3 items-center text-md">
+                      {detail.profileSkills.map((skill) => {
+                        return (
+                          <span className="px-6 py-1.5 bg-cyan-950 rounded-lg">
+                            {skill}
+                          </span>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
-              
-             </div>
 
-                
                 <Link
-                    to={`/host/hostProfileDetails/${detail._id}`}
-                    className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg "
-                  >
-                    Details
+                  to={`/host/hostProfileDetails/${detail._id}`}
+                  className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg "
+                >
+                  Details
                 </Link>
-                
-              <div className="mt-2 flex gap-3 justify-start items-center pr-4">
-                
-                  
 
+                <div className="mt-2 flex gap-3 justify-start items-center pr-4">
                   <Link
                     to={`/host/aboutEmployee/${detail.profileUploader}`}
                     className="bg-cyan-600 text-white hover:bg-cyan-800 px-4 py-2  rounded-lg  "
@@ -263,19 +256,17 @@ export default function ApplicantProfiles() {
                 </div>
               </div>
 
-               <div className="mt-4 items-center gap-3 pr-4 flex justify-end">
-                
-                  <button
-                    onClick={() => handleHireProfile(detail._id)}
-                    className={`px-4 py-2 rounded-lg font-semibold text-white ${
-                      detail.choosen
-                        ? "bg-red-500 hover:bg-red-600"
-                        : "bg-green-500 hover:bg-green-600"
-                    }`}
-                  >
-                    {detail.choosen ? "Deselect" : "Select"}
-                  </button>
-         
+              <div className="mt-4 items-center gap-3 pr-4 flex justify-end">
+                <button
+                  onClick={() => handleHireProfile(detail._id)}
+                  className={`px-4 py-2 rounded-lg font-semibold text-white ${
+                    detail.choosen
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-green-500 hover:bg-green-600"
+                  }`}
+                >
+                  {detail.choosen ? "Deselect" : "Select"}
+                </button>
               </div>
             </li>
           ))}

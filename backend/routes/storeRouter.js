@@ -43,7 +43,11 @@ storeRouter.get(
   "/addAboutEmployee/:userId",
   storeController.getAddAboutEmployee
 );
-storeRouter.post("/addAboutEmployee", upload.single("profilePicture"), storeController.postAddAboutEmployee);
+storeRouter.post(
+  "/addAboutEmployee",
+  upload.single("profilePicture"),
+  storeController.postAddAboutEmployee
+);
 storeRouter.get("/aboutRecruiter/:userId", storeController.getAboutRecruiter);
 
 module.exports = storeRouter;

@@ -11,7 +11,6 @@ import {
 const Footer = () => {
   return (
     <footer className="relative w-[95%] my-10 bg-gradient-to-r from-gray-950 via-gray-700 to-gray-950 text-white px-8 pt-12 pb-24 flex flex-col md:flex-row justify-around items-start md:items-center shadow-lg rounded-2xl self-center">
-      
       {/* Left - Social Media */}
       <div className="mb-8 md:mb-0">
         <h2 className="text-2xl font-semibold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent mb-4">

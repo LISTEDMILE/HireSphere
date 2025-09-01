@@ -125,11 +125,10 @@ const LandingPage = () => {
               scrub: 3,
               ease: "bounce.out",
             },
-            y:"850px",
+            y: "850px",
             rotate: -90,
           });
-        }
-        else {
+        } else {
           gsap.to(".rocket", {
             scrollTrigger: {
               trigger: ".logoDiv",
@@ -143,9 +142,8 @@ const LandingPage = () => {
             rotate: -90,
           });
         }
-      });
-
-    
+      }
+    );
 
     gsap.from(".logoImg", {
       scrollTrigger: {
@@ -158,7 +156,6 @@ const LandingPage = () => {
       opacity: 0,
       transform: "translateY(300px) translateX(300px)",
       scale: 0,
-      
     });
 
     gsap.to(".TitleBlack", {
@@ -260,8 +257,6 @@ const LandingPage = () => {
         x: -400,
       });
     });
-
-   
   });
 
   useEffect(() => {
@@ -413,11 +408,12 @@ const LandingPage = () => {
           </div>
         </div>
 
-        <a className="endingH text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-center w-full py-32 md:py-48 animate-pulse drop-shadow-[0_0_20px_rgba(0,255,255,0.6)] cursor-pointer"
+        <a
+          className="endingH text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-center w-full py-32 md:py-48 animate-pulse drop-shadow-[0_0_20px_rgba(0,255,255,0.6)] cursor-pointer"
           href="/login"
         >
-  Get Started..
-</a>
+          Get Started..
+        </a>
       </div>
       <Footer />
     </div>

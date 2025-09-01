@@ -62,9 +62,7 @@ export default function Offers() {
       });
       setOffers((prevOffers) =>
         prevOffers.map((offer) =>
-          offer._id == offerId
-            ? { ...offer, status: "accepted" }
-            : offer
+          offer._id == offerId ? { ...offer, status: "accepted" } : offer
         )
       );
     } catch (error) {
@@ -83,9 +81,7 @@ export default function Offers() {
       });
       setOffers((prevOffers) =>
         prevOffers.map((offer) =>
-          offer._id == offerId
-            ? { ...offer, status: "rejected" }
-            : offer
+          offer._id == offerId ? { ...offer, status: "rejected" } : offer
         )
       );
     } catch (error) {
@@ -95,10 +91,10 @@ export default function Offers() {
 
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center ">
-          <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
-          <NavHome />
-          <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
-            <span className="relative z-10">Offers</span>
+      <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
+      <NavHome />
+      <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
+        <span className="relative z-10">Offers</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
       {offers.length === 0 && <Empty />}
@@ -112,7 +108,7 @@ export default function Offers() {
            rounded-2xl shadow-lg hover:shadow-cyan-500/20 
            transition transform hover:scale-[1.02] flex gap-12 flex-col    wrap-break-word p-6 w-[95%] sm:w-[80%] "
             >
-             <div className="flex justify-end items-center border-b pb-3 border-white text-3xl gap-6 pr-4">
+              <div className="flex justify-end items-center border-b pb-3 border-white text-3xl gap-6 pr-4">
                 <Link
                   to={`/store/addProfile/${offer.profile._id}?editing=true`}
                   className="text-gray-400 hover:text-gray-600"
@@ -136,37 +132,35 @@ export default function Offers() {
                 </form>
               </div>
               <div className="w-full flex flex-col gap-4">
-              <h2 className="text-3xl self-center text-cyan-400 font-semibold">
-                    {offer.profile.profilePost}
-                  </h2>
-                  <div className="mt-2 flex gap-3">
-                    <label className=" text-gray-400 text-xl">Name:</label>
-                    <p className="text-white text-xl">
-                      {offer.profile.profileName}
-                    </p>
-                  </div>
-
-                  <div className="mt-2 flex gap-3">
-                    <label className=" text-gray-400 font-medium">Tenth</label>
-                    <p className="text-white">
-                      {" "}
-                      <span className="font-semibold">10th (%):</span>{" "}
-                      {offer.profile.profileTenth}
-                    </p>
-                  </div>
-                  <div className="mt-2 flex gap-3">
-                    <label className=" text-gray-400 font-medium">
-                      Twelth:
-                    </label>
-                    <p className="text-white">
-                      {" "}
-                      <span className="font-semibold">12th (%):</span>{" "}
-                      {offer.profile.profileTwelth}
-                    </p>
-                  </div>
+                <h2 className="text-3xl self-center text-cyan-400 font-semibold">
+                  {offer.profile.profilePost}
+                </h2>
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 text-xl">Name:</label>
+                  <p className="text-white text-xl">
+                    {offer.profile.profileName}
+                  </p>
                 </div>
 
-                <div className="w-full text-white  flex justify-center">
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 font-medium">Tenth</label>
+                  <p className="text-white">
+                    {" "}
+                    <span className="font-semibold">10th (%):</span>{" "}
+                    {offer.profile.profileTenth}
+                  </p>
+                </div>
+                <div className="mt-2 flex gap-3">
+                  <label className=" text-gray-400 font-medium">Twelth:</label>
+                  <p className="text-white">
+                    {" "}
+                    <span className="font-semibold">12th (%):</span>{" "}
+                    {offer.profile.profileTwelth}
+                  </p>
+                </div>
+              </div>
+
+              <div className="w-full text-white  flex justify-center">
                 <div className=" flex gap-6 w-full flex-col ">
                   <label className=" text-gray-400 font-medium">Skills:</label>
                   <div className="flex flex-wrap gap-3 items-center text-md">
@@ -186,15 +180,13 @@ export default function Offers() {
                   <span className="text-gray-400 text-xl"> Status:</span>
                   <p className="text-cyan-300 text-xl">{offer.status}</p>
                 </div>
-                  <Link
-                    to={`/store/storeProfileDetails/${offer.profile._id}`}
-                    className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg mr-4 "
-                  >
-                    Details
-                  </Link>
-                </div>
-             
-      
+                <Link
+                  to={`/store/storeProfileDetails/${offer.profile._id}`}
+                  className="bg-teal-600 text-white hover:bg-teal-800 px-4 py-2  rounded-lg mr-4 "
+                >
+                  Details
+                </Link>
+              </div>
 
               {/*offeredBy */}
               <div className=" bg-[#0e201c8f] flex flex-col gap-3 p-8 rounded-lg shadow-inner">

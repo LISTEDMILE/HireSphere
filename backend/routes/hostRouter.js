@@ -3,7 +3,6 @@ const hostController = require("../controllers/hostController");
 const hostRouter = express.Router();
 const upload = require("../utils/uploadUtils");
 
-
 hostRouter.post("/addJob", hostController.addJobPost);
 hostRouter.get("/hostJobList", hostController.hostJobList);
 
@@ -13,9 +12,18 @@ hostRouter.get("/hostApplications", hostController.getApplications);
 
 hostRouter.post("/deleteJob/:jobId", hostController.postDeleteJob);
 
-hostRouter.delete("/ignoreApplication/:applicationId", hostController.ignoreApplication);
-hostRouter.post("/acceptApplication/:applicationId", hostController.acceptApplication);
-hostRouter.post("/rejectApplication/:applicationId", hostController.rejectApplication);
+hostRouter.delete(
+  "/ignoreApplication/:applicationId",
+  hostController.ignoreApplication
+);
+hostRouter.post(
+  "/acceptApplication/:applicationId",
+  hostController.acceptApplication
+);
+hostRouter.post(
+  "/rejectApplication/:applicationId",
+  hostController.rejectApplication
+);
 
 hostRouter.get("/hostProfileList", hostController.profileList);
 
@@ -44,9 +52,12 @@ hostRouter.get(
   "/addAboutRecruiter/:userId",
   hostController.getAddAboutRecruiter
 );
- 
 
-hostRouter.post("/addAboutRecruiter", upload.single("profilePicture"), hostController.postAddAboutRecruiter);
+hostRouter.post(
+  "/addAboutRecruiter",
+  upload.single("profilePicture"),
+  hostController.postAddAboutRecruiter
+);
 
 hostRouter.get("/aboutEmployee/:userId", hostController.getAboutEmployee);
 

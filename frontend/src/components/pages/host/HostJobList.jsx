@@ -68,12 +68,11 @@ export default function HostJobList() {
           {jobs.map((job) => (
             <li
               key={job._id}
-               className="bg-white/5 backdrop-blur-md border border-white/10 
+              className="bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg hover:shadow-cyan-500/20 
            transition transform hover:scale-[1.02] flex gap-12 flex-col    wrap-break-word p-6 w-[95%] sm:w-[400px] "
             >
               <div className="flex justify-between items-center border-b pb-3 border-white text-3xl pr-4">
-        
                 <Link
                   to={`/host/addJob/${job._id}?editing=true`}
                   className="text-gray-400 hover:text-gray-600"
@@ -89,7 +88,7 @@ export default function HostJobList() {
                 </button>
               </div>
 
-             <div className="w-full flex flex-col gap-4">
+              <div className="w-full flex flex-col gap-4">
                 <h2 className="text-3xl self-center text-cyan-400 font-semibold">
                   {job.jobPost}
                 </h2>

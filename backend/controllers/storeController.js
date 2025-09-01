@@ -62,12 +62,10 @@ exports.getStoreOffererJobs = async (req, res, next) => {
 
 exports.getFavourites = (req, res, next) => {
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   const favs = UserEmployee.findById(req.session.user._id)
     .then((user) => {
@@ -87,12 +85,10 @@ exports.getFavourites = (req, res, next) => {
 
 exports.getOffers = async (req, res, next) => {
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   try {
     const user = await UserEmployee.findById(req.session.user._id, "offers");
@@ -115,7 +111,7 @@ exports.getOffers = async (req, res, next) => {
           profile: profile,
           offeredBy: offeredBy,
           status: detail.status,
-          _id:detail._id
+          _id: detail._id,
         };
       })
     );
@@ -134,28 +130,21 @@ exports.getOffers = async (req, res, next) => {
 
 exports.ignoreOffer = async (req, res, next) => {
   const offerId = req.params.offerId;
-  if (
-    !offerId ||
-    !req.session ||
-    !req.session.user ||
-    !req.session.user._id
-  ) {
+  if (!offerId || !req.session || !req.session.user || !req.session.user._id) {
     return res
       .status(400)
       .json({ error: "Profile ID is required or user not logged in" });
   }
   if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   try {
     const user = await UserEmployee.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    const offer = user.offers.find(
-      (off) => off._id.toString() === offerId
-    );
-  
+    const offer = user.offers.find((off) => off._id.toString() === offerId);
+
     user.offers = user.offers.filter(
       (offer) => offer._id.toString() !== offerId
     );
@@ -178,27 +167,20 @@ exports.ignoreOffer = async (req, res, next) => {
 
 exports.acceptOffer = async (req, res, next) => {
   const offerId = req.params.offerId;
-  if (
-    !offerId ||
-    !req.session ||
-    !req.session.user ||
-    !req.session.user._id
-  ) {
+  if (!offerId || !req.session || !req.session.user || !req.session.user._id) {
     return res
       .status(400)
       .json({ error: "Profile ID is required or user not logged in" });
   }
   if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   try {
     const user = await UserEmployee.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    const offer = user.offers.find(
-      (offer) => offer._id.toString() === offerId
-    );
+    const offer = user.offers.find((offer) => offer._id.toString() === offerId);
     if (!offer) {
       return res.status(404).json({ error: "Offer not found" });
     }
@@ -207,12 +189,11 @@ exports.acceptOffer = async (req, res, next) => {
     if (!userRecruiter) {
       return res.status(404).json({ error: "Offer provider not found" });
     }
-   
+
     userRecruiter.choosenProfiles = userRecruiter.choosenProfiles.map((off) => {
       if (off.Ids.toString() == offer.profile.toString()) {
         return { ...off, status: "accepted" };
       } else {
-        
         return off;
       }
     });
@@ -227,27 +208,20 @@ exports.acceptOffer = async (req, res, next) => {
 
 exports.rejectOffer = async (req, res, next) => {
   const offerId = req.params.offerId;
-  if (
-    !offerId ||
-    !req.session ||
-    !req.session.user ||
-    !req.session.user._id
-  ) {
+  if (!offerId || !req.session || !req.session.user || !req.session.user._id) {
     return res
       .status(400)
       .json({ error: "Profile ID is required or user not logged in" });
   }
   if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   try {
     const user = await UserEmployee.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    const offer = user.offers.find(
-      (offer) => offer._id.toString() === offerId
-    );
+    const offer = user.offers.find((offer) => offer._id.toString() === offerId);
     if (!offer) {
       return res.status(404).json({ error: "Offer not found" });
     }
@@ -256,7 +230,7 @@ exports.rejectOffer = async (req, res, next) => {
     if (!userRecruiter) {
       return res.status(404).json({ error: "Offer provider not found" });
     }
-   
+
     userRecruiter.choosenProfiles = userRecruiter.choosenProfiles.map((off) => {
       if (off.Ids.toString() == offer.profile.toString()) {
         return { ...off, status: "rejected" };
@@ -275,12 +249,10 @@ exports.rejectOffer = async (req, res, next) => {
 
 exports.getAppliedJobs = (req, res, next) => {
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
 
   const user = UserEmployee.findById(req.session.user._id)
@@ -302,13 +274,13 @@ exports.getAppliedJobs = (req, res, next) => {
 exports.getOnlyFavourites = async (req, res, next) => {
   try {
     if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
-  }
-  if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
-  }
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: Please log in first" });
+    }
+    if (req.session.user.userType !== "employee") {
+      return res.status(401).json({ error: "Unauthorized: User" });
+    }
     const favs = await UserEmployee.findById(
       req.session.user._id,
       "favourites"
@@ -332,7 +304,7 @@ exports.getOnlyAppliedJobs = async (req, res, next) => {
         .json({ error: "Unauthorized: Please log in first" });
     }
     if (req.session.user.userType !== "employee") {
-      return res.status(401).json({error:"Unauthorized: User"})
+      return res.status(401).json({ error: "Unauthorized: User" });
     }
     const user = await UserEmployee.findById(
       req.session.user._id,
@@ -361,18 +333,16 @@ exports.getOnlyAppliedJobs = async (req, res, next) => {
 exports.postAddFavourites = async (req, res, next) => {
   const jobId = req.params.jobId;
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   try {
     const user = await UserEmployee.findById(req.session.user._id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
-    } 
+    }
 
     if (user.favourites.includes(jobId)) {
       user.favourites.pull(jobId);
@@ -392,12 +362,10 @@ exports.postAddFavourites = async (req, res, next) => {
 exports.postApply = async (req, res, next) => {
   const jobId = req.params.jobId;
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   try {
     const user = await UserEmployee.findById(req.session.user._id);
@@ -405,7 +373,7 @@ exports.postApply = async (req, res, next) => {
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
-    } 
+    }
     if (!userhost) {
       return res.status(404).json({ error: "Job not found" });
     } else if (userhost.userType !== "recruiter") {
@@ -502,7 +470,7 @@ exports.addProfilePost = [
         .json({ error: "Unauthorized: Please log in first" });
     }
     if (req.session.user.userType !== "employee") {
-      return res.status(401).json({error:"Unauthorized: User"})
+      return res.status(401).json({ error: "Unauthorized: User" });
     }
 
     if (!errors.isEmpty()) {
@@ -513,7 +481,6 @@ exports.addProfilePost = [
         oldInput: { profileToAdd },
       });
     }
-
 
     try {
       const user = await UserEmployee.findById(req.session.user._id);
@@ -570,13 +537,15 @@ exports.addProfilePost = [
 ];
 
 exports.postAddAboutEmployee = [
-
   async (req, res) => {
     const errors = validationResult(req);
-      Object.keys(req.body).forEach((key) => {
+    Object.keys(req.body).forEach((key) => {
       try {
         const value = req.body[key];
-        if (typeof value === "string" && (value.startsWith("[") || value.startsWith("{"))) {
+        if (
+          typeof value === "string" &&
+          (value.startsWith("[") || value.startsWith("{"))
+        ) {
           req.body[key] = JSON.parse(value);
         }
       } catch (e) {
@@ -593,7 +562,7 @@ exports.postAddAboutEmployee = [
         .json({ error: "Unauthorized: Please log in first" });
     }
     if (req.session.user.userType !== "employee") {
-      return res.status(401).json({error:"Unauthorized: User"})
+      return res.status(401).json({ error: "Unauthorized: User" });
     }
 
     if (!errors.isEmpty()) {
@@ -607,29 +576,25 @@ exports.postAddAboutEmployee = [
       return res.status(404).json({ errors: ["User not found"] });
     }
     try {
-    let profilePath;
-     if (req.file) {
-            profilePath = `/uploads/${req.file.filename}`;
-            const oldImagePath = path.join(__dirname, `..${user.aboutEmployee.profilePicture}`);
-            fs.unlink(oldImagePath, (error) => {
-              if (error) {
-                console.log("Error uploading image",error);
-              }
-            })
+      let profilePath;
+      if (req.file) {
+        profilePath = `/uploads/${req.file.filename}`;
+        const oldImagePath = path.join(
+          __dirname,
+          `..${user.aboutEmployee.profilePicture}`
+        );
+        fs.unlink(oldImagePath, (error) => {
+          if (error) {
+            console.log("Error uploading image", error);
           }
-          else if(user.aboutEmployee.profilePicture){
-            profilePath = user.aboutEmployee.profilePicture;
-          }
-          else {
-            profilePath = null;
-          }
+        });
+      } else if (user.aboutEmployee.profilePicture) {
+        profilePath = user.aboutEmployee.profilePicture;
+      } else {
+        profilePath = null;
+      }
 
-   
-      
-
-      
-
-      user.aboutEmployee = { ...data, profilePicture:profilePath };
+      user.aboutEmployee = { ...data, profilePicture: profilePath };
 
       await user.save();
       return res.status(201).json({
@@ -647,19 +612,15 @@ exports.postAddAboutEmployee = [
 exports.getAddAboutEmployee = async (req, res, next) => {
   const userId = req.session.user._id;
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   const user = await UserEmployee.findById(userId);
   if (!user) {
     return res.status(400).json({ error: "Unauthorized access" });
-  }
-  
-  else {
+  } else {
     return res.status(200).json(user.aboutEmployee);
   }
 };
@@ -682,12 +643,10 @@ exports.getAboutRecruiter = async (req, res, next) => {
 exports.getEditProfile = async (req, res, next) => {
   const profileId = req.params.profileId;
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
   if (!profileId) {
     return res.status(400).json({ error: "Profile ID is required" });
@@ -738,7 +697,7 @@ exports.storeProfileList = async (req, res, next) => {
         .json({ error: "Unauthorized: Please log in first" });
     }
     if (req.session.user.userType !== "employee") {
-      return res.status(401).json({error:"Unauthorized: User"})
+      return res.status(401).json({ error: "Unauthorized: User" });
     }
     const profilesAdder = await UserEmployee.findById(
       req.session.user._id,
@@ -757,14 +716,14 @@ exports.storeProfileList = async (req, res, next) => {
 
 exports.getStoreProfileDetails = async (req, res, next) => {
   try {
-     if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
-  }
-  if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
-  }
+    if (!req.session || !req.session.user || !req.session.user._id) {
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: Please log in first" });
+    }
+    if (req.session.user.userType !== "employee") {
+      return res.status(401).json({ error: "Unauthorized: User" });
+    }
     const profilesAdder = await UserEmployee.findById(
       req.session.user._id,
       "profilesPosted"
@@ -772,7 +731,7 @@ exports.getStoreProfileDetails = async (req, res, next) => {
     let profileIds = profilesAdder.profilesPosted;
 
     if (!profileIds.includes(req.params.profileId)) {
-      return res.status(404).json({error:"You don't own this Resume"})
+      return res.status(404).json({ error: "You don't own this Resume" });
     }
 
     const profileId = req.params.profileId;
@@ -787,12 +746,10 @@ exports.getStoreProfileDetails = async (req, res, next) => {
 exports.postDeleteProfile = async (req, res, next) => {
   const profileId = req.params.profileId;
   if (!req.session || !req.session.user || !req.session.user._id) {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized: Please log in first" });
+    return res.status(401).json({ error: "Unauthorized: Please log in first" });
   }
   if (req.session.user.userType !== "employee") {
-    return res.status(401).json({error:"Unauthorized: User"})
+    return res.status(401).json({ error: "Unauthorized: User" });
   }
 
   const profilesAdder = await UserEmployee.findById(
@@ -802,9 +759,9 @@ exports.postDeleteProfile = async (req, res, next) => {
   let profileIds = profilesAdder.profilesPosted;
 
   if (!profileIds.includes(req.params.profileId)) {
-    return res.status(404).json({error:"You don't own this Resume"})
+    return res.status(404).json({ error: "You don't own this Resume" });
   }
-  
+
   try {
     const result = await Profile.findByIdAndDelete(profileId);
     if (!result) {

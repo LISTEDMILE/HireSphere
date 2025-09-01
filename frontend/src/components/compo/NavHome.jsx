@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
 import { IoMdMenu, IoMdClose, IoMdHome } from "react-icons/io";
-import { 
-  FaHeart, 
-  FaBriefcase, 
-  FaFileAlt, 
-  FaGift, 
-  FaListUl, 
-  FaCheckCircle 
+import {
+  FaHeart,
+  FaBriefcase,
+  FaFileAlt,
+  FaGift,
+  FaListUl,
+  FaCheckCircle,
 } from "react-icons/fa";
 import { MdOutlineWork } from "react-icons/md";
 
@@ -63,7 +63,7 @@ const NavHome = () => {
         href="/"
         className=" bg-red-800 text-white rounded-md px-4 py-1.5 flex gap-1 text-xl ml-8 hover:underline hover:bg-red-600 transition-all duration-300 ease-in-out"
       >
-       <IoMdHome className="text-2xl" /> Home
+        <IoMdHome className="text-2xl" /> Home
       </a>
       {!isLoggedIn && (
         <>
@@ -226,12 +226,14 @@ const NavHome = () => {
             className="inset-0 fixed bg-black opacity-70"
             onClick={() => setNavOpen(false)}
           ></div>
-          <div className="flex fixed overflow-y-scroll overflow-x-hidden z-30 top-0  right-0 min-h-[50vh] items-start bg-gradient-to-b from-gray-900 via-gray-800 to-black
+          <div
+            className="flex fixed overflow-y-scroll overflow-x-hidden z-30 top-0  right-0 min-h-[50vh] items-start bg-gradient-to-b from-gray-900 via-gray-800 to-black
  p-6 w-72 flex-col gap-8 h-full"
-           style={{
-    scrollbarWidth: "none",       
-    msOverflowStyle: "none",    
-  }}>
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
             <button
               className="text-3xl self-end  hover:cursor-pointer"
               onClick={() => {
@@ -266,124 +268,109 @@ const NavHome = () => {
               </Link>
             )}
 
-
-
-
-
-
-{isLoggedIn && userType === "employee" && (
-        <div className="flex items-start flex-col gap-3 text-lg">
-          <a
-            href="/store/favourite"
-            className="hover:underline hover:text-red-100 bg-transparent flex gap-3 items-center
+            {isLoggedIn && userType === "employee" && (
+              <div className="flex items-start flex-col gap-3 text-lg">
+                <a
+                  href="/store/favourite"
+                  className="hover:underline hover:text-red-100 bg-transparent flex gap-3 items-center
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-           <FaHeart className="text-red-400"/>  Favourites
-          </a>
+                >
+                  <FaHeart className="text-red-400" /> Favourites
+                </a>
 
-          <a
-            href="/store/storeJobList"
-            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+                <a
+                  href="/store/storeJobList"
+                  className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-          <FaBriefcase className="text-blue-400"/>  Vacancies
-          </a>
+                >
+                  <FaBriefcase className="text-blue-400" /> Vacancies
+                </a>
 
-          <a
-            href="/store/appliedJobs"
-            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+                <a
+                  href="/store/appliedJobs"
+                  className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-           <MdOutlineWork className="text-green-400"/>  Applied
-          </a>
+                >
+                  <MdOutlineWork className="text-green-400" /> Applied
+                </a>
 
-          <a
-            href="/store/addProfile"
-            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+                <a
+                  href="/store/addProfile"
+                  className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-           <FaFileAlt className="text-yellow-400"/>  Add Resume
-          </a>
+                >
+                  <FaFileAlt className="text-yellow-400" /> Add Resume
+                </a>
 
-          <a
-            href="/store/storeProfileList"
-            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+                <a
+                  href="/store/storeProfileList"
+                  className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-           <FaFileAlt className="text-indigo-400"/>  Resumes
-          </a>
+                >
+                  <FaFileAlt className="text-indigo-400" /> Resumes
+                </a>
 
-          <a
-            href="/store/offers/"
-            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+                <a
+                  href="/store/offers/"
+                  className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-           <FaGift  className="text-purple-400"/> Offers
-          </a>
-        </div>
-      )}
+                >
+                  <FaGift className="text-purple-400" /> Offers
+                </a>
+              </div>
+            )}
 
-      {isLoggedIn && userType === "recruiter" && (
-        <div className="flex items-start flex-col gap-3 texl-lg">
-          <a
-            href="/host/addJob"
-            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+            {isLoggedIn && userType === "recruiter" && (
+              <div className="flex items-start flex-col gap-3 texl-lg">
+                <a
+                  href="/host/addJob"
+                  className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-           
-           <FaBriefcase className="text-blue-400" />  Add Vacancy
-          </a>
+                >
+                  <FaBriefcase className="text-blue-400" /> Add Vacancy
+                </a>
 
-          <a
-            href="/host/hostJobList"
-            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+                <a
+                  href="/host/hostJobList"
+                  className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-           <FaListUl className="text-orange-400" /> Added by you
-          </a>
+                >
+                  <FaListUl className="text-orange-400" /> Added by you
+                </a>
 
-          <a
-            href="/host/hostApplications"
-            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+                <a
+                  href="/host/hostApplications"
+                  className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-          <MdOutlineWork className="text-green-400" />  Applications
-          </a>
+                >
+                  <MdOutlineWork className="text-green-400" /> Applications
+                </a>
 
-          <a
-            href="/host/hostProfileList"
-            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+                <a
+                  href="/host/hostProfileList"
+                  className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-           <FaFileAlt className="text-indigo-400" /> Resumes
-          </a>
+                >
+                  <FaFileAlt className="text-indigo-400" /> Resumes
+                </a>
 
-          <a
-            href="/host/favouriteProfile"
-            className="hover:underline hover:text-red-100  flex gap-3 items-center not-only-of-type:bg-transparent
+                <a
+                  href="/host/favouriteProfile"
+                  className="hover:underline hover:text-red-100  flex gap-3 items-center not-only-of-type:bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-          <FaHeart className="text-pink-500" />  Favourites
-          </a>
+                >
+                  <FaHeart className="text-pink-500" /> Favourites
+                </a>
 
-          <a
-            href="/host/choosenProfiles"
-            className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
+                <a
+                  href="/host/choosenProfiles"
+                  className="hover:underline hover:text-red-100  flex gap-3 items-center bg-transparent
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
-          >
-           <FaCheckCircle className="text-teal-400" /> Selected
-          </a>
-        </div>
-      )}
-
-
-
-
-
-            
-
-
-            
+                >
+                  <FaCheckCircle className="text-teal-400" /> Selected
+                </a>
+              </div>
+            )}
 
             <div className="flex flex-col gap-1 mb-2 mt-6">
               <a

@@ -75,29 +75,29 @@ export default function AddAboutRecruiter() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const fd = new FormData();
-    
+
     // Add normal fields
     for (let key in formData) {
       if (Array.isArray(formData[key])) {
         if (formData[key].length > 0) {
           formData[key].forEach((item) => fd.append(key, item));
         } else {
-          fd[key]=[]; 
+          fd[key] = [];
         }
       } else {
         fd.append(key, formData[key]);
       }
     }
-  
+
     try {
       let response = await fetch(`${apiURL}/host/addAboutRecruiter`, {
         method: "POST",
         credentials: "include",
         body: fd, // No JSON.stringify, no headers
       });
-  
+
       const data = await response.json();
       setErrors(data.errors ? data.errors : null);
       if (!data.errors) setMessage("Profile Updated Successfully");
@@ -105,16 +105,16 @@ export default function AddAboutRecruiter() {
       console.error("Error submitting:", error);
     }
   };
-  
+
   return (
-     <div className="w-full min-h-[100vh] flex flex-col items-center ">
+    <div className="w-full min-h-[100vh] flex flex-col items-center ">
       <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
       <NavHome />
       <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
         <span className="relative z-10">Your Profile</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
-       <div className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white ">
+      <div className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white ">
         {message && (
           <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-center">
             {message}
@@ -131,62 +131,68 @@ export default function AddAboutRecruiter() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} enctype="multipart/form-data" className="w-full flex flex-col gap-12 ">
-          
+        <form
+          onSubmit={handleSubmit}
+          enctype="multipart/form-data"
+          className="w-full flex flex-col gap-12 "
+        >
           {/* no database */}
-        
-           {/* <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
+
+          {/* <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
                  
             className="w-[250px] h-[250px] self-center rounded-full mb-6" /> */}
-          
-           <img src="/AlternateProfilePic.png"
-              className="w-[250px] h-[250px] self-center rounded-full mb-6" />
 
-          
-          
+          <img
+            src="/AlternateProfilePic.png"
+            className="w-[250px] h-[250px] self-center rounded-full mb-6"
+          />
+
           <div
             className="w-full bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl shadow-lg flex gap-2 flex-col p-6"
           >
-          <div className="flex flex-col gap-5 ">
-            {[
-              { field: "fullName", placeholder: "Full Name" },
-              { field: "designation", placeholder: "Designation" },
-              { field: "company", placeholder: "Company" },
-              { field: "companyWebsite", placeholder: "Company Website" },
-              { field: "email", placeholder: "Email" },
-              { field: "linkedIn", placeholder: "Linked In Url" },
-            ].map(({ field, placeholder }) => {
-              return (
-                <div className="flex flex-col gap-2">
-                  <label className="text-gray-400 text-lg">{placeholder}</label>
-                  <input
-                    name={field}
-                    value={formData[field]}
-                    onChange={handleChange}
-                    placeholder={placeholder}
-                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  />
-                </div>
-              );
-            })}
+            <div className="flex flex-col gap-5 ">
+              {[
+                { field: "fullName", placeholder: "Full Name" },
+                { field: "designation", placeholder: "Designation" },
+                { field: "company", placeholder: "Company" },
+                { field: "companyWebsite", placeholder: "Company Website" },
+                { field: "email", placeholder: "Email" },
+                { field: "linkedIn", placeholder: "Linked In Url" },
+              ].map(({ field, placeholder }) => {
+                return (
+                  <div className="flex flex-col gap-2">
+                    <label className="text-gray-400 text-lg">
+                      {placeholder}
+                    </label>
+                    <input
+                      name={field}
+                      value={formData[field]}
+                      onChange={handleChange}
+                      placeholder={placeholder}
+                      className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    />
+                  </div>
+                );
+              })}
 
-
-<div className="flex flex-col gap-2">
-                  <label className="text-gray-400 text-lg">Profile Picture</label>
-              <input
-                type="file"
-                    name="profilePicture"
-                    onChange={(e) =>
-                      setFormData({ ...formData, profilePicture: e.target.files[0] })
-                    }
-                accept="image/*"
-                    className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  />
-            </div> 
-            
+              <div className="flex flex-col gap-2">
+                <label className="text-gray-400 text-lg">Profile Picture</label>
+                <input
+                  type="file"
+                  name="profilePicture"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      profilePicture: e.target.files[0],
+                    })
+                  }
+                  accept="image/*"
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                />
+              </div>
             </div>
-            </div>
+          </div>
 
           <input type="hidden" name="_id" value={formData._id} />
 
