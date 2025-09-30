@@ -603,7 +603,7 @@ exports.postAddAboutEmployee = [
         fs.unlink(req.file.path, (err) => {
           if (err) {
             console.error("Error deleting local file:", err);
-          } 
+          }
         });
       }
 
