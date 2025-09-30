@@ -1,7 +1,6 @@
 const express = require("express");
 const storeController = require("../controllers/storeController");
 const storeRouter = express.Router();
-const upload = require("../utils/uploadUtils");
 
 storeRouter.get("/storeJobList", storeController.jobList);
 
@@ -43,11 +42,7 @@ storeRouter.get(
   "/addAboutEmployee/:userId",
   storeController.getAddAboutEmployee
 );
-storeRouter.post(
-  "/addAboutEmployee",
-  upload.single("profilePicture"),
-  storeController.postAddAboutEmployee
-);
+storeRouter.post("/addAboutEmployee", storeController.postAddAboutEmployee);
 storeRouter.get("/aboutRecruiter/:userId", storeController.getAboutRecruiter);
 
 module.exports = storeRouter;

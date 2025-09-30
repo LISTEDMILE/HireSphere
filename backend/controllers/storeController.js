@@ -3,8 +3,7 @@ const UserEmployee = require("../models/userEmployee");
 const UserRecruiter = require("../models/userRecruiter");
 const { check, validationResult } = require("express-validator");
 const Profile = require("../models/firstProfilemodel");
-const path = require("path");
-const fs = require("fs");
+const cloudinary = require("../utils/cloudinary");
 
 exports.jobList = (req, res, next) => {
   const details = Job.find()
@@ -576,22 +575,28 @@ exports.postAddAboutEmployee = [
       return res.status(404).json({ errors: ["User not found"] });
     }
     try {
-      let profilePath;
+      let profilePath = user.aboutEmployee.profilePicture;
+
       if (req.file) {
-        profilePath = `/uploads/${req.file.filename}`;
-        const oldImagePath = path.join(
-          __dirname,
-          `..${user.aboutEmployee.profilePicture}`
-        );
-        fs.unlink(oldImagePath, (error) => {
-          if (error) {
-            console.log("Error uploading image", error);
+        if (profilePath) {
+          try {
+            const segments = profilePath.split("/");
+            const fileNameWithExt = segments[segments.length - 1];
+            const publicId = `profile_pictures/${
+              fileNameWithExt.split(".")[0]
+            }`;
+            await cloudinary.uploader.destroy(publicId);
+          } catch (err) {
+            console.warn("Could not delete old Cloudinary image", err);
           }
+        }
+
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "profilePicture_HireSphere",
+          transformation: [{ width: 500, height: 500, crop: "limit" }],
         });
-      } else if (user.aboutEmployee.profilePicture) {
-        profilePath = user.aboutEmployee.profilePicture;
-      } else {
-        profilePath = null;
+
+        profilePath = result.secure_url;
       }
 
       user.aboutEmployee = { ...data, profilePicture: profilePath };
