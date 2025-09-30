@@ -4,6 +4,8 @@ const UserRecruiter = require("../models/userRecruiter");
 const { check, validationResult } = require("express-validator");
 const Profile = require("../models/firstProfilemodel");
 const cloudinary = require("../utils/cloudinary");
+const fs = require("fs");
+const path = require("path");
 
 exports.jobList = (req, res, next) => {
   const details = Job.find()
@@ -597,6 +599,12 @@ exports.postAddAboutEmployee = [
         });
 
         profilePath = result.secure_url;
+
+        fs.unlink(req.file.path, (err) => {
+          if (err) {
+            console.error("Error deleting local file:", err);
+          } 
+        });
       }
 
       user.aboutEmployee = { ...data, profilePicture: profilePath };

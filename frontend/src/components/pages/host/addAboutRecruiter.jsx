@@ -100,7 +100,11 @@ export default function AddAboutRecruiter() {
 
       const data = await response.json();
       setErrors(data.errors ? data.errors : null);
-      if (!data.errors) setMessage("Profile Updated Successfully");
+      if (!data.errors) {
+        setMessage("Profile Updated Successfully");
+        alert("Profile Updated Successfully");
+        window.location.reload();
+      }
     } catch (error) {
       console.error("Error submitting:", error);
     }

@@ -103,6 +103,20 @@ exports.postAddAboutRecruiter = [
 
   async (req, res) => {
     const errors = validationResult(req);
+    Object.keys(req.body).forEach((key) => {
+      try {
+        const value = req.body[key];
+        if (
+          typeof value === "string" &&
+          (value.startsWith("[") || value.startsWith("{"))
+        ) {
+          req.body[key] = JSON.parse(value);
+        }
+      } catch (e) {
+        console.warn(`Could not parse ${key}, setting to empty`, e);
+        req.body[key] = [];
+      }
+    });
     const data = req.body;
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -144,6 +158,12 @@ exports.postAddAboutRecruiter = [
         });
 
         profilePath = result.secure_url;
+
+        fs.unlink(req.file.path, (err) => {
+          if (err) {
+            console.error("Error deleting local file:", err);
+          } 
+        });
       }
 
       user.aboutRecruiter = { ...data, profilePicture: profilePath };
