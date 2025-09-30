@@ -136,14 +136,14 @@ export default function AddAboutRecruiter() {
           enctype="multipart/form-data"
           className="w-full flex flex-col gap-12 "
         >
-          {/* no database */}
-
-          {/* <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
-                 
-            className="w-[250px] h-[250px] self-center rounded-full mb-6" /> */}
-
           <img
-            src="/AlternateProfilePic.png"
+            src={
+              formData.profilePicture &&
+              formData.profilePicture !== null &&
+              formData.profilePicture !== ""
+                ? `${formData.profilePicture}`
+                : "/AlternateProfilePic.png"
+            }
             className="w-[250px] h-[250px] self-center rounded-full mb-6"
           />
 

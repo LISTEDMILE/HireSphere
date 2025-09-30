@@ -5,6 +5,7 @@ const UserRecruiter = require("../models/userRecruiter");
 const fs = require("fs");
 const path = require("path");
 const { check, validationResult } = require("express-validator");
+const cloudinary = require("../utils/cloudinary");
 
 exports.addJobPost = [
   check("jobCompany").notEmpty().withMessage("Job Company is required").trim(),
@@ -123,23 +124,26 @@ exports.postAddAboutRecruiter = [
           .json({ errors: ["Access denied. Only Recruiters can update."] });
       }
 
-      let profilePath;
+      let profilePath = user.aboutRecruiter?.profilePicture || null;
 
       if (req.file) {
-        profilePath = `/uploads/${req.file.filename}`;
-        const oldImagePath = path.join(
-          __dirname,
-          `..${user.aboutRecruiter.profilePicture}`
-        );
-        fs.unlink(oldImagePath, (error) => {
-          if (error) {
-            console.log("Error uploading image", error);
+        if (user.aboutRecruiter?.profilePicture) {
+          const publicId = user.aboutRecruiter.profilePicture
+            .split("/")
+            .pop()
+            .split(".")[0];
+          try {
+            await cloudinary.uploader.destroy(publicId);
+          } catch (err) {
+            console.log("Error deleting old image from Cloudinary:", err);
           }
+        }
+
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "profilePicture_HireSphere",
         });
-      } else if (user.aboutRecruiter.profilePicture) {
-        profilePath = user.aboutRecruiter.profilePicture;
-      } else {
-        profilePath = null;
+
+        profilePath = result.secure_url;
       }
 
       user.aboutRecruiter = { ...data, profilePicture: profilePath };
