@@ -57,13 +57,14 @@ export default function AboutRecruiter() {
            rounded-2xl shadow-lg flex gap-2 flex-col p-6"
         >
           <div className="flex flex-col sm:flex-row justify-around w-full gap-8 mb-6 pb-6 border-b">
-            {/* no database */}
-
-            {/* <img src={(formData.profilePicture && formData.profilePicture!==null) ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"}
-                      className="w-[250px] h-[250px] self-center rounded-full mb-6" /> */}
-
             <img
-              src="/AlternateProfilePic.png"
+              src={
+                formData.profilePicture &&
+                formData.profilePicture !== null &&
+                formData.profilePicture !== ""
+                  ? `${formData.profilePicture}`
+                  : "/AlternateProfilePic.png"
+              }
               className="w-[250px] h-[250px] self-center rounded-full mb-6"
             />
 

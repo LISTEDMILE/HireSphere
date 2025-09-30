@@ -315,14 +315,14 @@ export default function AddAboutEmployee() {
           className="w-full bg-white/5 backdrop-blur-md border border-white/10 
            rounded-2xl text-wrap shadow-lg flex gap-2 flex-col p-6"
         >
-          {/* no database */}
-
-          {/* <img src={(formData.profilePicture && formData.profilePicture!==null && formData.profilePicture!== "") ? `${apiURL}${formData.profilePicture}` : "/AlternateProfilePic.png"} 
-                    className="w-[250px] h-[250px] self-center rounded-full mb-6" />
-                    */}
-
           <img
-            src="/AlternateProfilePic.png"
+            src={
+              formData.profilePicture &&
+              formData.profilePicture !== null &&
+              formData.profilePicture !== ""
+                ? `${formData.profilePicture}`
+                : "/AlternateProfilePic.png"
+            }
             className="w-[250px] h-[250px] self-center rounded-full mb-6"
           />
 
