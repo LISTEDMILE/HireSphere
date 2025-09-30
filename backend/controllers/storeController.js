@@ -576,19 +576,20 @@ exports.postAddAboutEmployee = [
       return res.status(404).json({ errors: ["User not found"] });
     }
     try {
-      let profilePath = user.aboutEmployee.profilePicture;
+      let profilePath = user.aboutEmployee?.profilePicture || null;
 
       if (req.file) {
-        if (profilePath) {
+        if (user.aboutEmployee?.profilePicture) {
+          const publicId = user.aboutEmployee.profilePicture
+            .split("/")
+            .pop()
+            .split(".")[0];
           try {
-            const segments = profilePath.split("/");
-            const fileNameWithExt = segments[segments.length - 1];
-            const publicId = `profile_pictures/${
-              fileNameWithExt.split(".")[0]
-            }`;
-            await cloudinary.uploader.destroy(publicId);
+            await cloudinary.uploader.destroy(
+              `profilePicture_HireSphere/${publicId}`
+            );
           } catch (err) {
-            console.warn("Could not delete old Cloudinary image", err);
+            console.log("Error deleting old image from Cloudinary:", err);
           }
         }
 

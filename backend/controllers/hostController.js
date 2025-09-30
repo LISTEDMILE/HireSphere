@@ -146,7 +146,9 @@ exports.postAddAboutRecruiter = [
             .pop()
             .split(".")[0];
           try {
-            await cloudinary.uploader.destroy(publicId);
+            await cloudinary.uploader.destroy(
+              `profilePicture_HireSphere/${publicId}`
+            );
           } catch (err) {
             console.log("Error deleting old image from Cloudinary:", err);
           }
