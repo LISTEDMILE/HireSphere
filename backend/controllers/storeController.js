@@ -4,8 +4,7 @@ const UserRecruiter = require("../models/userRecruiter");
 const { check, validationResult } = require("express-validator");
 const Profile = require("../models/firstProfilemodel");
 const cloudinary = require("../utils/cloudinary");
-const fs = require("fs");
-const path = require("path");
+const streamifier = require("streamifier");
 
 exports.jobList = (req, res, next) => {
   const details = Job.find()
@@ -593,18 +592,18 @@ exports.postAddAboutEmployee = [
           }
         }
 
-        const result = await cloudinary.uploader.upload(req.file.path, {
-          folder: "profilePicture_HireSphere",
-          transformation: [{ width: 500, height: 500, crop: "limit" }],
+        const result = await new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: "profilePicture_HireSphere" },
+            (error, result) => {
+              if (error) return reject(error);
+              resolve(result);
+            }
+          );
+          streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
         });
 
         profilePath = result.secure_url;
-
-        fs.unlink(req.file.path, (err) => {
-          if (err) {
-            console.error("Error deleting local file:", err);
-          }
-        });
       }
 
       user.aboutEmployee = { ...data, profilePicture: profilePath };
