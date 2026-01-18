@@ -6,10 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { userActions } from "../../../store";
 import { useDispatch } from "react-redux";
 import { BackgroundAnimation } from "../compo/anima";
+import Loader from "../compo/loader";
+import Errors from "../compo/Errors";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [display, setDisplay] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState(null);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -29,6 +32,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     let user = await LoginUserToServer(formData);
     if (!user.errors) {
       dispatch(
@@ -37,11 +41,12 @@ export default function LoginPage() {
           firstname: user.firstname,
           userType: user.userType,
           lastname: user.lastname,
-        })
+        }),
       );
       navigate("/");
     } else {
       setErrors(user.errors);
+      setIsLoading(false);
     }
   };
 
@@ -55,13 +60,8 @@ export default function LoginPage() {
         onSubmit={handleSubmit}
         className="bg-[#0d212ec9] relative shadow-lg rounded-lg p-8 w-[95%] sm:w-[400px] "
       >
-        {errors && (
-          <div className=" border-2  bg-red-100 text-red-900  p-3 rounded-md mb-4">
-            {errors.map((error) => {
-              return <li>{error}</li>;
-            })}
-          </div>
-        )}
+        <Errors errors={errors} />
+
         <div className="mb-4">
           <div className="flex justify-around w-full border-b-2 border-b-white pb-4 mb-6">
             <button
@@ -170,6 +170,9 @@ export default function LoginPage() {
           </a>
         </div>
       </form>
+
+      <Loader isLoading={isLoading} />
+
       <Footer />
     </div>
   );

@@ -4,6 +4,8 @@ import Footer from "../compo/Footer";
 import { AddUserToServer } from "../../../services/Services";
 import { useNavigate } from "react-router-dom";
 import { BackgroundAnimation } from "../compo/anima";
+import Errors from "../compo/Errors";
+import Loader from "../compo/loader";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ const SignUpPage = () => {
   });
 
   const [display, setDisplay] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [errors, setErrors] = useState(null);
 
@@ -32,8 +35,11 @@ const SignUpPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     if (formData.password !== formData.confirmPassword) {
       setErrors(["Passwords do not match."]);
+      setIsLoading(false);
       return;
     }
     let er = await AddUserToServer(formData);
@@ -42,6 +48,8 @@ const SignUpPage = () => {
     if (!er.errors) {
       navigate("/login");
     }
+    setIsLoading(false);
+    
   };
 
   return (
@@ -54,13 +62,8 @@ const SignUpPage = () => {
         onSubmit={handleSubmit}
         className="bg-[#0d212ec9] relative shadow-lg text-white rounded-lg p-8 w-[95%] sm:w-[600px]"
       >
-        {errors && (
-          <div className="bg-[#330e0e] border-2 border-white  text-white p-3 rounded-md mb-4">
-            {errors.map((error) => {
-              return <li>{error}</li>;
-            })}
-          </div>
-        )}
+        <Errors errors={errors} />
+        
         <div className="mb-4">
           <div className="flex justify-around w-full border-b-2 border-b-white pb-4 mb-6">
             <button
@@ -219,6 +222,8 @@ const SignUpPage = () => {
           </a>
         </div>
       </form>
+
+      <Loader isLoading={isLoading}/>
 
       <Footer />
     </div>
