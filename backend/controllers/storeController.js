@@ -6,25 +6,38 @@ const Profile = require("../models/firstProfilemodel");
 const cloudinary = require("../utils/cloudinary");
 const streamifier = require("streamifier");
 
-exports.jobList = (req, res, next) => {
-  const details = Job.find()
-    .then((details) => {
-      res.status(200).json({
-        message: "Job List fetched successfully",
-        details: details,
-      });
-    })
-    .catch((err) => {
-      console.log("Error fetching job list", err);
-      res.status(500).json({
-        message: "Error fetching job list",
-        error: err,
-      });
+exports.jobList = async (req, res) => {
+  try {
+    const details = await Job.find()
+      .select(
+        "_id jobPost jobCompany jobLocation jobSalaryOffered jobExperienceRequired jobUploader"
+      )
+      .lean(); // 🚀 faster, plain JS objects
+
+    res.status(200).json({
+      message: "Job List fetched successfully",
+      details,
     });
+  } catch (err) {
+    console.error("Error fetching job list", err);
+    res.status(500).json({
+      message: "Error fetching job list",
+      error: err,
+    });
+  }
 };
 
+
 exports.getStoreJobDetails = (req, res, next) => {
-  const detail = Job.findById(req.params.jobId)
+  Job.findById(req.params.jobId)
+      .select(
+        "_id " +
+        "jobPost jobCompany jobLocation jobSalaryOffered jobIndustry " +
+        "jobExperienceRequired description " +
+        "jobSkills jobEmploymentType jobType jobTags " +
+        "jobUploader jobOwnerMobile jobOwnerEmail"
+      )
+      .lean()
     .then((detail) => {
       res.status(200).json({
         message: "Job List fetched successfully",
@@ -44,17 +57,23 @@ exports.getStoreOffererJobs = async (req, res, next) => {
   const offererId = req.params.offererId;
 
   try {
-    const jobProvider = await UserRecruiter.findById(offererId, "jobsPosted");
-    jobList = jobProvider.jobsPosted;
+    const jobProvider = await UserRecruiter.findById(offererId, "jobsPosted firstname");
 
     if (!jobProvider) {
       return res.status(404).json({ error: "User Not Found" });
     }
 
+    
+    let jobList = jobProvider.jobsPosted;
+    let providerName = jobProvider.firstname;
+
     const jobs = await Job.find({
       _id: { $in: jobList },
-    });
-    return res.status(200).json(jobs);
+    }).select(
+        "_id jobPost jobCompany jobLocation jobSalaryOffered jobExperienceRequired jobUploader"
+      )
+      .lean();
+    return res.status(200).json({ jobs: jobs, providerName: providerName });
   } catch (error) {
     console.error("Error fetching users:", error);
   }
@@ -102,8 +121,16 @@ exports.getOffers = async (req, res, next) => {
 
     const offers = await Promise.all(
       offerIds.map(async (detail) => {
-        const profile = await Profile.findById(detail.profile);
-        let offeredBy = await UserRecruiter.findById(detail.offeredBy);
+        const profile = await Profile.findById(detail.profile)
+          .select(
+            "_id profilePost profileName profileTenth profileTwelth profileSkills"
+          )
+          .lean();
+            const offeredBy = await UserRecruiter.findById(detail.offeredBy)
+          .select(
+            "_id aboutRecruiter.fullName aboutRecruiter.designation aboutRecruiter.company aboutRecruiter.bio"
+          )
+          .lean();
         if (!profile || !offeredBy) {
           return null; // Skip this offer if profile or offeredBy is not found
         }
@@ -289,7 +316,11 @@ exports.getOnlyFavourites = async (req, res, next) => {
 
     const jobs = await Job.find({
       _id: { $in: favIds },
-    });
+    }).select(
+        "_id jobPost jobCompany jobLocation jobSalaryOffered jobExperienceRequired jobUploader"
+      )
+      .lean();
+    
     return res.status(200).json(jobs);
   } catch (error) {
     console.error("Error fetching favourites:", error);
@@ -311,9 +342,12 @@ exports.getOnlyAppliedJobs = async (req, res, next) => {
       "appliedJobs"
     );
     let appliedIds = user.appliedJobs.map((ids) => ids.Ids);
-    let jobs = await Job.find({
-      _id: { $in: appliedIds },
-    });
+   let jobs = await Job.find({ _id: { $in: appliedIds } })
+      .select(
+        "_id jobPost jobCompany jobLocation jobSalaryOffered jobExperienceRequired jobUploader"
+      )
+      .lean();
+
     let status;
     jobs = jobs.map((ele) => {
       user.appliedJobs.forEach((e) => {
@@ -347,11 +381,11 @@ exports.postAddFavourites = async (req, res, next) => {
     if (user.favourites.includes(jobId)) {
       user.favourites.pull(jobId);
       await user.save();
-      return res.status(200).json({ message: "Job removed from favourites" });
+      return res.status(200).json({ message: "success" });
     } else {
       user.favourites.push(jobId);
       await user.save();
-      return res.status(200).json({ message: "Job added to favourites" });
+      return res.status(200).json({ message: "success" });
     }
   } catch (err) {
     console.error("Error updating favourites:", err);
@@ -391,7 +425,7 @@ exports.postApply = async (req, res, next) => {
       userhost.applications.pull({ job: jobId, applierProfile: user._id });
       await userhost.save();
       await user.save();
-      return res.status(200).json({ message: "Job application cancelled" });
+      return res.status(200).json({ message: "success" });
     } else {
       user.appliedJobs.push({ Ids: jobId, status: "pending" });
       userhost.applications.push({
@@ -401,7 +435,7 @@ exports.postApply = async (req, res, next) => {
       });
       await userhost.save();
       await user.save();
-      return res.status(200).json({ message: "Job applied successfully" });
+      return res.status(200).json({ message: "success" });
     }
   } catch (err) {
     console.error("Error applying for job:", err);
@@ -536,7 +570,58 @@ exports.addProfilePost = [
   },
 ];
 
-exports.postAddAboutEmployee = [
+exports.postAddAboutEmployee =  [
+  // 🔹 Basic info
+  check("fullName")
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage("Full name must be between 2 and 50 characters"),
+
+  check("profession")
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage("Profession must be between 2 and 50 characters"),
+
+  check("location")
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage("Location is invalid"),
+
+  // 🔹 Email
+  check("email")
+    .optional()
+    .isEmail()
+    .withMessage("Invalid email address")
+    .normalizeEmail(),
+
+  // 🔹 Mobile (India)
+  check("mobile")
+    .optional()
+    .matches(/^[6-9]\d{9}$/)
+    .withMessage("Mobile number must be a valid 10-digit Indian number"),
+
+  // 🔹 URLs
+  check("linkedIn")
+    .optional()
+    .isURL({ protocols: ["http", "https"], require_protocol: true })
+    .withMessage("LinkedIn must be a valid URL"),
+
+  check("gitHub")
+    .optional()
+    .isURL({ protocols: ["http", "https"], require_protocol: true })
+    .withMessage("GitHub must be a valid URL"),
+
+  // 🔹 Bio
+  check("bio")
+    .optional()
+    .isLength({ max: 1500 })
+    .withMessage("Bio cannot exceed 1500 characters"),
+
+
+  // 🔹 Controller logic (UNCHANGED)
   async (req, res) => {
     const errors = validationResult(req);
     Object.keys(req.body).forEach((key) => {
@@ -630,7 +715,26 @@ exports.getAddAboutEmployee = async (req, res, next) => {
   if (req.session.user.userType !== "employee") {
     return res.status(401).json({ error: "Unauthorized: User" });
   }
-  const user = await UserEmployee.findById(userId);
+  const user = await UserEmployee.findById(userId)
+      .select(
+        "aboutEmployee.fullName " +
+        "aboutEmployee.profilePicture " +
+        "aboutEmployee.profession " +
+        "aboutEmployee.location " +
+        "aboutEmployee.email " +
+        "aboutEmployee.linkedIn " +
+        "aboutEmployee.gitHub " +
+        "aboutEmployee.bio " +
+        "aboutEmployee.mobile " +
+        "aboutEmployee.education " +
+        "aboutEmployee.skills " +
+        "aboutEmployee.experience " +
+        "aboutEmployee.projects " +
+        "aboutEmployee.achievements " +
+        "aboutEmployee.languageKnown " +
+        "aboutEmployee.jobPreferences"
+      )
+      .lean();
   if (!user) {
     return res.status(400).json({ error: "Unauthorized access" });
   } else {
@@ -719,8 +823,12 @@ exports.storeProfileList = async (req, res, next) => {
     let profileIds = profilesAdder.profilesPosted;
 
     const profiles = await Profile.find({
-      _id: { $in: profileIds },
-    });
+  _id: { $in: profileIds },
+})
+  .select(
+    "_id profilePost profileName profileTenth profileTwelth profileSkills"
+  )
+  .lean();
     return res.status(200).json(profiles);
   } catch (error) {
     console.error("Error fetching profiles:", error);
@@ -747,9 +855,19 @@ exports.getStoreProfileDetails = async (req, res, next) => {
       return res.status(404).json({ error: "You don't own this Resume" });
     }
 
-    const profileId = req.params.profileId;
+  
 
-    const profile = await Profile.findById(profileId);
+    const profile = await Profile.findById(req.params.profileId)
+      .select(
+        "_id " +
+        "profilePost profileName profileGender " +
+        "profileTenth profileTwelth profileGraduation " +
+        "profileExpectedSalary profileExperience profileCourse " +
+        "profileSkills profileJobType profilePreferredLocations profileProjects " +
+        "profileDescription profilePostDescription " +
+        "profileMobile profileEmail"
+      )
+      .lean();
     return res.status(200).json(profile);
   } catch (error) {
     console.error("Error fetching profiles:", error);

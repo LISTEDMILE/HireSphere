@@ -6,12 +6,15 @@ import { MdDeleteSweep } from "react-icons/md";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function Offers() {
   const [offers, setOffers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchOffers = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(`${apiURL}/store/offers`, {
           method: "GET",
@@ -23,17 +26,20 @@ export default function Offers() {
         const data = await response.json();
         if (data.error) {
           console.error("Error fetching Offers:", data.error);
+          setIsLoading(false);
           return;
         }
         setOffers(data.offers);
       } catch (error) {
         console.error("Error fetching Offers:", error);
       }
+      setIsLoading(false);
     };
     fetchOffers();
   }, []);
 
   const handleIgnore = async (offerId) => {
+    setIsLoading(true);
     try {
       await fetch(`${apiURL}/store/ignoreOffer/${offerId}`, {
         method: "DELETE",
@@ -49,9 +55,11 @@ export default function Offers() {
     } catch (error) {
       console.error("Error ignoring offer:", error);
     }
+    setIsLoading(false);
   };
 
   const handleAccept = async (offerId) => {
+    setIsLoading(true);
     try {
       await fetch(`${apiURL}/store/acceptOffer/${offerId}`, {
         method: "POST",
@@ -68,9 +76,11 @@ export default function Offers() {
     } catch (error) {
       console.error("Error accepting offer:", error);
     }
+    setIsLoading(false);
   };
 
   const handleReject = async (offerId) => {
+    setIsLoading(true);
     try {
       await fetch(`${apiURL}/store/rejectOffer/${offerId}`, {
         method: "POST",
@@ -87,6 +97,7 @@ export default function Offers() {
     } catch (error) {
       console.error("Error rejecting offer:", error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -265,6 +276,8 @@ export default function Offers() {
           ))}
         </ul>
       </div>
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

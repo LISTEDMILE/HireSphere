@@ -1,0 +1,17 @@
+Error connecting to server: querySrv ECONNREFUSED _mongodb._tcp.<mongodb-cluster>.mongodb.net
+    at QueryReqWrap.onresolve [as oncomplete] (node:internal/dns/promises:294:17) {
+  errno: undefined,
+  code: 'ECONNREFUSED',
+  syscall: 'querySrv',
+  hostname: '_mongodb._tcp.<mongodb-cluster>.mongodb.net'
+}
+
+<project-path>/node_modules/connect-mongodb-session/index.js:110
+        var e = new Error('Error connecting to database: ' + error.message);
+                ^
+
+Error: Error connecting to database: querySrv ECONNREFUSED _mongodb._tcp.<mongodb-cluster>.mongodb.net
+    at <project-path>/node_modules/connect-mongodb-session/index.js:110:17
+
+Node.js vXX.X.X
+[nodemon] app crashed - waiting for file changes before starting...

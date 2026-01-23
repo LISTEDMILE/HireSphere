@@ -4,6 +4,8 @@ import { MdOutlineCancel } from "react-icons/md";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
+import Errors from "../../compo/Errors";
 
 export default function AddAboutEmployee() {
   const [errors, setErrors] = useState(null);
@@ -36,6 +38,7 @@ export default function AddAboutEmployee() {
 
   const [language, setLanguage] = useState("");
   const [jobPreferred, setJobPreferred] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { userId } = useParams();
 
@@ -60,6 +63,7 @@ export default function AddAboutEmployee() {
 
   useEffect(() => {
     const fetchAboutEmployee = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(
           `${apiURL}/store/addAboutEmployee/${userId}`,
@@ -69,18 +73,20 @@ export default function AddAboutEmployee() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-          }
+          },
         );
         const data = await response.json();
         setFormData({ ...data });
       } catch (error) {
         console.error("Error fetching About Employee", error);
       }
+      setIsLoading(false);
     };
     fetchAboutEmployee();
   }, []);
 
   const handleChange = (e) => {
+    setErrors(null);
     const { name, value, type } = e.target;
     setFormData({
       ...formData,
@@ -89,6 +95,7 @@ export default function AddAboutEmployee() {
   };
 
   const handleArrayAdd = (e, field, value) => {
+    setErrors(null);
     e.preventDefault();
     if (
       value !== null &&
@@ -100,6 +107,7 @@ export default function AddAboutEmployee() {
   };
 
   const handleArrayRemove = (e, field, value) => {
+    setErrors(null);
     e.preventDefault();
     let elementsArray = [...formData[field]];
     elementsArray = elementsArray.filter((ele) => ele !== value);
@@ -107,6 +115,7 @@ export default function AddAboutEmployee() {
   };
 
   const handleAddProjectTechnologies = (e, value) => {
+    setErrors(null);
     e.preventDefault();
     if (
       value !== null &&
@@ -119,7 +128,9 @@ export default function AddAboutEmployee() {
       });
     }
   };
+
   const handleAddProject = (e, value) => {
+    setErrors(null);
     e.preventDefault();
     const { title, description, link, technologies } = value;
     if (
@@ -136,7 +147,7 @@ export default function AddAboutEmployee() {
         (proj) =>
           proj.title === title &&
           proj.description === description &&
-          proj.link === link
+          proj.link === link,
       );
 
       if (!alreadyExists) {
@@ -157,12 +168,15 @@ export default function AddAboutEmployee() {
   };
 
   const handleRemoveProjectTechnologies = (e, value) => {
+    setErrors(null);
     e.preventDefault();
     let array = [...project["technologies"]];
     array = array.filter((tech) => tech !== value);
     setProject({ ...project, technologies: [...array] });
   };
+
   const handleRemoveProject = (e, value) => {
+    setErrors(null);
     e.preventDefault();
     let elementsArray = [...formData["projects"]];
     elementsArray = elementsArray.filter(
@@ -171,12 +185,13 @@ export default function AddAboutEmployee() {
           proj.title === value.title &&
           proj.description === value.description &&
           proj.link === value.link
-        )
+        ),
     );
     setFormData({ ...formData, ["projects"]: elementsArray });
   };
 
   const handleAddEducation = (e, value) => {
+    setErrors(null);
     e.preventDefault();
     const { degree, college, passingYear, CGPA } = value;
     if (
@@ -189,7 +204,7 @@ export default function AddAboutEmployee() {
       return;
     } else {
       const alreadyExists = formData.education.some(
-        (edu) => edu.degree === degree
+        (edu) => edu.degree === degree,
       );
 
       if (!alreadyExists) {
@@ -210,15 +225,17 @@ export default function AddAboutEmployee() {
   };
 
   const handleRemoveEducation = (e, value) => {
+    setErrors(null);
     e.preventDefault();
     let elementsArray = [...formData["education"]];
     elementsArray = elementsArray.filter(
-      (edu) => !(edu.degree === value.degree)
+      (edu) => !(edu.degree === value.degree),
     );
     setFormData({ ...formData, ["education"]: elementsArray });
   };
 
   const handleAddExperience = (e, value) => {
+    setErrors(null);
     e.preventDefault();
     const { company, role, duration, descriptionWork } = value;
     if (
@@ -234,7 +251,7 @@ export default function AddAboutEmployee() {
         (exp) =>
           exp.company === company &&
           exp.role === role &&
-          exp.duration === duration
+          exp.duration === duration,
       );
 
       if (!alreadyExists) {
@@ -255,6 +272,7 @@ export default function AddAboutEmployee() {
   };
 
   const handleRemoveExperience = (e, value) => {
+    setErrors(null);
     e.preventDefault();
     let elementsArray = [...formData["experience"]];
     elementsArray = elementsArray.filter(
@@ -263,13 +281,14 @@ export default function AddAboutEmployee() {
           exp.company === value.company &&
           exp.role === value.role &&
           exp.duration === value.duration
-        )
+        ),
     );
     setFormData({ ...formData, ["experience"]: elementsArray });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const fd = new FormData();
 
@@ -298,6 +317,7 @@ export default function AddAboutEmployee() {
     } catch (error) {
       console.error("Error submitting:", error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -954,6 +974,8 @@ export default function AddAboutEmployee() {
             </div>
           </div>
         </div>
+
+        <Errors errors={errors} />
         <button
           className="w-fit self-center mt-12  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
           type="submit"
@@ -961,6 +983,8 @@ export default function AddAboutEmployee() {
           Update
         </button>
       </form>
+
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

@@ -4,13 +4,16 @@ import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
 import Empty from "../../compo/Empty";
+import Loader from "../../compo/loader";
 
 export default function AppliedJobs() {
   const [appliedJobs, setAppliedJobs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch applied jobs from the server
   useEffect(() => {
     const fetchAppliedJobs = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(`${apiURL}/store/onlyAppliedJobs`, {
           method: "GET",
@@ -22,9 +25,10 @@ export default function AppliedJobs() {
         const data = await response.json();
         if (data.error) {
           console.error("Error fetching applied jobs:", data.error);
+          setIsLoading(false);
           return;
         } else {
-          let ans = data.map((e) => ({ ...e._doc, status: e.status }));
+          let ans = data.map((e) => ({ ...e, status: e.status }));
           var appliedJobsWithoutFav = ans.map((job) => ({
             ...job,
             applied: true,
@@ -43,19 +47,21 @@ export default function AppliedJobs() {
         const favs = await favResponse.json();
         if (favs.error) {
           console.error("Error fetching favourites:", favs.error);
+          setIsLoading(false);
           return;
         }
         const favIds = favs.favIds;
         let appliedJobs = appliedJobsWithoutFav.map((job) =>
           favIds.includes(job._id)
             ? { ...job, fav: true }
-            : { ...job, fav: false }
+            : { ...job, fav: false },
         );
 
         setAppliedJobs(appliedJobs);
       } catch (error) {
         console.error("Error fetching applied jobs:", error);
       }
+      setIsLoading(false);
     };
 
     fetchAppliedJobs();
@@ -63,25 +69,42 @@ export default function AppliedJobs() {
 
   // Handle Apply
   const handleApply = async (jobId) => {
+    setAppliedJobs((prevJobs) =>
+      prevJobs.map((job) =>
+        job._id === jobId
+          ? {
+              ...job,
+              applied: !job.applied,
+              status: job.applied == true ? null : "pending",
+            }
+          : job,
+      ),
+    );
     try {
-      await fetch(`${apiURL}/store/apply/${jobId}`, {
+      const resApply = await fetch(`${apiURL}/store/apply/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
       });
-      setAppliedJobs((prevJobs) =>
-        prevJobs.map((job) =>
-          job._id === jobId
-            ? {
-                ...job,
-                applied: !job.applied,
-                status: job.applied == true ? null : "pending",
-              }
-            : job
-        )
-      );
+
+      const ansApply = await resApply.json();
+
+      if (ansApply.message !== "success") {
+        alert("Error applying");
+        setAppliedJobs((prevJobs) =>
+          prevJobs.map((job) =>
+            job._id === jobId
+              ? {
+                  ...job,
+                  applied: !job.applied,
+                  status: job.applied == true ? null : "pending",
+                }
+              : job,
+          ),
+        );
+      }
     } catch (error) {
       console.error("Error in application to job:", error);
     }
@@ -89,19 +112,29 @@ export default function AppliedJobs() {
 
   // Handle Favorite Toggle
   const handleFavourite = async (jobId) => {
+    setAppliedJobs((prevJobs) =>
+      prevJobs.map((job) =>
+        job._id === jobId ? { ...job, fav: !job.fav } : job,
+      ),
+    );
     try {
-      await fetch(`${apiURL}/store/favourite/${jobId}`, {
+      const resFav = await fetch(`${apiURL}/store/favourite/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
       });
-      setAppliedJobs((prevJobs) =>
-        prevJobs.map((job) =>
-          job._id === jobId ? { ...job, fav: !job.fav } : job
-        )
-      );
+
+      const ansFav = await resFav.json();
+
+      if (ansFav.message !== "success") {
+        setAppliedJobs((prevJobs) =>
+          prevJobs.map((job) =>
+            job._id === jobId ? { ...job, fav: !job.fav } : job,
+          ),
+        );
+      }
     } catch (error) {
       console.error("Error toggling favorite:", error);
     }
@@ -214,6 +247,8 @@ export default function AppliedJobs() {
           ))}
         </ul>
       </div>
+
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

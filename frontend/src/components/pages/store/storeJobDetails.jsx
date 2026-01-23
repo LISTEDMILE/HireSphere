@@ -3,15 +3,17 @@ import { Link, useParams } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function StoreJobDetails() {
   const [job, setJob] = useState();
   const { jobId } = useParams();
-  const [fetching, setFetching] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch jobs from the server
   useEffect(() => {
     const fetchJobs = async () => {
+      setIsLoading(true);
       try {
         // Fetch jobs
         const response = await fetch(
@@ -28,6 +30,7 @@ export default function StoreJobDetails() {
         const data = await response.json();
         if (data.error) {
           console.error("Error fetching jobs:", data.error);
+           setIsLoading(false);
           return;
         }
 
@@ -45,6 +48,7 @@ export default function StoreJobDetails() {
         const favs = await favResponse.json();
         if (favs.error) {
           console.error("Error fetching favourites:", favs.error);
+           setIsLoading(false);
           return;
         }
 
@@ -60,6 +64,7 @@ export default function StoreJobDetails() {
         const appliedData = await applyResponse.json();
         if (appliedData.error) {
           console.error("Error fetching applied jobs:", appliedData.error);
+           setIsLoading(false);
           return;
         }
         let appliedWhole = appliedData.appliedIds;
@@ -95,43 +100,60 @@ export default function StoreJobDetails() {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-      setFetching(false);
+      setIsLoading(false);
     };
 
     fetchJobs();
   }, []);
 
-  //   // Handle Apply/Cancel Apply
+ // Handle Apply
   const handleApply = async (jobId) => {
+    setJob({
+        ...job,
+        applied: !job.applied,
+        status: job.applied == true ? null : "pending",
+      });
     try {
-      await fetch(`${apiURL}/store/apply/${jobId}`, {
+      const resApply = await fetch(`${apiURL}/store/apply/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
       });
-      setJob({
+
+      const ansApply = await resApply.json();
+
+      if (ansApply.message !== "success") {
+        alert("Error applying");
+       setJob({
         ...job,
         applied: !job.applied,
         status: job.applied == true ? null : "pending",
       });
+      }
     } catch (error) {
-      console.error("Error applying to job:", error);
+      console.error("Error in application to job:", error);
     }
   };
 
   // Handle Favorite Toggle
   const handleFavourite = async (jobId) => {
+    setJob({ ...job, fav: !job.fav });
     try {
-      await fetch(`${apiURL}/store/favourite/${jobId}`, {
+      const resFav = await fetch(`${apiURL}/store/favourite/${jobId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
       });
-      setJob({ ...job, fav: !job.fav });
+
+      const ansFav = await resFav.json();
+
+      if (ansFav.message !== "success") {
+        setJob({ ...job, fav: !job.fav });
+      }
     } catch (error) {
       console.error("Error toggling favorite:", error);
     }
@@ -145,7 +167,7 @@ export default function StoreJobDetails() {
         <span className="relative z-10 ">Detailed Post</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
-      {!fetching && (
+      {!isLoading ? 
         <div
           key={job._id}
           className=" flex gap-8 flex-col  border-white shadow-md  wrap-break-word rounded-lg w-[90%] mb-24"
@@ -320,7 +342,7 @@ export default function StoreJobDetails() {
             {job.applied ? "Cancel Apply" : "Apply"}
           </button>
         </div>
-      )}
+       : <Loader isLoading={isLoading}/>}
 
       <Footer />
     </div>

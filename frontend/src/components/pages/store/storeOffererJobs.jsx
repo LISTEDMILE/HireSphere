@@ -4,14 +4,19 @@ import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
 import Empty from "../../compo/Empty";
+import Loader from "../../compo/loader";
 
 export default function StoreOffererJobs() {
   const [jobs, setJobs] = useState([]);
   const { offererId } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [providerName, setProviderName] = useState("...");
 
   // Fetch jobs from the server
   useEffect(() => {
+    
     const fetchJobs = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(
           `${apiURL}/store/storeOffererJobs/${offererId}`,
@@ -27,10 +32,12 @@ export default function StoreOffererJobs() {
         const data = await response.json();
         if (data.error) {
           console.error("Error fetching jobs:", data.error);
+          setIsLoading(false);
           return;
         }
 
-        let jobList = data;
+        let jobList = data.jobs;
+        setProviderName(data.providerName);
 
         // Fetch favourites
         const favResponse = await fetch(`${apiURL}/store/favourite`, {
@@ -44,6 +51,7 @@ export default function StoreOffererJobs() {
         const favs = await favResponse.json();
         if (favs.error) {
           console.error("Error fetching favourites:", favs.error);
+          setIsLoading(false);
           return;
         }
 
@@ -59,6 +67,7 @@ export default function StoreOffererJobs() {
         const appliedData = await applyResponse.json();
         if (appliedData.error) {
           console.error("Error fetching applied jobs:", appliedData.error);
+          setIsLoading(false);
           return;
         }
         let appliedWhole = appliedData.appliedIds;
@@ -95,21 +104,14 @@ export default function StoreOffererJobs() {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
+      setIsLoading(false);
     };
 
     fetchJobs();
   }, []);
 
-  //   // Handle Apply/Cancel Apply
-  const handleApply = async (jobId) => {
-    try {
-      await fetch(`${apiURL}/store/apply/${jobId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+   // Handle Apply
+    const handleApply = async (jobId) => {
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
           job._id === jobId
@@ -118,40 +120,75 @@ export default function StoreOffererJobs() {
                 applied: !job.applied,
                 status: job.applied == true ? null : "pending",
               }
-            : job
-        )
+            : job,
+        ),
       );
-    } catch (error) {
-      console.error("Error applying to job:", error);
-    }
-  };
-
-  // Handle Favorite Toggle
-  const handleFavourite = async (jobId) => {
-    try {
-      await fetch(`${apiURL}/store/favourite/${jobId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      try {
+        const resApply = await fetch(`${apiURL}/store/apply/${jobId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+  
+        const ansApply = await resApply.json();
+  
+        if (ansApply.message !== "success") {
+          alert("Error applying");
+          setJobs((prevJobs) =>
+            prevJobs.map((job) =>
+              job._id === jobId
+                ? {
+                    ...job,
+                    applied: !job.applied,
+                    status: job.applied == true ? null : "pending",
+                  }
+                : job,
+            ),
+          );
+        }
+      } catch (error) {
+        console.error("Error in application to job:", error);
+      }
+    };
+  
+    // Handle Favorite Toggle
+    const handleFavourite = async (jobId) => {
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
-          job._id === jobId ? { ...job, fav: !job.fav } : job
-        )
+          job._id === jobId ? { ...job, fav: !job.fav } : job,
+        ),
       );
-    } catch (error) {
-      console.error("Error toggling favorite:", error);
-    }
-  };
+      try {
+        const resFav = await fetch(`${apiURL}/store/favourite/${jobId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+  
+        const ansFav = await resFav.json();
+  
+        if (ansFav.message !== "success") {
+          setJobs((prevJobs) =>
+            prevJobs.map((job) =>
+              job._id === jobId ? { ...job, fav: !job.fav } : job,
+            ),
+          );
+        }
+      } catch (error) {
+        console.error("Error toggling favorite:", error);
+      }
+    };
 
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center z-[">
       <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
       <NavHome />
       <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
-        <span className="relative z-10">Vacancies BY ...</span>
+        <span className="relative z-10">Vacancies BY {`${providerName}`}</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
       {jobs.length === 0 && <Empty />}
@@ -252,6 +289,8 @@ export default function StoreOffererJobs() {
           ))}
         </ul>
       </div>
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

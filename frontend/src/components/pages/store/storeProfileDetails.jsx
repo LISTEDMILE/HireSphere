@@ -6,14 +6,16 @@ import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function StoreProfilesDetails() {
   const [profile, setProfile] = useState();
   const { profileId } = useParams();
-  const [fetching, setFetching] = useState(true);
+  const [isLoading , setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfiles = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(
           `${apiURL}/store/storeProfileDetails/${profileId}`,
@@ -31,12 +33,13 @@ export default function StoreProfilesDetails() {
       } catch (error) {
         console.error("Error fetching profiles:", error);
       }
-      setFetching(false);
+      setIsLoading(false);
     };
     fetchProfiles();
   }, []);
 
   const handleDelete = async (profileId) => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         `${apiURL}/store/deleteProfile/${profileId}`,
@@ -60,6 +63,7 @@ export default function StoreProfilesDetails() {
     } catch (error) {
       console.error("Error deleting profile:", error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -70,7 +74,7 @@ export default function StoreProfilesDetails() {
         <span className="relative z-10 ">Detailed Resume</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
-      {!fetching && (
+      {!isLoading ? (
         <div className="flex w-full sm:w-[80%] flex-col items-center p-4 gap-6">
           <div className="flex justify-end items-center border-b pb-3 gap-6 w-full border-white text-3xl pr-4">
             <Link
@@ -301,7 +305,7 @@ export default function StoreProfilesDetails() {
             </div>
           </div>
         </div>
-      )}
+      ) : <Loader isLoading={isLoading}/>}
       <Footer />
     </div>
   );

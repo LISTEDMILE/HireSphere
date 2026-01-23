@@ -6,13 +6,17 @@ import { MdDeleteSweep } from "react-icons/md";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function StoreProfilesList() {
   const [profiles, setProfiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfiles = async () => {
+      setIsLoading(true);
       try {
+
         const response = await fetch(`${apiURL}/store/storeProfileList`, {
           method: "GET",
           headers: {
@@ -26,11 +30,14 @@ export default function StoreProfilesList() {
       } catch (error) {
         console.error("Error fetching profiles:", error);
       }
+      setIsLoading(false);
     };
     fetchProfiles();
+  
   }, []);
 
   const handleDelete = async (profileId) => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         `${apiURL}/store/deleteProfile/${profileId}`,
@@ -53,6 +60,7 @@ export default function StoreProfilesList() {
     } catch (error) {
       console.error("Error deleting profile:", error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -154,6 +162,8 @@ export default function StoreProfilesList() {
           ))}
         </ul>
       </div>
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

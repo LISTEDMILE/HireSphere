@@ -9,6 +9,7 @@ import { apiURL } from "../../../../apiUrl";
 
 export default function ProfileForm() {
   const [errors, setErrors] = useState(null);
+  const [isAdding, setIsAdding] = useState(false);
   const [preferredLocation, setPreferredLocation] = useState("");
   const [insideProjectTechnologies, setInsideProjectTechnologies] =
     useState("");
@@ -185,6 +186,7 @@ export default function ProfileForm() {
 
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
+    setIsAdding(true);
     e.preventDefault();
     let data = await AddProfileToServer(formData);
     setErrors(data.errors ? data.errors : null);
@@ -193,6 +195,7 @@ export default function ProfileForm() {
     } else {
       navigate("/store/storeProfileList");
     }
+    setIsAdding(false);
   };
 
   return (
@@ -614,7 +617,8 @@ export default function ProfileForm() {
               id="submit"
               type="submit"
               value={editing ? "Update" : "Add"}
-              className="w-[fit]  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+              className="w-[fit]  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition" 
+              disabled={isAdding}
             />
             <p className="text-sm text-gray-500 mt-2">
               *For multiple responses come back from the next page.

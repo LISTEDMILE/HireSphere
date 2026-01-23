@@ -19,7 +19,7 @@ const Footer = () => {
         <ul className="space-y-3">
           <li className="flex items-center gap-3 hover:translate-x-2 transition-all cursor-pointer">
             <FaInstagram className="text-pink-500 text-xl" />
-            <span>@ttshks123</span>
+            <span>insta123@hire</span>
           </li>
           <li className="flex items-center gap-3 hover:translate-x-2 transition-all cursor-pointer">
             <FaDiscord className="text-indigo-400 text-xl" />
@@ -27,7 +27,7 @@ const Footer = () => {
           </li>
           <li className="flex items-center gap-3 hover:translate-x-2 transition-all cursor-pointer">
             <FaYoutube className="text-red-500 text-xl" />
-            <span>@skjdfkl</span>
+            <span>Hires</span>
           </li>
         </ul>
       </div>
@@ -48,14 +48,14 @@ const Footer = () => {
           </li>
           <li className="flex items-center gap-3">
             <FaEnvelope className="text-yellow-400 text-lg" />
-            <span>dkljf4324@gmail.com</span>
+            <span>hire324@gmail.com</span>
           </li>
         </ul>
       </div>
 
       {/* Bottom strip */}
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-gray-400 text-sm opacity-70">
-        © {new Date().getFullYear()} HireSphere. All rights reserved.
+        {new Date().getFullYear()} HireSphere.
       </div>
     </footer>
   );

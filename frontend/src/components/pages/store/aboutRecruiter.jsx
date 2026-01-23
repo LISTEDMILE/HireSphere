@@ -5,9 +5,11 @@ import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
 import { FaLinkedin } from "react-icons/fa";
 import { FaGlobeAmericas } from "react-icons/fa";
+import Loader from "../../compo/loader";
 
 export default function AboutRecruiter() {
   const { userId } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     profilePicture: "",
@@ -23,6 +25,7 @@ export default function AboutRecruiter() {
 
   useEffect(() => {
     const fetchAboutRecruiter = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(
           `${apiURL}/store/aboutRecruiter/${userId}`,
@@ -32,13 +35,14 @@ export default function AboutRecruiter() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-          }
+          },
         );
         const data = await response.json();
         setFormData({ ...data });
       } catch (error) {
         console.error("Error fetching About Recruiter", error);
       }
+      setIsLoading(false);
     };
     fetchAboutRecruiter();
   }, [userId]);
@@ -151,6 +155,8 @@ export default function AboutRecruiter() {
           </p>
         </div>
       </div>
+
+      <Loader isLoading={isLoading} />
 
       <Footer />
     </div>
