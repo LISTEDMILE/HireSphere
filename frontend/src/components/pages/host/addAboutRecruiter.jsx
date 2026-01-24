@@ -4,11 +4,13 @@ import { MdOutlineCancel } from "react-icons/md";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function AddAboutRecruiter() {
   const [role, setRole] = useState("");
   const [errors, setErrors] = useState(null);
   const [message, setMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { userId } = useParams();
 
@@ -26,7 +28,9 @@ export default function AddAboutRecruiter() {
   });
 
   useEffect(() => {
+    
     const fetchAboutRecruiter = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(
           `${apiURL}/host/addAboutRecruiter/${userId}`,
@@ -44,6 +48,7 @@ export default function AddAboutRecruiter() {
       } catch (error) {
         console.error("Error fetching About Recruiter", error);
       }
+      setIsLoading(false);
     };
     fetchAboutRecruiter();
   }, []);
@@ -74,6 +79,7 @@ export default function AddAboutRecruiter() {
   };
 
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
 
     const fd = new FormData();
@@ -108,6 +114,7 @@ export default function AddAboutRecruiter() {
     } catch (error) {
       console.error("Error submitting:", error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -119,21 +126,7 @@ export default function AddAboutRecruiter() {
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
       <div className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white ">
-        {message && (
-          <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-center">
-            {message}
-          </div>
-        )}
-
-        {errors && (
-          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
-            <ul className="list-disc list-inside">
-              {errors.map((err, i) => (
-                <li key={i}>{err}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+       
 
         <form
           onSubmit={handleSubmit}
@@ -226,7 +219,7 @@ export default function AddAboutRecruiter() {
               </div>
             </div>
             <div className="flex justify-start items-center gap-3 w-full flex-wrap">
-              {formData.rolesHiring.map((role) => {
+              {formData.rolesHiring?.map((role) => {
                 return (
                   <div className="bg-cyan-950 px-3 py-1 rounded-lg flex items-center">
                     <span>{role}</span>
@@ -253,14 +246,33 @@ export default function AddAboutRecruiter() {
             />
           </div>
 
+           {message && (
+          <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-center">
+            {message}
+          </div>
+        )}
+
+        {errors && (
+          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+            <ul className="list-disc list-inside">
+              {errors.map((err, i) => (
+                <li key={i}>{err}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
           <button
             className="w-fit self-center mt-6  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
             type="submit"
+            disabled={isLoading}
           >
             Update
           </button>
         </form>
       </div>
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

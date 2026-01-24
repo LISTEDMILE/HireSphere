@@ -5,10 +5,12 @@ import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
 import { FaLinkedin } from "react-icons/fa";
 import { SiGithub } from "react-icons/si";
+import Loader from "../../compo/loader";
 
 export default function AboutEmployee() {
   const { userId } = useParams();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     profilePicture: "",
@@ -29,6 +31,7 @@ export default function AboutEmployee() {
 
   useEffect(() => {
     const fetchAboutEmployee = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(`${apiURL}/host/aboutEmployee/${userId}`, {
           method: "GET",
@@ -42,6 +45,7 @@ export default function AboutEmployee() {
       } catch (error) {
         console.error("Error fetching About Employee", error);
       }
+      setIsLoading(false);
     };
 
     fetchAboutEmployee();
@@ -363,6 +367,8 @@ export default function AboutEmployee() {
           </div>
         </div>
       </div>
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

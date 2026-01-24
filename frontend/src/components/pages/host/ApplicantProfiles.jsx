@@ -5,14 +5,17 @@ import NavHome from "../../compo/NavHome";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function ApplicantProfiles() {
   const [profiles, setProfiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { applicantId } = useParams();
 
   useEffect(() => {
     const fetchProfiles = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(
           `${apiURL}/host/hostApplicantProfiles/${applicantId}`,
@@ -42,6 +45,7 @@ export default function ApplicantProfiles() {
         const favs = await favResponse.json();
         if (favs.error) {
           console.error("Error fetching favourites:", favs.error);
+          setIsLoading(false);
           return;
         }
         const favIds = favs.favIds;
@@ -63,6 +67,7 @@ export default function ApplicantProfiles() {
         const choosenData = await choosenResponse.json();
         if (choosenData.error) {
           console.error("Error fetching choosen profiles:", choosenData.error);
+          setIsLoading(false);
           return;
         }
 
@@ -92,11 +97,19 @@ export default function ApplicantProfiles() {
       } catch (error) {
         console.error("Error fetching profiles:", error);
       }
+      setIsLoading(false);
     };
     fetchProfiles();
   }, []);
 
   const handleFavourite = async (profileId) => {
+    setProfiles(
+        profiles.map((profile) =>
+          profile._id === profileId
+            ? { ...profile, fav: !profile.fav }
+            : profile
+        )
+      );
     try {
       await fetch(`${apiURL}/host/favouriteProfile/${profileId}`, {
         method: "POST",
@@ -106,6 +119,10 @@ export default function ApplicantProfiles() {
         credentials: "include",
       });
 
+      
+    } catch (error) {
+      console.error("Error toggling favourite:", error);
+      alert("Error triggering favourite:");
       setProfiles(
         profiles.map((profile) =>
           profile._id === profileId
@@ -113,12 +130,21 @@ export default function ApplicantProfiles() {
             : profile
         )
       );
-    } catch (error) {
-      console.error("Error toggling favourite:", error);
     }
   };
 
   const handleHireProfile = async (profileId) => {
+    setProfiles(
+        profiles.map((profile) =>
+          profile._id === profileId
+            ? {
+                ...profile,
+                choosen: !profile.choosen,
+                status: profile.choosen == true ? null : "pending",
+              }
+            : profile
+        )
+      );
     try {
       const response = await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
         method: "POST",
@@ -131,10 +157,7 @@ export default function ApplicantProfiles() {
       const data = await response.json();
       if (data.error) {
         alert("Error hiring profile: " + data.error);
-        return;
-      }
-
-      setProfiles(
+        setProfiles(
         profiles.map((profile) =>
           profile._id === profileId
             ? {
@@ -145,6 +168,10 @@ export default function ApplicantProfiles() {
             : profile
         )
       );
+        return;
+      }
+
+      
     } catch (error) {
       console.error("Error hiring profile:", error);
     }
@@ -272,6 +299,8 @@ export default function ApplicantProfiles() {
           ))}
         </ul>
       </div>
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

@@ -6,6 +6,7 @@ import { GrRadialSelected } from "react-icons/gr";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function AddJob() {
   const [errors, setErrors] = useState(null);
@@ -13,6 +14,7 @@ export default function AddJob() {
   const [skill, setSkill] = useState("");
   const { jobId } = useParams();
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
   const editing =
     new URLSearchParams(location.search).get("editing") === "true"; // Check if editing is true
 
@@ -51,6 +53,7 @@ export default function AddJob() {
   }, [editing]);
 
   const fetchJobDetails = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(`${apiURL}/host/editJob/${jobId}`, {
         method: "GET",
@@ -64,6 +67,7 @@ export default function AddJob() {
     } catch (error) {
       console.error("Error fetching job details:", error);
     }
+    setIsLoading(false);
   };
 
   const handleChange = (e) => {
@@ -110,6 +114,7 @@ export default function AddJob() {
 
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     let data = await AddJobToServer(formData);
     setErrors(data.errors ? data.errors : null);
@@ -118,6 +123,7 @@ export default function AddJob() {
     } else {
       navigate("/host/hostJobList");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -131,15 +137,7 @@ export default function AddJob() {
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
       <div className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white">
-        {errors && (
-          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
-            <ul className="list-disc list-inside">
-              {errors.map((err, i) => (
-                <li key={i}>{err}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+       
 
         <form
           onSubmit={handleSubmit}
@@ -434,15 +432,31 @@ export default function AddJob() {
             </div>
           </div>
 
+
+           {errors && (
+          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+            <ul className="list-disc list-inside">
+              {errors.map((err, i) => (
+                <li key={i}>{err}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
           {/* Submit Button */}
           <button
             type="submit"
             className="w-[fit]  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
+            disabled={isLoading}
           >
             {editing ? "Update" : "Add"} Job
           </button>
         </form>
+
+
       </div>
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

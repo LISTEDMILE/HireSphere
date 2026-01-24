@@ -229,7 +229,9 @@ exports.getEditJob = async (req, res, next) => {
 
 exports.getAddAboutRecruiter = async (req, res, next) => {
   const userId = req.session.user._id;
-  const user = await UserRecruiter.findById(userId);
+ const user = await UserRecruiter.findById(userId)
+.select("_id userType aboutRecruiter")
+.lean();
   if (!user) {
     return res.status(400).json({ error: "Unauthorized access" });
   } else if (user.userType !== "recruiter") {
@@ -287,7 +289,7 @@ jobSkills
 `)
 .lean();
 
-
+ 
 const applier = await UserEmployee.findById(detail.applierProfile)
 .select(`
 _id
@@ -834,8 +836,12 @@ exports.getApplicantProfiles = async (req, res, next) => {
     let profileIds = profilesAdder.profilesPosted;
 
     const profiles = await Profile.find({
-      _id: { $in: profileIds },
-    });
+_id: { $in: profileIds },
+})
+.select(
+"_id profilePost profileName profileTenth profileTwelth profileSkills profileUploader"
+)
+.lean();
     return res.status(200).json(profiles);
   } catch (error) {
     console.error("Error fetching profiles:", error);
