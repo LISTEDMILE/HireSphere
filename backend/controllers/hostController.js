@@ -831,7 +831,7 @@ exports.getApplicantProfiles = async (req, res, next) => {
     const applicantId = req.params.applicantId;
     const profilesAdder = await UserEmployee.findById(
       applicantId,
-      "profilesPosted"
+      "profilesPosted firstname"
     );
     let profileIds = profilesAdder.profilesPosted;
 
@@ -842,7 +842,7 @@ _id: { $in: profileIds },
 "_id profilePost profileName profileTenth profileTwelth profileSkills profileUploader"
 )
 .lean();
-    return res.status(200).json(profiles);
+    return res.status(200).json({ profiles, profilesAdderName: profilesAdder.firstname });
   } catch (error) {
     console.error("Error fetching profiles:", error);
   }

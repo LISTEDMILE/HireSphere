@@ -10,6 +10,7 @@ import Loader from "../../compo/loader";
 export default function ApplicantProfiles() {
   const [profiles, setProfiles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [profilesAdderName, setProfilesAdderName] = useState("...");
 
   const { applicantId } = useParams();
 
@@ -31,9 +32,11 @@ export default function ApplicantProfiles() {
         let data = await response.json();
         if (data.error) {
           console.error("Error fetching profiles:", data.error);
+          setIsLoading(false);
           return;
         }
-        let profileList = data;
+        let profileList = data.profiles;
+        setProfilesAdderName(data.profilesAdderName);
 
         const favResponse = await fetch(`${apiURL}/host/favouriteProfile`, {
           method: "GET",
@@ -182,7 +185,7 @@ export default function ApplicantProfiles() {
       <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
       <NavHome />
       <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
-        <span className="relative z-10">Resumes BY...</span>
+        <span className="relative z-10">Resumes By {profilesAdderName} </span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
 
