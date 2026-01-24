@@ -6,15 +6,18 @@ import { FaUserEdit } from "react-icons/fa";
 import { MdDeleteSweep } from "react-icons/md";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function HostJobDetails() {
   const [job, setJob] = useState();
   const { jobId } = useParams();
-  const [fetching, setFetching] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch jobs from the server
   useEffect(() => {
+    
     const fetchJobs = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(`${apiURL}/host/hostJobDetails/${jobId}`, {
           method: "GET",
@@ -29,13 +32,14 @@ export default function HostJobDetails() {
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
-      setFetching(false);
+      setIsLoading(false);
     };
 
     fetchJobs();
   }, []);
 
   const handleDelete = async (jobId) => {
+    setIsLoading(true);
     try {
       const response = await fetch(`${apiURL}/host/deleteJob/${jobId}`, {
         method: "POST",
@@ -56,6 +60,7 @@ export default function HostJobDetails() {
     } catch (error) {
       console.error("Error deleting job:", error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -67,7 +72,7 @@ export default function HostJobDetails() {
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
 
-      {!fetching && (
+      {!isLoading && (
         <div className="flex w-full sm:w-[80%] flex-col items-center p-4 gap-6">
           <div className="flex justify-end items-center border-b pb-3 gap-6 w-full border-white text-3xl pr-4">
             <Link
@@ -211,6 +216,7 @@ export default function HostJobDetails() {
         </div>
       )}
 
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

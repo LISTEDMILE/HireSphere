@@ -4,13 +4,16 @@ import NavHome from "../../compo/NavHome";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function ChoosenProfiles() {
   const [profiles, setProfiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch selected profiles from the server
   useEffect(() => {
     const fetchProfiles = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(`${apiURL}/host/onlyChoosenProfiles`, {
           method: "GET",
@@ -22,6 +25,7 @@ export default function ChoosenProfiles() {
         const data = await response.json();
         if (data.error) {
           console.error("Error fetching choosen profiles:", data.error);
+          setIsLoading(false);
           return;
         } else {
           let ans = data.map((e) => ({ ...e._doc, status: e.status }));
@@ -42,6 +46,7 @@ export default function ChoosenProfiles() {
         const favs = await favResponse.json();
         if (favs.error) {
           console.error("Error fetching favourites:", favs.error);
+          setIsLoading(false);
           return;
         }
         const favIds = favs.favIds;
@@ -56,11 +61,23 @@ export default function ChoosenProfiles() {
       } catch (error) {
         console.error("Error fetching choosen profiles:", error);
       }
+      setIsLoading(false);
     };
     fetchProfiles();
   }, []);
 
   const handleHire = async (profileId) => {
+    setProfiles((prevProfiles) =>
+        prevProfiles.map((profile) =>
+          profile._id === profileId
+            ? {
+                ...profile,
+                choosen: !profile.choosen,
+                status: profile.choosen == true ? null : "pending",
+              }
+            : profile
+        )
+      );
     try {
       await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
         method: "POST",
@@ -69,6 +86,10 @@ export default function ChoosenProfiles() {
           "Content-Type": "application/json",
         },
       });
+      
+    } catch (error) {
+      console.error("Error hiring profile:", error);
+      alert("Error hiring profile:");
       setProfiles((prevProfiles) =>
         prevProfiles.map((profile) =>
           profile._id === profileId
@@ -80,13 +101,18 @@ export default function ChoosenProfiles() {
             : profile
         )
       );
-    } catch (error) {
-      console.error("Error hiring profile:", error);
     }
   };
 
   // Handle Favorite Toggle
   const handleFavourite = async (profileId) => {
+    setProfiles((prevProfiles) =>
+        prevProfiles.map((profile) =>
+          profile._id === profileId
+            ? { ...profile, fav: !profile.fav }
+            : profile
+        )
+      );
     try {
       await fetch(`${apiURL}/host/favouriteProfile/${profileId}`, {
         method: "POST",
@@ -95,6 +121,10 @@ export default function ChoosenProfiles() {
           "Content-Type": "application/json",
         },
       });
+      
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      alert("Error toggling favourite:");
       setProfiles((prevProfiles) =>
         prevProfiles.map((profile) =>
           profile._id === profileId
@@ -102,8 +132,6 @@ export default function ChoosenProfiles() {
             : profile
         )
       );
-    } catch (error) {
-      console.error("Error toggling favorite:", error);
     }
   };
 
@@ -215,7 +243,7 @@ export default function ChoosenProfiles() {
 
               <div className="mt-4 items-center gap-3 pr-4 flex justify-end">
                 <button
-                  onClick={() => handleHireProfile(detail._id)}
+                  onClick={() => handleHire(detail._id)}
                   className={`px-4 py-2 rounded-lg font-semibold text-white ${
                     detail.choosen
                       ? "bg-red-500 hover:bg-red-600"
@@ -229,6 +257,8 @@ export default function ChoosenProfiles() {
           ))}
         </ul>
       </div>
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

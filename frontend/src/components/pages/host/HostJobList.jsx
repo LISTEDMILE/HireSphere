@@ -6,12 +6,15 @@ import { MdDeleteSweep } from "react-icons/md";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function HostJobList() {
   const [jobs, setJobs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch jobs from the server
   useEffect(() => {
+    setIsLoading(true);
     const fetchJobs = async () => {
       try {
         const response = await fetch(`${apiURL}/host/hostJobList`, {
@@ -27,13 +30,16 @@ export default function HostJobList() {
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
+      setIsLoading(false);
     };
 
     fetchJobs();
   }, []);
 
   const handleDelete = async (jobId) => {
+    setIsLoading(true);
     try {
+
       const response = await fetch(`${apiURL}/host/deleteJob/${jobId}`, {
         method: "POST",
         headers: {
@@ -51,7 +57,9 @@ export default function HostJobList() {
       }
     } catch (error) {
       console.error("Error deleting job:", error);
+       alert("Error deleting job: ");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -134,6 +142,8 @@ export default function HostJobList() {
           ))}
         </ul>
       </div>
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

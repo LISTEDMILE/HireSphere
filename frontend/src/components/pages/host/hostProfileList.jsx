@@ -4,12 +4,15 @@ import NavHome from "../../compo/NavHome";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function HostProfileList() {
   const [profiles, setProfiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfiles = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(`${apiURL}/host/hostProfileList`, {
           method: "GET",
@@ -21,6 +24,7 @@ export default function HostProfileList() {
         let data = await response.json();
         if (data.error) {
           console.error("Error fetching profiles:", data.error);
+          setIsLoading(false);
           return;
         }
         let profileList = data.profiles;
@@ -35,6 +39,7 @@ export default function HostProfileList() {
         const favs = await favResponse.json();
         if (favs.error) {
           console.error("Error fetching favourites:", favs.error);
+          setIsLoading(false);
           return;
         }
         const favIds = favs.favIds;
@@ -56,6 +61,7 @@ export default function HostProfileList() {
         const choosenData = await choosenResponse.json();
         if (choosenData.error) {
           console.error("Error fetching choosen profiles:", choosenData.error);
+          setIsLoading(false);
           return;
         }
 
@@ -85,12 +91,20 @@ export default function HostProfileList() {
       } catch (error) {
         console.error("Error fetching profiles:", error);
       }
+      setIsLoading(false);
     };
     fetchProfiles();
   }, []);
 
   const handleFavourite = async (profileId) => {
     try {
+      setProfiles(
+        profiles.map((profile) =>
+          profile._id === profileId
+            ? { ...profile, fav: !profile.fav }
+            : profile
+        )
+      );
       await fetch(`${apiURL}/host/favouriteProfile/${profileId}`, {
         method: "POST",
         headers: {
@@ -99,6 +113,10 @@ export default function HostProfileList() {
         credentials: "include",
       });
 
+      
+    } catch (error) {
+      console.error("Error toggling favourite:", error);
+      alert("Erro toggling favourite:")
       setProfiles(
         profiles.map((profile) =>
           profile._id === profileId
@@ -106,28 +124,12 @@ export default function HostProfileList() {
             : profile
         )
       );
-    } catch (error) {
-      console.error("Error toggling favourite:", error);
     }
   };
 
   const handleHireProfile = async (profileId) => {
     try {
-      const response = await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      const data = await response.json();
-      if (data.error) {
-        alert("Error hiring profile: " + data.error);
-        return;
-      }
-
-      setProfiles(
+       setProfiles(
         profiles.map((profile) =>
           profile._id === profileId
             ? {
@@ -138,8 +140,36 @@ export default function HostProfileList() {
             : profile
         )
       );
+      const response = await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const data = await response.json();
+      if (data.error) {
+        console.error("Error hiring profile: " + data.error);
+        alert("Error hiring profile:")
+        
+        return;
+      }
+
+     
     } catch (error) {
       console.error("Error hiring profile:", error);
+       setProfiles(
+        profiles.map((profile) =>
+          profile._id === profileId
+            ? {
+                ...profile,
+                choosen: !profile.choosen,
+                status: profile.choosen == true ? null : "pending",
+              }
+            : profile
+        )
+      );
     }
   };
 
@@ -265,6 +295,8 @@ export default function HostProfileList() {
           ))}
         </ul>
       </div>
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

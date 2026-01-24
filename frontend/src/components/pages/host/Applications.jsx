@@ -5,13 +5,16 @@ import { FaUserEdit } from "react-icons/fa";
 import Empty from "../../compo/Empty";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function Applications() {
   const [applications, setApplications] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch applications from the server
   useEffect(() => {
     const fetchApplications = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(`${apiURL}/host/hostApplications`, {
           method: "GET",
@@ -24,12 +27,14 @@ export default function Applications() {
         const data = await response.json();
         if (data.error) {
           console.error("Error fetching applications:", data.error);
+          setIsLoading(false);
           return;
         }
         setApplications(data.applications);
       } catch (error) {
         console.error("Error fetching applications:", error);
       }
+      setIsLoading(false);
     };
 
     fetchApplications();
@@ -37,6 +42,7 @@ export default function Applications() {
 
   // Handle Reject Application
   const handleIgnore = async (applicationId) => {
+    setIsLoading(true);
     try {
       await fetch(`${apiURL}/host/ignoreApplication/${applicationId}`, {
         method: "DELETE",
@@ -53,10 +59,13 @@ export default function Applications() {
       ); // Remove the rejected application from the list
     } catch (error) {
       console.error("Error rejecting application:", error);
+      alert("Error Removing application:");
     }
+    setIsLoading(false);
   };
 
   const handleAccept = async (applicationId) => {
+    setIsLoading(true);
     try {
       await fetch(`${apiURL}/host/acceptApplication/${applicationId}`, {
         method: "POST",
@@ -76,10 +85,13 @@ export default function Applications() {
       ); // Remove the accepted application from the list
     } catch (error) {
       console.error("Error accepting application:", error);
+       alert("Error Accepting:");
     }
+    setIsLoading(false);
   };
 
   const handleReject = async (applicationId) => {
+    setIsLoading(true);
     try {
       await fetch(`${apiURL}/host/rejectApplication/${applicationId}`, {
         method: "POST",
@@ -98,7 +110,9 @@ export default function Applications() {
       ); // Remove the rejected application from the list
     } catch (error) {
       console.error("Error rejecting application:", error);
+       alert("Error Rejecting:");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -259,6 +273,8 @@ export default function Applications() {
           ))}
         </ul>
       </div>
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );

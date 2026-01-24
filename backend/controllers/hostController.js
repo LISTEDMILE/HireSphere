@@ -275,12 +275,29 @@ exports.getApplications = async (req, res, next) => {
 
     const applications = await Promise.all(
       applicationIds.map(async (detail) => {
-        let job = await Job.findById(detail.job);
-        let applier = await UserEmployee.findById(detail.applierProfile);
-        if (!job || !applier) {
-          console.error("Job or Applier not found for ID:", detail);
-          return null; // Skip this application if job or applier is not found
-        }
+        const job = await Job.findById(detail.job)
+.select(`
+_id
+jobPost
+jobCompany
+jobLocation
+jobSalaryOffered
+jobExperienceRequired
+jobSkills
+`)
+.lean();
+
+
+const applier = await UserEmployee.findById(detail.applierProfile)
+.select(`
+_id
+firstname
+aboutEmployee
+`)
+.lean();
+
+
+if (!job || !applier) return null;
         return {
           job: job,
           applierProfile: applier,
@@ -442,11 +459,22 @@ exports.hostJobList = async (req, res, next) => {
       req.session.user._id,
       "jobsPosted"
     );
-    let jobList = jobProvider.jobsPosted;
+    
 
-    const jobs = await Job.find({
-      _id: { $in: jobList },
-    });
+   const jobs = await Job.find({
+_id: { $in: jobProvider.jobsPosted },
+})
+.select(
+`
+_id
+jobPost
+jobCompany
+jobLocation
+jobSalaryOffered
+jobExperienceRequired
+`
+)
+.lean();
     return res.status(200).json(jobs);
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -475,7 +503,25 @@ exports.getHostJobDetails = async (req, res, next) => {
       return res.status(404).json({ error: "Unauthorized Access" });
     }
 
-    const job = await Job.findById(jobId);
+    const job = await Job.findById(req.params.jobId)
+.select(`
+_id
+jobPost
+jobCompany
+jobLocation
+jobSalaryOffered
+jobIndustry
+jobExperienceRequired
+jobSkills
+jobEmploymentType
+jobType
+jobTags
+description
+jobOwnerMobile
+jobOwnerEmail
+jobUploader
+`)
+.lean();
     return res.status(200).json(job);
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -516,32 +562,64 @@ exports.postDeleteJob = async (req, res, next) => {
   }
 };
 
-exports.profileList = (req, res, next) => {
-  Profile.find()
-    .then((profiles) => {
-      res.status(200).json({
-        message: "Profiles fetched successfully",
-        profiles: profiles,
-      });
-    })
-    .catch((err) => {
-      console.error("Error fetching profiles:", err);
-      res.status(500).json({ error: "Failed to fetch profiles" });
+exports.profileList = async (req, res) => {
+  try {
+    const profiles = await Profile.find()
+      .select(
+        "_id profilePost profileName profileTenth profileTwelth profileSkills profileUploader"
+      )
+      .lean();
+
+    return res.status(200).json({
+      message: "Profiles fetched successfully",
+      profiles,
     });
+  } catch (err) {
+    console.error("Error fetching profiles:", err);
+    return res.status(500).json({ error: "Failed to fetch profiles" });
+  }
 };
 
-exports.getHostProfileDetails = (req, res, next) => {
-  Profile.findById(req.params.profileId)
-    .then((profile) => {
-      res.status(200).json({
-        message: "Profile fetched successfully",
-        profile: profile,
-      });
-    })
-    .catch((err) => {
-      console.error("Error fetching profiles:", err);
-      res.status(500).json({ error: "Failed to fetch profiles" });
+exports.getHostProfileDetails = async (req, res) => {
+  try {
+    const profile = await Profile.findById(req.params.profileId)
+      .select(
+        `
+        _id
+        profilePost
+        profileName
+        profileGender
+        profileTenth
+        profileTwelth
+        profileGraduation
+        profileExpectedSalary
+        profileExperience
+        profileCourse
+        profileSkills
+        profileJobType
+        profilePreferredLocations
+        profileProjects
+        profileDescription
+        profilePostDescription
+        profileMobile
+        profileEmail
+        profileUploader
+        `
+      )
+      .lean();
+
+    if (!profile) {
+      return res.status(404).json({ error: "Profile not found" });
+    }
+
+    return res.status(200).json({
+      message: "Profile fetched successfully",
+      profile,
     });
+  } catch (err) {
+    console.error("Error fetching profile:", err);
+    return res.status(500).json({ error: "Failed to fetch profile" });
+  }
 };
 
 exports.getProfileFavourites = (req, res, next) => {
@@ -582,9 +660,19 @@ exports.getOnlyProfileFavourites = async (req, res, next) => {
       "profileFavourites"
     );
     let favIds = favs.profileFavourites;
-    const profiles = await Profile.find({
-      _id: { $in: favIds },
-    });
+   const profiles = await Profile.find({
+_id: { $in: favIds },
+})
+.select(`
+_id
+profilePost
+profileName
+profileTenth
+profileTwelth
+profileSkills
+profileUploader
+`)
+.lean();
     return res.status(200).json(profiles);
   } catch (error) {
     console.error("Error fetching favourites:", error);
@@ -639,7 +727,15 @@ exports.getOnlyChoosenProfiles = async (req, res, next) => {
     let choosenProfileIds = user.choosenProfiles.map((ids) => ids.Ids);
     let profiles = await Profile.find({
       _id: { $in: choosenProfileIds },
-    });
+    }).select(`
+_id
+profilePost
+profileName
+profileTenth
+profileTwelth
+profileSkills
+profileUploader
+`);
     let status;
     profiles = profiles.map((ele) => {
       user.choosenProfiles.forEach((e) => {

@@ -3,14 +3,16 @@ import { Link, useParams } from "react-router-dom";
 import NavHome from "../../compo/NavHome";
 import Footer from "../../compo/Footer";
 import { apiURL } from "../../../../apiUrl";
+import Loader from "../../compo/loader";
 
 export default function HostProfileDetails() {
   const [profile, setProfile] = useState();
   const { profileId } = useParams();
-  const [fetching, setFetching] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfiles = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(
           `${apiURL}/host/hostProfileDetails/${profileId}`,
@@ -25,6 +27,7 @@ export default function HostProfileDetails() {
         let data = await response.json();
         if (data.error) {
           console.error("Error fetching profiles:", data.error);
+          setIsLoading(false);
           return;
         }
         let profileFetched = data.profile;
@@ -39,6 +42,7 @@ export default function HostProfileDetails() {
         const favs = await favResponse.json();
         if (favs.error) {
           console.error("Error fetching favourites:", favs.error);
+          setIsLoading(false);
           return;
         }
         const favIds = favs.favIds;
@@ -60,6 +64,7 @@ export default function HostProfileDetails() {
         const choosenData = await choosenResponse.json();
         if (choosenData.error) {
           console.error("Error fetching choosen profiles:", choosenData.error);
+          setIsLoading(false);
           return;
         }
 
@@ -87,12 +92,13 @@ export default function HostProfileDetails() {
       } catch (error) {
         console.error("Error fetching profiles:", error);
       }
-      setFetching(false);
+      setIsLoading(false);
     };
     fetchProfiles();
   }, []);
 
   const handleFavourite = async (profileId) => {
+    setProfile({ ...profile, fav: !profile.fav });
     try {
       await fetch(`${apiURL}/host/favouriteProfile/${profileId}`, {
         method: "POST",
@@ -102,13 +108,19 @@ export default function HostProfileDetails() {
         credentials: "include",
       });
 
-      setProfile({ ...profile, fav: !profile.fav });
+      
     } catch (error) {
       console.error("Error toggling favourite:", error);
+      setProfile({ ...profile, fav: !profile.fav });
     }
   };
 
   const handleHireProfile = async (profileId) => {
+    setProfile({
+        ...profile,
+        choosen: !profile.choosen,
+        status: profile.choosen == true ? null : "pending",
+      });
     try {
       const response = await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
         method: "POST",
@@ -121,16 +133,22 @@ export default function HostProfileDetails() {
       const data = await response.json();
       if (data.error) {
         alert("Error hiring profile: " + data.error);
+        setProfile({
+        ...profile,
+        choosen: !profile.choosen,
+        status: profile.choosen == true ? null : "pending",
+      });
         return;
       }
 
+      
+    } catch (error) {
+      console.error("Error hiring profile:", error);
       setProfile({
         ...profile,
         choosen: !profile.choosen,
         status: profile.choosen == true ? null : "pending",
       });
-    } catch (error) {
-      console.error("Error hiring profile:", error);
     }
   };
 
@@ -142,7 +160,7 @@ export default function HostProfileDetails() {
         <span className="relative z-10 ">Detailed Resume :</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
-      {!fetching && (
+      {!isLoading && (
         <div className="gap-8 mt-12 flex flex-col items-center w-full ">
           <li
             key={profile._id}
@@ -388,6 +406,8 @@ export default function HostProfileDetails() {
           </li>
         </div>
       )}
+
+      <Loader isLoading={isLoading}/>
       <Footer />
     </div>
   );
