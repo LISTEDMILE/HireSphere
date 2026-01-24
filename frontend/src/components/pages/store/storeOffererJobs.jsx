@@ -14,7 +14,6 @@ export default function StoreOffererJobs() {
 
   // Fetch jobs from the server
   useEffect(() => {
-    
     const fetchJobs = async () => {
       setIsLoading(true);
       try {
@@ -26,7 +25,7 @@ export default function StoreOffererJobs() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-          }
+          },
         );
 
         const data = await response.json();
@@ -77,12 +76,12 @@ export default function StoreOffererJobs() {
         // Merge fav info into job list and applied list
         const updatedJobs = jobList
           .map((job) =>
-            favIds.includes(job._id) ? { ...job, fav: true } : job
+            favIds.includes(job._id) ? { ...job, fav: true } : job,
           )
           .map((job) =>
             appliedIds.includes(job._id)
               ? { ...job, applied: true }
-              : { ...job, applied: false }
+              : { ...job, applied: false },
           );
 
         let status;
@@ -110,78 +109,78 @@ export default function StoreOffererJobs() {
     fetchJobs();
   }, []);
 
-   // Handle Apply
-    const handleApply = async (jobId) => {
-      setJobs((prevJobs) =>
-        prevJobs.map((job) =>
-          job._id === jobId
-            ? {
-                ...job,
-                applied: !job.applied,
-                status: job.applied == true ? null : "pending",
-              }
-            : job,
-        ),
-      );
-      try {
-        const resApply = await fetch(`${apiURL}/store/apply/${jobId}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-  
-        const ansApply = await resApply.json();
-  
-        if (ansApply.message !== "success") {
-          alert("Error applying");
-          setJobs((prevJobs) =>
-            prevJobs.map((job) =>
-              job._id === jobId
-                ? {
-                    ...job,
-                    applied: !job.applied,
-                    status: job.applied == true ? null : "pending",
-                  }
-                : job,
-            ),
-          );
-        }
-      } catch (error) {
-        console.error("Error in application to job:", error);
+  // Handle Apply
+  const handleApply = async (jobId) => {
+    setJobs((prevJobs) =>
+      prevJobs.map((job) =>
+        job._id === jobId
+          ? {
+              ...job,
+              applied: !job.applied,
+              status: job.applied == true ? null : "pending",
+            }
+          : job,
+      ),
+    );
+    try {
+      const resApply = await fetch(`${apiURL}/store/apply/${jobId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const ansApply = await resApply.json();
+
+      if (ansApply.message !== "success") {
+        alert("Error applying");
+        setJobs((prevJobs) =>
+          prevJobs.map((job) =>
+            job._id === jobId
+              ? {
+                  ...job,
+                  applied: !job.applied,
+                  status: job.applied == true ? null : "pending",
+                }
+              : job,
+          ),
+        );
       }
-    };
-  
-    // Handle Favorite Toggle
-    const handleFavourite = async (jobId) => {
-      setJobs((prevJobs) =>
-        prevJobs.map((job) =>
-          job._id === jobId ? { ...job, fav: !job.fav } : job,
-        ),
-      );
-      try {
-        const resFav = await fetch(`${apiURL}/store/favourite/${jobId}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-  
-        const ansFav = await resFav.json();
-  
-        if (ansFav.message !== "success") {
-          setJobs((prevJobs) =>
-            prevJobs.map((job) =>
-              job._id === jobId ? { ...job, fav: !job.fav } : job,
-            ),
-          );
-        }
-      } catch (error) {
-        console.error("Error toggling favorite:", error);
+    } catch (error) {
+      console.error("Error in application to job:", error);
+    }
+  };
+
+  // Handle Favorite Toggle
+  const handleFavourite = async (jobId) => {
+    setJobs((prevJobs) =>
+      prevJobs.map((job) =>
+        job._id === jobId ? { ...job, fav: !job.fav } : job,
+      ),
+    );
+    try {
+      const resFav = await fetch(`${apiURL}/store/favourite/${jobId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const ansFav = await resFav.json();
+
+      if (ansFav.message !== "success") {
+        setJobs((prevJobs) =>
+          prevJobs.map((job) =>
+            job._id === jobId ? { ...job, fav: !job.fav } : job,
+          ),
+        );
       }
-    };
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
+  };
 
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center z-[">
@@ -290,7 +289,7 @@ export default function StoreOffererJobs() {
         </ul>
       </div>
 
-      <Loader isLoading={isLoading}/>
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

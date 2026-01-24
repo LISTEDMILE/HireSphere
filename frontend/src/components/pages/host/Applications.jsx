@@ -54,8 +54,8 @@ export default function Applications() {
 
       setApplications((prevApplications) =>
         prevApplications.filter(
-          (application) => application._id !== applicationId
-        )
+          (application) => application._id !== applicationId,
+        ),
       ); // Remove the rejected application from the list
     } catch (error) {
       console.error("Error rejecting application:", error);
@@ -80,12 +80,12 @@ export default function Applications() {
           prevApplications.map((application) =>
             application._id == applicationId
               ? { ...application, status: "accepted" }
-              : application
-          ) // Mark the application as accepted
+              : application,
+          ), // Mark the application as accepted
       ); // Remove the accepted application from the list
     } catch (error) {
       console.error("Error accepting application:", error);
-       alert("Error Accepting:");
+      alert("Error Accepting:");
     }
     setIsLoading(false);
   };
@@ -105,12 +105,12 @@ export default function Applications() {
           prevApplications.map((application) =>
             application._id == applicationId
               ? { ...application, status: "rejected" }
-              : application
-          ) // Mark the application as rejected
+              : application,
+          ), // Mark the application as rejected
       ); // Remove the rejected application from the list
     } catch (error) {
       console.error("Error rejecting application:", error);
-       alert("Error Rejecting:");
+      alert("Error Rejecting:");
     }
     setIsLoading(false);
   };
@@ -118,7 +118,7 @@ export default function Applications() {
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center ">
       <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
-      <NavHome active="hostApplications"/>
+      <NavHome active="hostApplications" />
       <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
         <span className="relative z-10">Applications</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
@@ -274,7 +274,7 @@ export default function Applications() {
         </ul>
       </div>
 
-      <Loader isLoading={isLoading}/>
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

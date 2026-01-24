@@ -28,7 +28,6 @@ export default function AddAboutRecruiter() {
   });
 
   useEffect(() => {
-    
     const fetchAboutRecruiter = async () => {
       setIsLoading(true);
       try {
@@ -40,7 +39,7 @@ export default function AddAboutRecruiter() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-          }
+          },
         );
 
         const data = await response.json();
@@ -126,8 +125,6 @@ export default function AddAboutRecruiter() {
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
       <div className="w-full sm:w-[80%]  p-4 sm:p-6 flex flex-col items-center rounded-lg text-white ">
-       
-
         <form
           onSubmit={handleSubmit}
           enctype="multipart/form-data"
@@ -246,21 +243,21 @@ export default function AddAboutRecruiter() {
             />
           </div>
 
-           {message && (
-          <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-center">
-            {message}
-          </div>
-        )}
+          {message && (
+            <div className="bg-green-100 text-green-700 p-3 rounded mb-4 text-center">
+              {message}
+            </div>
+          )}
 
-        {errors && (
-          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
-            <ul className="list-disc list-inside">
-              {errors.map((err, i) => (
-                <li key={i}>{err}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+          {errors && (
+            <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+              <ul className="list-disc list-inside">
+                {errors.map((err, i) => (
+                  <li key={i}>{err}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <button
             className="w-fit self-center mt-6  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
@@ -272,7 +269,7 @@ export default function AddAboutRecruiter() {
         </form>
       </div>
 
-      <Loader isLoading={isLoading}/>
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

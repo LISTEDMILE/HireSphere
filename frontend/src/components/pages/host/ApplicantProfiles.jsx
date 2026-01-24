@@ -26,7 +26,7 @@ export default function ApplicantProfiles() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-          }
+          },
         );
 
         let data = await response.json();
@@ -54,7 +54,7 @@ export default function ApplicantProfiles() {
         const favIds = favs.favIds;
 
         const ProfilesWithFav = profileList.map((profile) =>
-          favIds.includes(profile._id) ? { ...profile, fav: true } : profile
+          favIds.includes(profile._id) ? { ...profile, fav: true } : profile,
         );
 
         const choosenResponse = await fetch(
@@ -65,7 +65,7 @@ export default function ApplicantProfiles() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-          }
+          },
         );
         const choosenData = await choosenResponse.json();
         if (choosenData.error) {
@@ -80,7 +80,7 @@ export default function ApplicantProfiles() {
         const updatedProfiles = ProfilesWithFav.map((profile) =>
           choosenIds.includes(profile._id)
             ? { ...profile, choosen: true }
-            : { ...profile, choosen: false }
+            : { ...profile, choosen: false },
         );
         let status;
 
@@ -107,12 +107,10 @@ export default function ApplicantProfiles() {
 
   const handleFavourite = async (profileId) => {
     setProfiles(
-        profiles.map((profile) =>
-          profile._id === profileId
-            ? { ...profile, fav: !profile.fav }
-            : profile
-        )
-      );
+      profiles.map((profile) =>
+        profile._id === profileId ? { ...profile, fav: !profile.fav } : profile,
+      ),
+    );
     try {
       await fetch(`${apiURL}/host/favouriteProfile/${profileId}`, {
         method: "POST",
@@ -121,8 +119,6 @@ export default function ApplicantProfiles() {
         },
         credentials: "include",
       });
-
-      
     } catch (error) {
       console.error("Error toggling favourite:", error);
       alert("Error triggering favourite:");
@@ -130,24 +126,24 @@ export default function ApplicantProfiles() {
         profiles.map((profile) =>
           profile._id === profileId
             ? { ...profile, fav: !profile.fav }
-            : profile
-        )
+            : profile,
+        ),
       );
     }
   };
 
   const handleHireProfile = async (profileId) => {
     setProfiles(
-        profiles.map((profile) =>
-          profile._id === profileId
-            ? {
-                ...profile,
-                choosen: !profile.choosen,
-                status: profile.choosen == true ? null : "pending",
-              }
-            : profile
-        )
-      );
+      profiles.map((profile) =>
+        profile._id === profileId
+          ? {
+              ...profile,
+              choosen: !profile.choosen,
+              status: profile.choosen == true ? null : "pending",
+            }
+          : profile,
+      ),
+    );
     try {
       const response = await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
         method: "POST",
@@ -161,20 +157,18 @@ export default function ApplicantProfiles() {
       if (data.error) {
         alert("Error hiring profile: " + data.error);
         setProfiles(
-        profiles.map((profile) =>
-          profile._id === profileId
-            ? {
-                ...profile,
-                choosen: !profile.choosen,
-                status: profile.choosen == true ? null : "pending",
-              }
-            : profile
-        )
-      );
+          profiles.map((profile) =>
+            profile._id === profileId
+              ? {
+                  ...profile,
+                  choosen: !profile.choosen,
+                  status: profile.choosen == true ? null : "pending",
+                }
+              : profile,
+          ),
+        );
         return;
       }
-
-      
     } catch (error) {
       console.error("Error hiring profile:", error);
     }
@@ -303,7 +297,7 @@ export default function ApplicantProfiles() {
         </ul>
       </div>
 
-      <Loader isLoading={isLoading}/>
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

@@ -45,7 +45,7 @@ export default function HostProfileList() {
         const favIds = favs.favIds;
 
         const ProfilesWithFav = profileList.map((profile) =>
-          favIds.includes(profile._id) ? { ...profile, fav: true } : profile
+          favIds.includes(profile._id) ? { ...profile, fav: true } : profile,
         );
 
         const choosenResponse = await fetch(
@@ -56,7 +56,7 @@ export default function HostProfileList() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-          }
+          },
         );
         const choosenData = await choosenResponse.json();
         if (choosenData.error) {
@@ -71,7 +71,7 @@ export default function HostProfileList() {
         const updatedProfiles = ProfilesWithFav.map((profile) =>
           choosenIds.includes(profile._id)
             ? { ...profile, choosen: true }
-            : { ...profile, choosen: false }
+            : { ...profile, choosen: false },
         );
         let status;
 
@@ -102,8 +102,8 @@ export default function HostProfileList() {
         profiles.map((profile) =>
           profile._id === profileId
             ? { ...profile, fav: !profile.fav }
-            : profile
-        )
+            : profile,
+        ),
       );
       await fetch(`${apiURL}/host/favouriteProfile/${profileId}`, {
         method: "POST",
@@ -112,24 +112,22 @@ export default function HostProfileList() {
         },
         credentials: "include",
       });
-
-      
     } catch (error) {
       console.error("Error toggling favourite:", error);
-      alert("Erro toggling favourite:")
+      alert("Erro toggling favourite:");
       setProfiles(
         profiles.map((profile) =>
           profile._id === profileId
             ? { ...profile, fav: !profile.fav }
-            : profile
-        )
+            : profile,
+        ),
       );
     }
   };
 
   const handleHireProfile = async (profileId) => {
     try {
-       setProfiles(
+      setProfiles(
         profiles.map((profile) =>
           profile._id === profileId
             ? {
@@ -137,8 +135,8 @@ export default function HostProfileList() {
                 choosen: !profile.choosen,
                 status: profile.choosen == true ? null : "pending",
               }
-            : profile
-        )
+            : profile,
+        ),
       );
       const response = await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
         method: "POST",
@@ -151,15 +149,13 @@ export default function HostProfileList() {
       const data = await response.json();
       if (data.error) {
         console.error("Error hiring profile: " + data.error);
-        alert("Error hiring profile:")
-        
+        alert("Error hiring profile:");
+
         return;
       }
-
-     
     } catch (error) {
       console.error("Error hiring profile:", error);
-       setProfiles(
+      setProfiles(
         profiles.map((profile) =>
           profile._id === profileId
             ? {
@@ -167,8 +163,8 @@ export default function HostProfileList() {
                 choosen: !profile.choosen,
                 status: profile.choosen == true ? null : "pending",
               }
-            : profile
-        )
+            : profile,
+        ),
       );
     }
   };
@@ -176,7 +172,7 @@ export default function HostProfileList() {
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center z-[">
       <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
-      <NavHome active="hostProfileList"/>
+      <NavHome active="hostProfileList" />
       <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
         <span className="relative z-10">Resumes</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
@@ -296,7 +292,7 @@ export default function HostProfileList() {
         </ul>
       </div>
 
-      <Loader isLoading={isLoading}/>
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

@@ -54,7 +54,7 @@ export default function ChoosenProfiles() {
         let choosenProfiles = choosenProfilesWithoutFav.map((profile) =>
           favIds.includes(profile._id)
             ? { ...profile, fav: true }
-            : { ...profile, fav: false }
+            : { ...profile, fav: false },
         );
 
         setProfiles(choosenProfiles);
@@ -68,16 +68,16 @@ export default function ChoosenProfiles() {
 
   const handleHire = async (profileId) => {
     setProfiles((prevProfiles) =>
-        prevProfiles.map((profile) =>
-          profile._id === profileId
-            ? {
-                ...profile,
-                choosen: !profile.choosen,
-                status: profile.choosen == true ? null : "pending",
-              }
-            : profile
-        )
-      );
+      prevProfiles.map((profile) =>
+        profile._id === profileId
+          ? {
+              ...profile,
+              choosen: !profile.choosen,
+              status: profile.choosen == true ? null : "pending",
+            }
+          : profile,
+      ),
+    );
     try {
       await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
         method: "POST",
@@ -86,7 +86,6 @@ export default function ChoosenProfiles() {
           "Content-Type": "application/json",
         },
       });
-      
     } catch (error) {
       console.error("Error hiring profile:", error);
       alert("Error hiring profile:");
@@ -98,8 +97,8 @@ export default function ChoosenProfiles() {
                 choosen: !profile.choosen,
                 status: profile.choosen == true ? null : "pending",
               }
-            : profile
-        )
+            : profile,
+        ),
       );
     }
   };
@@ -107,12 +106,10 @@ export default function ChoosenProfiles() {
   // Handle Favorite Toggle
   const handleFavourite = async (profileId) => {
     setProfiles((prevProfiles) =>
-        prevProfiles.map((profile) =>
-          profile._id === profileId
-            ? { ...profile, fav: !profile.fav }
-            : profile
-        )
-      );
+      prevProfiles.map((profile) =>
+        profile._id === profileId ? { ...profile, fav: !profile.fav } : profile,
+      ),
+    );
     try {
       await fetch(`${apiURL}/host/favouriteProfile/${profileId}`, {
         method: "POST",
@@ -121,7 +118,6 @@ export default function ChoosenProfiles() {
           "Content-Type": "application/json",
         },
       });
-      
     } catch (error) {
       console.error("Error toggling favorite:", error);
       alert("Error toggling favourite:");
@@ -129,8 +125,8 @@ export default function ChoosenProfiles() {
         prevProfiles.map((profile) =>
           profile._id === profileId
             ? { ...profile, fav: !profile.fav }
-            : profile
-        )
+            : profile,
+        ),
       );
     }
   };
@@ -138,7 +134,7 @@ export default function ChoosenProfiles() {
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center z-[">
       <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
-      <NavHome active="choosenProfiles"/>
+      <NavHome active="choosenProfiles" />
       <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
         <span className="relative z-10">Resumes</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
@@ -258,7 +254,7 @@ export default function ChoosenProfiles() {
         </ul>
       </div>
 
-      <Loader isLoading={isLoading}/>
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

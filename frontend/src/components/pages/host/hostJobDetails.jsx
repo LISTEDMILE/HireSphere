@@ -15,7 +15,6 @@ export default function HostJobDetails() {
 
   // Fetch jobs from the server
   useEffect(() => {
-    
     const fetchJobs = async () => {
       setIsLoading(true);
       try {
@@ -216,7 +215,7 @@ export default function HostJobDetails() {
         </div>
       )}
 
-      <Loader isLoading={isLoading}/>
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

@@ -15,7 +15,7 @@ import { MdOutlineWork } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { apiURL } from "../../../apiUrl";
 
-const NavHome = ({active}) => {
+const NavHome = ({ active }) => {
   const navigate = useNavigate();
   const { isLoggedIn, userType } = useSelector((store) => store.userInfo);
   const [navOpen, setNavOpen] = useState(false);
@@ -70,21 +70,21 @@ const NavHome = ({active}) => {
           <div className="hidden sm:flex items-center text-lg space-x-14 ">
             <a
               href="/help"
-              className={` hover:underline ${active ==="helpPage" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+              className={` hover:underline ${active === "helpPage" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
             >
               Help
             </a>
             <a
               href="/contact"
-              className={` hover:underline ${active ==="contactPage" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+              className={` hover:underline ${active === "contactPage" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
             >
               Contact-Us
             </a>
             <a
               href="/about"
-              className={` hover:underline ${active ==="aboutPage" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+              className={` hover:underline ${active === "aboutPage" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
             >
               About-Us
@@ -112,7 +112,7 @@ const NavHome = ({active}) => {
         <div className="hidden sm:flex items-center space-x-4 text-lg">
           <a
             href="/store/favourite"
-            className={` hover:underline ${active ==="storeFavourites" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "storeFavourites" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Favourites
@@ -120,7 +120,7 @@ const NavHome = ({active}) => {
 
           <a
             href="/store/storeJobList"
-            className={` hover:underline ${active ==="storeJobList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "storeJobList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Vacancies
@@ -128,7 +128,7 @@ const NavHome = ({active}) => {
 
           <a
             href="/store/appliedJobs"
-            className={` hover:underline ${active ==="appliedJobs" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "appliedJobs" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Applied
@@ -136,7 +136,7 @@ const NavHome = ({active}) => {
 
           <a
             href="/store/addProfile"
-            className={` hover:underline ${active ==="addProfile" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "addProfile" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Add Resume
@@ -144,7 +144,7 @@ const NavHome = ({active}) => {
 
           <a
             href="/store/storeProfileList"
-            className={` hover:underline ${active ==="storeProfileList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "storeProfileList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Resumes
@@ -152,7 +152,7 @@ const NavHome = ({active}) => {
 
           <a
             href="/store/offers/"
-            className={` hover:underline ${active ==="offers" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "offers" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Offers
@@ -164,7 +164,7 @@ const NavHome = ({active}) => {
         <div className="hidden sm:flex items-center space-x-4 texl-lg">
           <a
             href="/host/addJob"
-            className={` hover:underline ${active ==="addJob" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "addJob" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Add Vacancy
@@ -172,7 +172,7 @@ const NavHome = ({active}) => {
 
           <a
             href="/host/hostJobList"
-            className={` hover:underline ${active ==="hostJobList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "hostJobList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Added by you
@@ -180,7 +180,7 @@ const NavHome = ({active}) => {
 
           <a
             href="/host/hostApplications"
-            className={` hover:underline ${active ==="hostApplications" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "hostApplications" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Applications
@@ -188,7 +188,7 @@ const NavHome = ({active}) => {
 
           <a
             href="/host/hostProfileList"
-            className={` hover:underline ${active ==="hostProfileList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "hostProfileList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Resumes
@@ -196,7 +196,7 @@ const NavHome = ({active}) => {
 
           <a
             href="/host/favouriteProfile"
-            className={` hover:underline ${active ==="favouriteProfile" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "favouriteProfile" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Favourites
@@ -204,7 +204,7 @@ const NavHome = ({active}) => {
 
           <a
             href="/host/choosenProfiles"
-            className={` hover:underline ${active ==="choosenProfiles" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+            className={` hover:underline ${active === "choosenProfiles" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
           hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Selected

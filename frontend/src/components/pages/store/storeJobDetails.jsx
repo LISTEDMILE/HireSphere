@@ -24,13 +24,13 @@ export default function StoreJobDetails() {
             headers: {
               "Content-Type": "application/json",
             },
-          }
+          },
         );
 
         const data = await response.json();
         if (data.error) {
           console.error("Error fetching jobs:", data.error);
-           setIsLoading(false);
+          setIsLoading(false);
           return;
         }
 
@@ -48,7 +48,7 @@ export default function StoreJobDetails() {
         const favs = await favResponse.json();
         if (favs.error) {
           console.error("Error fetching favourites:", favs.error);
-           setIsLoading(false);
+          setIsLoading(false);
           return;
         }
 
@@ -64,7 +64,7 @@ export default function StoreJobDetails() {
         const appliedData = await applyResponse.json();
         if (appliedData.error) {
           console.error("Error fetching applied jobs:", appliedData.error);
-           setIsLoading(false);
+          setIsLoading(false);
           return;
         }
         let appliedWhole = appliedData.appliedIds;
@@ -106,13 +106,13 @@ export default function StoreJobDetails() {
     fetchJobs();
   }, []);
 
- // Handle Apply
+  // Handle Apply
   const handleApply = async (jobId) => {
     setJob({
-        ...job,
-        applied: !job.applied,
-        status: job.applied == true ? null : "pending",
-      });
+      ...job,
+      applied: !job.applied,
+      status: job.applied == true ? null : "pending",
+    });
     try {
       const resApply = await fetch(`${apiURL}/store/apply/${jobId}`, {
         method: "POST",
@@ -126,11 +126,11 @@ export default function StoreJobDetails() {
 
       if (ansApply.message !== "success") {
         alert("Error applying");
-       setJob({
-        ...job,
-        applied: !job.applied,
-        status: job.applied == true ? null : "pending",
-      });
+        setJob({
+          ...job,
+          applied: !job.applied,
+          status: job.applied == true ? null : "pending",
+        });
       }
     } catch (error) {
       console.error("Error in application to job:", error);
@@ -167,7 +167,7 @@ export default function StoreJobDetails() {
         <span className="relative z-10 ">Detailed Post</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
       </h1>
-      {!isLoading ? 
+      {!isLoading ? (
         <div
           key={job._id}
           className=" flex gap-8 flex-col  border-white shadow-md  wrap-break-word rounded-lg w-[90%] mb-24"
@@ -342,7 +342,9 @@ export default function StoreJobDetails() {
             {job.applied ? "Cancel Apply" : "Apply"}
           </button>
         </div>
-       : <Loader isLoading={isLoading}/>}
+      ) : (
+        <Loader isLoading={isLoading} />
+      )}
 
       <Footer />
     </div>

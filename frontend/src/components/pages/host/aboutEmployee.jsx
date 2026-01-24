@@ -368,7 +368,7 @@ export default function AboutEmployee() {
         </div>
       </div>
 
-      <Loader isLoading={isLoading}/>
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

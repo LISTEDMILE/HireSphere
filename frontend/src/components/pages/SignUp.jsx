@@ -49,7 +49,6 @@ const SignUpPage = () => {
       navigate("/login");
     }
     setIsLoading(false);
-    
   };
 
   return (
@@ -63,7 +62,7 @@ const SignUpPage = () => {
         className="bg-[#0d212ec9] relative shadow-lg text-white rounded-lg p-8 w-[95%] sm:w-[600px]"
       >
         <Errors errors={errors} />
-        
+
         <div className="mb-4">
           <div className="flex justify-around w-full border-b-2 border-b-white pb-4 mb-6">
             <button
@@ -223,7 +222,7 @@ const SignUpPage = () => {
         </div>
       </form>
 
-      <Loader isLoading={isLoading}/>
+      <Loader isLoading={isLoading} />
 
       <Footer />
     </div>

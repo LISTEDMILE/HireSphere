@@ -142,7 +142,7 @@ const LandingPage = () => {
             rotate: -90,
           });
         }
-      }
+      },
     );
 
     gsap.from(".logoImg", {
@@ -270,7 +270,7 @@ const LandingPage = () => {
         50% { width: 22ch }
       }
     `,
-      styleSheet.cssRules.length
+      styleSheet.cssRules.length,
     );
 
     // Blinking cursor effect
@@ -280,7 +280,7 @@ const LandingPage = () => {
         50% { border-color: transparent }
       }
     `,
-      styleSheet.cssRules.length
+      styleSheet.cssRules.length,
     );
   }, []);
 

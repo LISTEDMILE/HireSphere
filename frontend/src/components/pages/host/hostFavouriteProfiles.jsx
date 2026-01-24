@@ -41,7 +41,7 @@ export default function FavouriteProfileList() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-          }
+          },
         );
         const choosenData = await choosenResponse.json();
         if (choosenData.error) {
@@ -57,7 +57,7 @@ export default function FavouriteProfileList() {
             (profile) =>
               choosenIds.includes(profile._id)
                 ? { ...profile, choosen: true }
-                : { ...profile, choosen: false }
+                : { ...profile, choosen: false },
           );
 
           let status;
@@ -89,16 +89,16 @@ export default function FavouriteProfileList() {
 
   const handleHireProfile = async (profileId) => {
     setFavouriteProfiles(
-        favouriteProfiles.map((profile) =>
-          profile._id === profileId
-            ? {
-                ...profile,
-                choosen: !profile.choosen,
-                status: profile.choosen == true ? null : "pending",
-              }
-            : profile
-        )
-      );
+      favouriteProfiles.map((profile) =>
+        profile._id === profileId
+          ? {
+              ...profile,
+              choosen: !profile.choosen,
+              status: profile.choosen == true ? null : "pending",
+            }
+          : profile,
+      ),
+    );
     try {
       const response = await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
         method: "POST",
@@ -113,11 +113,9 @@ export default function FavouriteProfileList() {
         alert("Error hiring profile: " + data.error);
         return;
       }
-
-      
     } catch (error) {
       console.error("Error hiring profile:", error);
-      alert("Error hiring profile:")
+      alert("Error hiring profile:");
       setFavouriteProfiles(
         favouriteProfiles.map((profile) =>
           profile._id === profileId
@@ -126,20 +124,18 @@ export default function FavouriteProfileList() {
                 choosen: !profile.choosen,
                 status: profile.choosen == true ? null : "pending",
               }
-            : profile
-        )
+            : profile,
+        ),
       );
     }
   };
 
   const handleFavourite = async (profileId) => {
     setFavouriteProfiles((prevProfiles) =>
-        prevProfiles.map((profile) =>
-          profile._id === profileId
-            ? { ...profile, fav: !profile.fav }
-            : profile
-        )
-      );
+      prevProfiles.map((profile) =>
+        profile._id === profileId ? { ...profile, fav: !profile.fav } : profile,
+      ),
+    );
     try {
       await fetch(`${apiURL}/host/favouriteProfile/${profileId}`, {
         method: "POST",
@@ -148,7 +144,6 @@ export default function FavouriteProfileList() {
         },
         credentials: "include",
       });
-      
     } catch (error) {
       console.error("Error toggling favourite:", error);
       alert("Error toggling favourite:");
@@ -156,8 +151,8 @@ export default function FavouriteProfileList() {
         prevProfiles.map((profile) =>
           profile._id === profileId
             ? { ...profile, fav: !profile.fav }
-            : profile
-        )
+            : profile,
+        ),
       );
     }
   };
@@ -165,7 +160,7 @@ export default function FavouriteProfileList() {
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center z-[">
       <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
-      <NavHome active="favouriteProfile"/>
+      <NavHome active="favouriteProfile" />
       <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
         <span className="relative z-10">Resumes</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
@@ -285,7 +280,7 @@ export default function FavouriteProfileList() {
         </ul>
       </div>
 
-      <Loader isLoading={isLoading}/>
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

@@ -11,7 +11,7 @@ import Loader from "../../compo/loader";
 export default function StoreProfilesDetails() {
   const [profile, setProfile] = useState();
   const { profileId } = useParams();
-  const [isLoading , setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -25,7 +25,7 @@ export default function StoreProfilesDetails() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-          }
+          },
         );
 
         let data = await response.json();
@@ -49,7 +49,7 @@ export default function StoreProfilesDetails() {
             "Content-Type": "application/json",
           },
           credentials: "include",
-        }
+        },
       );
 
       let data = await response.json();
@@ -305,7 +305,9 @@ export default function StoreProfilesDetails() {
             </div>
           </div>
         </div>
-      ) : <Loader isLoading={isLoading}/>}
+      ) : (
+        <Loader isLoading={isLoading} />
+      )}
       <Footer />
     </div>
   );

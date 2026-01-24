@@ -22,7 +22,7 @@ export default function HostProfileDetails() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-          }
+          },
         );
         let data = await response.json();
         if (data.error) {
@@ -59,7 +59,7 @@ export default function HostProfileDetails() {
               "Content-Type": "application/json",
             },
             credentials: "include",
-          }
+          },
         );
         const choosenData = await choosenResponse.json();
         if (choosenData.error) {
@@ -107,8 +107,6 @@ export default function HostProfileDetails() {
         },
         credentials: "include",
       });
-
-      
     } catch (error) {
       console.error("Error toggling favourite:", error);
       setProfile({ ...profile, fav: !profile.fav });
@@ -117,10 +115,10 @@ export default function HostProfileDetails() {
 
   const handleHireProfile = async (profileId) => {
     setProfile({
-        ...profile,
-        choosen: !profile.choosen,
-        status: profile.choosen == true ? null : "pending",
-      });
+      ...profile,
+      choosen: !profile.choosen,
+      status: profile.choosen == true ? null : "pending",
+    });
     try {
       const response = await fetch(`${apiURL}/host/hireProfile/${profileId}`, {
         method: "POST",
@@ -134,14 +132,12 @@ export default function HostProfileDetails() {
       if (data.error) {
         alert("Error hiring profile: " + data.error);
         setProfile({
-        ...profile,
-        choosen: !profile.choosen,
-        status: profile.choosen == true ? null : "pending",
-      });
+          ...profile,
+          choosen: !profile.choosen,
+          status: profile.choosen == true ? null : "pending",
+        });
         return;
       }
-
-      
     } catch (error) {
       console.error("Error hiring profile:", error);
       setProfile({
@@ -407,7 +403,7 @@ export default function HostProfileDetails() {
         </div>
       )}
 
-      <Loader isLoading={isLoading}/>
+      <Loader isLoading={isLoading} />
       <Footer />
     </div>
   );

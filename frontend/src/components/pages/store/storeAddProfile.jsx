@@ -136,7 +136,7 @@ export default function ProfileForm() {
         (proj) =>
           proj.title === title &&
           proj.description === description &&
-          proj.link === link
+          proj.link === link,
       );
 
       if (!alreadyExists) {
@@ -171,7 +171,7 @@ export default function ProfileForm() {
           proj.title === value.title &&
           proj.description === value.description &&
           proj.link === value.link
-        )
+        ),
     );
     setFormData({ ...formData, ["profileProjects"]: elementsArray });
   };
@@ -201,7 +201,7 @@ export default function ProfileForm() {
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center z-[">
       <div className=" fixed h-[100vh] w-[100vw] top-0 left-0 bg-gradient-to-b from-black via-[#042029] to-[#060a13] z-[-10]"></div>
-      <NavHome active="addProfile"/>
+      <NavHome active="addProfile" />
       <h1 className="relative text-3xl w-full py-4 font-bold text-white text-center">
         <span className="relative z-10">{editing ? "Edit" : "Add"} Resume</span>
         <span className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent animate-shimmer"></span>
@@ -281,7 +281,7 @@ export default function ProfileForm() {
                       handleArrayAdd(
                         e,
                         "profilePreferredLocations",
-                        preferredLocation
+                        preferredLocation,
                       );
                       setPreferredLocation("");
                     }}
@@ -453,7 +453,7 @@ export default function ProfileForm() {
                     onClick={(e) => {
                       handleAddProjectTechnologies(
                         e,
-                        insideProjectTechnologies
+                        insideProjectTechnologies,
                       );
                       setInsideProjectTechnologies("");
                     }}
@@ -617,7 +617,7 @@ export default function ProfileForm() {
               id="submit"
               type="submit"
               value={editing ? "Update" : "Add"}
-              className="w-[fit]  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition" 
+              className="w-[fit]  px-12 bg-teal-600 text-white py-2 rounded hover:bg-teal-700 transition"
               disabled={isAdding}
             />
             <p className="text-sm text-gray-500 mt-2">
