@@ -15,7 +15,7 @@ import { MdOutlineWork } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { apiURL } from "../../../apiUrl";
 
-const NavHome = () => {
+const NavHome = ({active}) => {
   const navigate = useNavigate();
   const { isLoggedIn, userType } = useSelector((store) => store.userInfo);
   const [navOpen, setNavOpen] = useState(false);
@@ -70,22 +70,22 @@ const NavHome = () => {
           <div className="hidden sm:flex items-center text-lg space-x-14 ">
             <a
               href="/help"
-              className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+              className={` hover:underline ${active ==="helpPage" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
             >
               Help
             </a>
             <a
               href="/contact"
-              className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+              className={` hover:underline ${active ==="contactPage" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
             >
               Contact-Us
             </a>
             <a
               href="/about"
-              className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+              className={` hover:underline ${active ==="aboutPage" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
             >
               About-Us
             </a>
@@ -112,48 +112,48 @@ const NavHome = () => {
         <div className="hidden sm:flex items-center space-x-4 text-lg">
           <a
             href="/store/favourite"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="storeFavourites" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Favourites
           </a>
 
           <a
             href="/store/storeJobList"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="storeJobList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Vacancies
           </a>
 
           <a
             href="/store/appliedJobs"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="appliedJobs" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Applied
           </a>
 
           <a
             href="/store/addProfile"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="addProfile" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Add Resume
           </a>
 
           <a
             href="/store/storeProfileList"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="storeProfileList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Resumes
           </a>
 
           <a
             href="/store/offers/"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="offers" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Offers
           </a>
@@ -164,48 +164,48 @@ const NavHome = () => {
         <div className="hidden sm:flex items-center space-x-4 texl-lg">
           <a
             href="/host/addJob"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="addJob" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Add Vacancy
           </a>
 
           <a
             href="/host/hostJobList"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="hostJobList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Added by you
           </a>
 
           <a
             href="/host/hostApplications"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="hostApplications" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Applications
           </a>
 
           <a
             href="/host/hostProfileList"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="hostProfileList" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Resumes
           </a>
 
           <a
             href="/host/favouriteProfile"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="favouriteProfile" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Favourites
           </a>
 
           <a
             href="/host/choosenProfiles"
-            className="hover:underline hover:text-red-100 bg-transparent
-          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out"
+            className={` hover:underline ${active ==="choosenProfiles" ? "underline bg-[#0f584aab]" : "bg-transparent"} hover:text-red-100 
+          hover:bg-[#183b34ab] px-4 py-1 rounded transition-all duration-300 ease-in-out`}
           >
             Selected
           </a>
