@@ -145,7 +145,7 @@ export default function AboutUs() {
                 </h2>
 
                 <p className="text-cyan-400">
-                  MERN Stack Developer
+                  Full Stack Developer
                 </p>
 
               </div>
