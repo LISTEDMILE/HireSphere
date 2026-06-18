@@ -13,7 +13,7 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#0b0b12] via-black to-black text-white">
+    <footer className="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#0b0b12] via-black to-black text-white w-screen mt-6">
 
       {/* Background Glow */}
       <div className="absolute inset-0 pointer-events-none">
