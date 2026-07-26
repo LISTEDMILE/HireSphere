@@ -133,7 +133,7 @@ export default function AboutEmployee() {
                   </label>
                   <p className=" text-wrap overflow-x-scroll sm:overflow-hidden">
                     {" "}
-                    {formData[field]}{" "}
+                    {formData[field]?formData[field]:"NULL"}{" "}
                   </p>
                 </div>
               );
@@ -217,10 +217,10 @@ export default function AboutEmployee() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="w-full flex flex-col gap-3">
           <label className="text-gray-400 text-lg">About User</label>
           <p className="w-full h-fit p-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500">
-            {formData.bio}
+            {formData.bio?formData.bio:"NULL"}
           </p>
         </div>
 
