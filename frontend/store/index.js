@@ -9,8 +9,8 @@ const userInfo = createSlice({
     Login: (state, action) => {
       state.isLoggedIn = true;
       state.username = action.payload.username;
-      state.firstname = action.payload.firstname;
-      state.lastname = action.payload.lastname;
+     
+      state.profilePicture = action.payload.profilePicture;
       state.userType = action.payload.userType;
       state.userId = action.payload.userId;
     },
