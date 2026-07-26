@@ -33,21 +33,28 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    let user = await LoginUserToServer(formData);
-    if (!user.errors) {
-      dispatch(
-        userActions.Login({
-          username: user.username,
-          firstname: user.firstname,
-          userType: user.userType,
-          lastname: user.lastname,
-        }),
-      );
-      navigate("/");
-    } else {
-      setErrors(user.errors);
-      setIsLoading(false);
+    try {
+      let user = await LoginUserToServer(formData);
+      if (!user.errors) {
+        dispatch(
+          userActions.Login({
+            username: user.username,
+            userId:user._id,
+            userType: user.userType,
+            profilePicture:user.profilePicture,
+
+          }),
+        );
+        navigate("/");
+      } else {
+        setErrors(user.errors);
+        
+      }
+    } catch (err) {
+      console.error("Error logging In", err);
+      setErrors(["Error connecting to server"]);
     }
+    setIsLoading(false);
   };
 
   return (

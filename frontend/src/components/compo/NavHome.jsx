@@ -17,7 +17,7 @@ import { apiURL } from "../../../apiUrl";
 
 const NavHome = ({ active }) => {
   const navigate = useNavigate();
-  const { isLoggedIn, userType } = useSelector((store) => store.userInfo);
+  const { isLoggedIn, userType,profilePicture } = useSelector((store) => store.userInfo);
   const [navOpen, setNavOpen] = useState(false);
   const [pass, setPass] = useState("");
 
@@ -242,31 +242,20 @@ const NavHome = ({ active }) => {
             >
               <IoMdClose />
             </button>
-            {userType === "employee" && (
+            {isLoggedIn && (
               <Link
                 className="flex border-b pb-1.5 w-full gap-5 items-center"
-                to={`/store/addAboutEmployee`}
+                to={userType === "employee" ? "/store/addAboutEmployee" : "/host/addAboutRecruiter"}
               >
                 <img
-                  src={"/AlternateProfilePic.png"}
+                  src={profilePicture ?profilePicture:"/AlternateProfilePic.png"}
                   className="w-[50px] h-[50px]  rounded-full "
                 />
                 <p className="text-lg hover:underline">Profile</p>{" "}
               </Link>
             )}
 
-            {userType === "recruiter" && (
-              <Link
-                className="flex border-b pb-1.5 w-full gap-5 items-center"
-                to={`/host/addAboutRecruiter`}
-              >
-                <img
-                  src={"/AlternateProfilePic.png"}
-                  className="w-[50px] h-[50px]  rounded-full "
-                />
-                <p className="text-lg hover:underline">Profile</p>{" "}
-              </Link>
-            )}
+            
 
             {isLoggedIn && userType === "employee" && (
               <div className="flex items-start flex-col gap-3 text-lg">

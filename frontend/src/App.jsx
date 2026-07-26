@@ -49,13 +49,14 @@ function App() {
           },
         });
         const data = await response.json();
+        console.log(data);
         if (data.isLoggedIn) {
           dispatch(
             userActions.Login({
               username: data.user.username,
-              firstname: data.user.firstname,
+              
               userType: data.user.userType,
-              lastname: data.user.lastname,
+             profilePicture:data.user.profilePicture,
               userId: data.user._id,
             }),
           );
