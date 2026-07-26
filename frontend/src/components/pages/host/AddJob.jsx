@@ -431,7 +431,7 @@ export default function AddJob() {
           </div>
 
           {errors && (
-            <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+            <div className="bg-red-100 text-red-700 w-full p-3 rounded mb-4">
               <ul className="list-disc list-inside">
                 {errors.map((err, i) => (
                   <li key={i}>{err}</li>
