@@ -7,6 +7,7 @@ import Loader from "../../compo/loader";
 
 export default function StoreJobDetails() {
   const [job, setJob] = useState();
+  const [errorr, setError] = useState("");
   const { jobId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -30,6 +31,7 @@ export default function StoreJobDetails() {
         const data = await response.json();
         if (data.error) {
           console.error("Error fetching jobs:", data.error);
+          setError(data.error);
           setIsLoading(false);
           return;
         }
@@ -48,6 +50,7 @@ export default function StoreJobDetails() {
         const favs = await favResponse.json();
         if (favs.error) {
           console.error("Error fetching favourites:", favs.error);
+          setError(favs.error);
           setIsLoading(false);
           return;
         }
@@ -64,6 +67,7 @@ export default function StoreJobDetails() {
         const appliedData = await applyResponse.json();
         if (appliedData.error) {
           console.error("Error fetching applied jobs:", appliedData.error);
+          setError(appliedData.error);
           setIsLoading(false);
           return;
         }
@@ -99,6 +103,7 @@ export default function StoreJobDetails() {
         setJob({ ...updatedJobWithAppliedAndStatus }); // ✅ update once with combined data
       } catch (error) {
         console.error("Error fetching data:", error);
+        setError("Error connecting to server");
       }
       setIsLoading(false);
     };
@@ -158,6 +163,8 @@ export default function StoreJobDetails() {
       console.error("Error toggling favorite:", error);
     }
   };
+
+  if(!job) return <center><h1>{errorr}</h1></center>
 
   return (
     <div className="w-full min-h-[100vh] flex flex-col items-center h-fit overflow-hidden">
